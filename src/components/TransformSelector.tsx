@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { FC } from 'react';
 
 const Container = styled.div`
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 `;
 
 const Select = styled.select`

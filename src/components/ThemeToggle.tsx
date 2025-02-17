@@ -3,9 +3,9 @@ import { FC } from 'react';
 
 const Button = styled.button`
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.5rem 1rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
     border: 1px solid ${props => props.theme.border};
     border-radius: 4px;
     background: ${props => props.theme.surface};

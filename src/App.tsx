@@ -9,13 +9,13 @@ import { loadTransformers, getTransformerOptions } from './utils/transformerLoad
 
 const Container = styled.div`
     min-height: 100vh;
-    padding: 2rem;
+    padding: 0.5rem;
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
 `;
 
 const Title = styled.h1`
-    margin: 0 0 2rem 0;
+    margin: 0 0 1rem 0;
     font-size: 2rem;
     font-weight: 600;
 `;
@@ -23,14 +23,14 @@ const Title = styled.h1`
 const PanelContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    gap: 2rem;
+    gap: 1rem;
     max-width: 1200px;
     margin: 0 auto;
 `;
 
 const SwapButton = styled.button`
     height: 200px;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     border: 1px solid ${({ theme }) => theme.border};
     border-radius: 4px;
     background: ${({ theme }) => theme.surface};
