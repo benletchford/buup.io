@@ -19,6 +19,7 @@ const Input = styled.input`
     color: ${props => props.theme.text};
     cursor: pointer;
     appearance: none;
+    font-size: 1.1rem;
     
     &:focus {
         outline: none;

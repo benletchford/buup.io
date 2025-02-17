@@ -18,6 +18,7 @@ const TextArea = styled.textarea`
   color: ${props => props.theme.text};
   resize: none;
   font-family: monospace;
+  font-size: 1.1rem;
   
   &:focus {
     outline: none;

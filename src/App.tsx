@@ -9,9 +9,6 @@ import { theme } from './theme';
 import { loadTransformers, getTransformerOptions } from './utils/transformerLoader';
 
 const TopBar = styled.div`
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
     display: flex;
     gap: 0.5rem;
 `;
@@ -35,15 +32,21 @@ const GitHubButton = styled.a`
 `;
 
 const Container = styled.div`
-    position: relative;
     min-height: 100vh;
-    padding: 0.5rem;
+    padding: 1.5rem;
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
 `;
 
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+`;
+
 const Title = styled.h1`
-    margin: 0.5rem 0 1rem 0;
+    margin: 0;
     font-size: 2rem;
     font-weight: 600;
 `;
@@ -52,7 +55,6 @@ const PanelContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 1rem;
-    max-width: 1200px;
     margin: 0 auto;
 `;
 
@@ -96,23 +98,27 @@ function App() {
   return (
     <ThemeProvider theme={isDark ? theme.dark : theme.light}>
       <Container>
-        <TopBar>
-          <GitHubButton
-            href="https://github.com/benletchford/buup"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaGithub size={20} />
-          </GitHubButton>
-          <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
-        </TopBar>
-        <Title>Buup - the text utility belt</Title>
-        <TransformSelector value={transformer} onChange={setTransformer} options={options} />
-        <PanelContainer>
-          <TransformPanel value={input} onChange={setInput} />
-          <SwapButton onClick={swapValues}>⇄</SwapButton>
-          <TransformPanel value={transform(input)} readOnly />
-        </PanelContainer>
+        <Header>
+          <Title>Buup - the text utility belt</Title>
+          <TopBar>
+            <GitHubButton
+              href="https://github.com/benletchford/buup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaGithub size={20} />
+            </GitHubButton>
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+          </TopBar>
+        </Header>
+        <div>
+          <TransformSelector value={transformer} onChange={setTransformer} options={options} />
+          <PanelContainer>
+            <TransformPanel value={input} onChange={setInput} />
+            <SwapButton onClick={swapValues}>⇄</SwapButton>
+            <TransformPanel value={transform(input)} readOnly />
+          </PanelContainer>
+        </div>
       </Container>
     </ThemeProvider>
   );
