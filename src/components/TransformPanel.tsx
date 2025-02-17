@@ -1,11 +1,40 @@
 import styled from '@emotion/styled';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
+import { FaRegCopy } from 'react-icons/fa';
 
 const Panel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  position: relative;
+`;
+
+const TextAreaContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const CopyButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px;
+  background: ${props => props.theme.surface};
+  border: 1px solid ${props => props.theme.border};
+  border-radius: 4px;
+  color: ${props => props.theme.text};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s, background-color 0.2s;
+
+  &:hover {
+    opacity: 1;
+    background: ${props => props.theme.surfaceHover};
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -33,14 +62,25 @@ interface TransformPanelProps {
 }
 
 export const TransformPanel: FC<TransformPanelProps> = ({ value, onChange, readOnly }) => {
+  const handleCopy = useCallback(() => {
+    navigator.clipboard.writeText(value).catch(console.error);
+  }, [value]);
+
   return (
     <Panel>
-      <TextArea
-        value={value}
-        onChange={e => onChange?.(e.target.value)}
-        readOnly={readOnly}
-        placeholder={readOnly ? 'Output will appear here...' : 'Enter text to transform...'}
-      />
+      <TextAreaContainer>
+        <TextArea
+          value={value}
+          onChange={e => onChange?.(e.target.value)}
+          readOnly={readOnly}
+          placeholder={readOnly ? 'Output will appear here...' : 'Enter text to transform...'}
+        />
+        {value && (
+          <CopyButton onClick={handleCopy} title="Copy to clipboard">
+            <FaRegCopy size={16} />
+          </CopyButton>
+        )}
+      </TextAreaContainer>
     </Panel>
   );
 };
