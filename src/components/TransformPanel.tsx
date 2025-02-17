@@ -7,12 +7,16 @@ const Panel = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  height: 100%;
   position: relative;
 `;
 
 const TextAreaContainer = styled.div`
   position: relative;
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const CopyButton = styled.button`
@@ -39,7 +43,7 @@ const CopyButton = styled.button`
 
 const TextArea = styled.textarea`
   width: 100%;
-  height: 200px;
+  flex: 1;
   padding: 0.5rem;
   border: 1px solid ${props => props.theme.border};
   border-radius: 4px;

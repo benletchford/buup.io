@@ -36,6 +36,8 @@ const Container = styled.div`
     padding: 1.5rem;
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
+    display: flex;
+    flex-direction: column;
 `;
 
 const Header = styled.div`
@@ -55,11 +57,12 @@ const PanelContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 1rem;
-    margin: 0 auto;
+    flex: 1;
+    min-height: 0;
 `;
 
 const SwapButton = styled.button`
-    height: 200px;
+    align-self: stretch;
     padding: 0 0.5rem;
     border: 1px solid ${({ theme }) => theme.border};
     border-radius: 4px;
@@ -111,7 +114,7 @@ function App() {
             </GitHubButton>
           </TopBar>
         </Header>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '1rem', minHeight: 0 }}>
           <TransformSelector value={transformer} onChange={setTransformer} options={options} />
           <PanelContainer>
             <TransformPanel value={input} onChange={setInput} />
