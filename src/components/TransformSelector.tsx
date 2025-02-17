@@ -2,7 +2,8 @@ import styled from '@emotion/styled';
 import { FC, useState, useRef, useEffect, KeyboardEvent } from 'react';
 
 const Container = styled.div`
-    margin-bottom: 0.5rem;
+    position: relative;
+    width: 100%;
 `;
 
 const InputContainer = styled.div`
@@ -54,6 +55,8 @@ const Dropdown = styled.ul<{ show: boolean }>`
     background: ${props => props.theme.surface};
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     z-index: 1000;
+    top: 100%;
+    left: 0;
 `;
 
 const DropdownItem = styled.li<{ selected: boolean }>`
@@ -101,12 +104,15 @@ export const TransformSelector: FC<TransformSelectorProps> = ({ value, onChange,
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
+                if (currentOption) {
+                    setInputValue(currentOption.title);
+                }
             }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    }, [currentOption]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -162,10 +168,12 @@ export const TransformSelector: FC<TransformSelectorProps> = ({ value, onChange,
                 <Input
                     value={inputValue}
                     onChange={handleInputChange}
-                    onFocus={() => setIsOpen(true)}
+                    onFocus={() => {
+                        setIsOpen(true);
+                        setInputValue('');
+                    }}
                     onKeyDown={handleKeyDown}
                     placeholder="Search transformers..."
-                    readOnly={!isOpen}
                 />
                 <DropdownArrow />
             </InputContainer>
