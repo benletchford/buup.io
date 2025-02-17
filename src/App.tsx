@@ -101,6 +101,7 @@ function App() {
         <Header>
           <Title>Buup - the text utility belt</Title>
           <TopBar>
+            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
             <GitHubButton
               href="https://github.com/benletchford/buup"
               target="_blank"
@@ -108,7 +109,6 @@ function App() {
             >
               <FaGithub size={20} />
             </GitHubButton>
-            <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </TopBar>
         </Header>
         <div>
