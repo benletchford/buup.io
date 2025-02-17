@@ -1,50 +1,64 @@
-# React + TypeScript + Vite
+# <img src="public/buup-icon.svg" width="32" height="32" alt="Buup Icon" style="vertical-align: middle; margin-right: 8px;"/> Buup - The Text Utility Belt
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Buup is a modern web application that provides a suite of text transformation tools in a clean, user-friendly interface. Transform text between different formats with real-time preview and easy switching between operations.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔄 Real-time text transformation
+- 🔀 Bi-directional transformations with one-click swap
+- 🌓 Light/Dark theme support
+- 💪 Built with TypeScript for type safety
+- 🎯 Modular transformer architecture
+- 🚀 Fast and responsive interface
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+- Node.js (Latest LTS version recommended)
+- npm or yarn
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/benletchford/buup.git
+
+# Navigate to the project directory
+cd buup
+
+# Install dependencies
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Development
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+```bash
+# Start the development server
+npm run dev
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Run linting
+npm run lint
 ```
+
+## Technology Stack
+
+- React 19
+- TypeScript
+- Vite
+- Emotion (Styled Components)
+- React Icons
+
+## Contributing
+
+Contributions are welcome! Feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the MIT license.
