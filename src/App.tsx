@@ -1,13 +1,41 @@
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { FaGithub } from 'react-icons/fa';
 import { TransformPanel } from './components/TransformPanel';
 import { TransformSelector } from './components/TransformSelector';
 import { ThemeToggle } from './components/ThemeToggle';
 import { theme } from './theme';
 import { loadTransformers, getTransformerOptions } from './utils/transformerLoader';
 
+const TopBar = styled.div`
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+`;
+
+const GitHubButton = styled.a`
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: ${({ theme }) => theme.surface};
+    color: ${({ theme }) => theme.text};
+    border: 1px solid ${({ theme }) => theme.border};
+    cursor: pointer;
+    text-decoration: none;
+    
+    &:hover {
+        opacity: 0.8;
+    }
+`;
+
 const Container = styled.div`
+    position: relative;
     min-height: 100vh;
     padding: 0.5rem;
     background: ${({ theme }) => theme.background};
@@ -15,7 +43,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-    margin: 0 0 1rem 0;
+    margin: 0.5rem 0 1rem 0;
     font-size: 2rem;
     font-weight: 600;
 `;
@@ -68,8 +96,17 @@ function App() {
   return (
     <ThemeProvider theme={isDark ? theme.dark : theme.light}>
       <Container>
-        <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
-        <Title>Buup</Title>
+        <TopBar>
+          <GitHubButton
+            href="https://github.com/benletchford/buup"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaGithub size={20} />
+          </GitHubButton>
+          <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
+        </TopBar>
+        <Title>Buup - the text utility belt</Title>
         <TransformSelector value={transformer} onChange={setTransformer} options={options} />
         <PanelContainer>
           <TransformPanel value={input} onChange={setInput} />
