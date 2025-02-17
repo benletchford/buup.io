@@ -7,8 +7,11 @@ const base64Encode: Transformer = {
     inverse: 'base64decode',
     transform: (input: string): string => {
         try {
-            return btoa(input);
-        } catch (_: unknown) {
+            // Convert string to UTF-8 bytes, then to base64
+            const bytes = new TextEncoder().encode(input);
+            const base64 = btoa(String.fromCharCode(...bytes));
+            return base64;
+        } catch {
             return 'Invalid input for Base64 encoding';
         }
     }
@@ -21,8 +24,11 @@ const base64Decode: Transformer = {
     inverse: 'base64encode',
     transform: (input: string): string => {
         try {
-            return atob(input);
-        } catch (_: unknown) {
+            // Convert base64 to bytes, then to UTF-8 string
+            const bytes = Uint8Array.from(atob(input), c => c.charCodeAt(0));
+            const text = new TextDecoder().decode(bytes);
+            return text;
+        } catch {
             return 'Invalid Base64 input';
         }
     }
