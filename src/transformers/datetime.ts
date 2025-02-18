@@ -39,11 +39,15 @@ const parseDateTime = (input: string, fromTimezone: TimezoneConfig): Date | null
     // First try to parse as ISO string
     const isoDate = parseISO(input);
     if (!isNaN(isoDate.getTime())) {
+      // For non-UTC timezones, ensure the date is interpreted in the correct timezone
+      if (fromTimezone.name !== 'utc' && !input.endsWith('Z') && !input.match(/[+-]\d{2}:?\d{2}$/)) {
+        return toZonedTime(isoDate, fromTimezone.tzDatabase);
+      }
       return isoDate;
     }
 
     // If ISO parsing fails, use chrono for natural language parsing
-    const parsedDate = chrono.parseDate(input);
+    const parsedDate = chrono.parseDate(input, { timezone: fromTimezone.tzDatabase });
     if (parsedDate) {
       return parsedDate;
     }
@@ -57,7 +61,10 @@ const parseDateTime = (input: string, fromTimezone: TimezoneConfig): Date | null
 const formatDateTime = (date: Date, timezone: TimezoneConfig): string => {
   try {
     const zonedDate = toZonedTime(date, timezone.tzDatabase);
-    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+    const formatString = timezone.name === 'utc' 
+      ? "yyyy-MM-dd'T'HH:mm:ss'Z'" 
+      : "yyyy-MM-dd'T'HH:mm:ssXXX";
+    return format(zonedDate, formatString);
   } catch {
     return '';
   }
