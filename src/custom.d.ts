@@ -5,6 +5,7 @@ declare module '@emotion/react' {
         background: string;
         text: string;
         surface: string;
+        surfaceHover: string;
         border: string;
     }
 }
