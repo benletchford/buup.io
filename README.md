@@ -1,4 +1,4 @@
-# <img src="public/buup-icon.svg" width="64" height="64" alt="Buup Icon" style="vertical-align: middle; margin-right: 4px;"/> Buup - The Text Utility Belt
+# Buup - The Text Utility Belt
 
 Buup is a modern web application that tries to do one thing well - it provides a suite of text transformation tools in a clean, user-friendly interface.
 
