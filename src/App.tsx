@@ -2,6 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
+import buupIcon from '/buup-icon.svg';
 import { TransformPanel } from './components/TransformPanel';
 import { TransformSelector } from './components/TransformSelector';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -45,6 +46,17 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+`;
+
+const TitleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+`;
+
+const TitleIcon = styled.img`
+    height: 2rem;
+    width: 2rem;
 `;
 
 const Title = styled.h1`
@@ -102,7 +114,10 @@ function App() {
     <ThemeProvider theme={isDark ? theme.dark : theme.light}>
       <Container>
         <Header>
-          <Title>Buup - the text utility belt</Title>
+          <TitleContainer>
+            <TitleIcon src={buupIcon} alt="Buup icon" />
+            <Title>Buup - the text utility belt</Title>
+          </TitleContainer>
           <TopBar>
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
             <GitHubButton
