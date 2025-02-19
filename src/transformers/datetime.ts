@@ -47,7 +47,10 @@ const parseDateTime = (input: string, fromTimezone: TimezoneConfig): Date | null
     }
 
     // If ISO parsing fails, use chrono for natural language parsing
-    const parsedDate = chrono.parseDate(input, { timezone: fromTimezone.tzDatabase });
+    // For natural language parsing, ensure timezone context is preserved
+    const parsedDate = chrono.parseDate(input, { 
+      timezone: fromTimezone.tzDatabase
+    });
     if (parsedDate) {
       return parsedDate;
     }

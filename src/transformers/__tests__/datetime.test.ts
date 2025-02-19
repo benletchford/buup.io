@@ -10,10 +10,10 @@ describe('datetime transformers', () => {
       expect(transform('2024-02-18T12:00:00')).toBe('2024-02-18T23:00:00+11:00');
     });
 
-    test('handles natural language input', () => {
-      // Note: These tests assume running in UTC timezone
-      expect(transform('Feb 18 2024 12:00')).toBe('2024-02-18T23:00:00+11:00');
-      expect(transform('2024-02-18 12:00')).toBe('2024-02-18T23:00:00+11:00');
+    test('handles natural language input with explicit timezone', () => {
+      expect(transform('Feb 18 2024 12:00 UTC')).toBe('2024-02-18T23:00:00+11:00');
+      expect(transform('2024-02-18 12:00 UTC')).toBe('2024-02-18T23:00:00+11:00');
+      expect(transform('2024-02-18 12:00Z')).toBe('2024-02-18T23:00:00+11:00');
     });
 
     test('handles invalid input', () => {
@@ -30,9 +30,10 @@ describe('datetime transformers', () => {
       expect(transform('2024-02-18T23:00:00')).toBe('2024-02-18T12:00:00Z');
     });
 
-    test('handles natural language input', () => {
-      expect(transform('Feb 18 2024 23:00')).toBe('2024-02-18T12:00:00Z');
-      expect(transform('2024-02-18 23:00')).toBe('2024-02-18T12:00:00Z');
+    test('handles natural language input with explicit timezone', () => {
+      expect(transform('Feb 18 2024 23:00 +11:00')).toBe('2024-02-18T12:00:00Z');
+      expect(transform('2024-02-18 23:00 +11:00')).toBe('2024-02-18T12:00:00Z');
+      expect(transform('2024-02-18 23:00 Australia/Sydney')).toBe('2024-02-18T12:00:00Z');
     });
 
     test('handles invalid input', () => {
