@@ -19,7 +19,7 @@ const markdownToHtml: Transformer = {
             html = html.replace(/^###### (.*$)/gm, '<h6>$1</h6>');
             
             // Handle code blocks - do this early to avoid processing markdown inside code blocks
-            html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+            html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
                 // Remove leading and trailing newlines
                 code = code.replace(/^\n/, '').replace(/\n$/, '');
                 return `<pre><code>${code}</code></pre>`;
