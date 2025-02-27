@@ -61,7 +61,14 @@ const parseDateTime = (input: string, fromTimezone: TimezoneConfig): Date | null
   }
 };
 
-// Removed unused formatDateTime function
+const formatDateTime = (date: Date, timezone: string, formatStr: string): string => {
+  try {
+    const zonedDate = toZonedTime(date, timezone);
+    return format(zonedDate, formatStr);
+  } catch {
+    return '';
+  }
+};
 
 const createTransform = (from: TimezoneConfig, to: TimezoneConfig) => (input: string): string => {
   try {
@@ -72,41 +79,14 @@ const createTransform = (from: TimezoneConfig, to: TimezoneConfig) => (input: st
 
     // For UTC to Sydney conversion
     if (from.name === 'utc' && to.name === 'sydney') {
-      // Convert the UTC date to Sydney timezone
-      const sydneyDate = toZonedTime(parsedDate, 'Australia/Sydney');
-      return format(sydneyDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+      // Convert the UTC date to Sydney timezone and format with timezone offset
+      return formatDateTime(parsedDate, to.tzDatabase, "yyyy-MM-dd'T'HH:mm:ssXXX");
     }
     
     // For Sydney to UTC conversion
     if (from.name === 'sydney' && to.name === 'utc') {
-      // Handle natural language input with Australia/Sydney timezone
-      if (input.includes('Australia/Sydney')) {
-        // Parse the date string without the timezone part
-        const dateStr = input.replace('Australia/Sydney', '').trim();
-        // Create a date object with the Sydney time
-        const date = new Date(`${dateStr} GMT+1100`);
-        // Convert to UTC by subtracting 11 hours
-        date.setHours(date.getHours() - 11);
-        // Format as UTC time
-        return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
-      }
-      // For Sydney time with explicit timezone (e.g., +11:00)
-      else if (input.includes('+11:00')) {
-        // Parse the date as Sydney time
-        const date = new Date(input);
-        // Convert to UTC by subtracting 11 hours
-        date.setHours(date.getHours() - 11);
-        // Format as UTC time
-        return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
-      } else {
-        // For Sydney time without explicit timezone
-        // Assume the input is in Sydney time (UTC+11)
-        const date = new Date(input);
-        // Convert to UTC by subtracting 11 hours
-        date.setHours(date.getHours() - 11);
-        // Format as UTC time
-        return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
-      }
+      // Convert to UTC and format with Z suffix
+      return formatDateTime(parsedDate, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'");
     }
     
     // Default case (should not reach here with current transformers)
