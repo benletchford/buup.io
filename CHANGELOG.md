@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/benletchford/buup/compare/v0.2.0...v0.3.0) (2025-04-27)
+
+
+### Features
+
+* **web:** Add version and git hash to footer ([8e01dcd](https://github.com/benletchford/buup/commit/8e01dcd704b4b1e0129be9644f6b23b44d58d792))
+
+
+### Bug Fixes
+
+* Use div_ceil in base64_encode capacity calculation ([fa33f2c](https://github.com/benletchford/buup/commit/fa33f2c9f5760f1e75cd557859b6299ee992d06c))
+
 ## [0.2.0](https://github.com/benletchford/buup/compare/v0.1.0...v0.2.0) (2025-04-27)
 
 
