@@ -2,6 +2,10 @@
 
 Buup is a versatile text transformation toolkit that provides a dependency-free core library for common text manipulations, with additional CLI and web interfaces.
 
+|                            Dark Mode                            |                            Light Mode                            |
+| :-------------------------------------------------------------: | :--------------------------------------------------------------: |
+| <img src="buup_web/assets/web-screenshot-dark.png" width="400"> | <img src="buup_web/assets/web-screenshot-light.png" width="400"> |
+
 ## Architecture
 
 ```bash
