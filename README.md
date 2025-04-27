@@ -92,9 +92,14 @@ The foundation of Buup is a dependency-free Rust library implementing common tex
 // [dependencies]
 // buup = "0.1.0"
 
-use buup::{transformer_from_id, Transform};
+use buup::Base64Encode;
 
 // You can directly use the library like this:
+let result = Base64Encode.transform("Hello, World!").unwrap();
+println!("{}", result); // Outputs: SGVsbG8sIFdvcmxkIQ==
+
+// -- or --
+
 let transformer = transformer_from_id("base64encode").unwrap();
 let result = transformer.transform("Hello, World!").unwrap();
 println!("{}", result); // Outputs: SGVsbG8sIFdvcmxkIQ==
