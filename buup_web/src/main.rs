@@ -302,7 +302,7 @@ fn App() -> Element {
         };
 
         // If search query is empty, show all transformers for the selected category
-        let mut filtered = if search_query().is_empty() {
+        let filtered = if search_query().is_empty() {
             category_filtered
         } else {
             // Filter transformers based on search query (match name or description)
@@ -320,8 +320,6 @@ fn App() -> Element {
                 .collect::<Vec<_>>()
         };
 
-        // Sort transformers by name for consistent ordering
-        filtered.sort_by_key(|a| a.name().to_lowercase());
         filtered
     };
 

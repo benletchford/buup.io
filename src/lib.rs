@@ -228,6 +228,11 @@ pub fn categorized_transformers() -> HashMap<TransformerCategory, Vec<&'static d
             .push(transformer);
     }
 
+    // Sort each category by transformer ID for consistent ordering
+    for transformers in categories.values_mut() {
+        transformers.sort_by_key(|t| t.id().to_string());
+    }
+
     categories
 }
 

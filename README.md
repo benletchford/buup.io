@@ -47,16 +47,16 @@ The following transformers are currently available in Buup:
 Available transformers:
 
 ENCODERS:
-  urlencode       - Encode text for use in URLs
-  hexencode       - Encode text to hexadecimal representation
   base64encode    - Encode text to Base64 format
+  hexencode       - Encode text to hexadecimal representation
   htmlencode      - Encodes special characters to HTML entities
+  urlencode       - Encode text for use in URLs
 
 DECODERS:
-  urldecode       - Decode URL-encoded text
-  hexdecode       - Decode hexadecimal to original text
   base64decode    - Decode Base64 text to plain text
+  hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters
+  urldecode       - Decode URL-encoded text
 
 FORMATTERS:
   jsonformatter   - Formats JSON with proper indentation
@@ -67,11 +67,11 @@ CRYPTOGRAPHY:
   sha256hash      - Computes the SHA-256 hash of the input text
 
 OTHERS:
-  csvtojson       - Converts CSV data to JSON format
-  textreverse     - Reverses the input text
   cameltosnake    - Converts camelCase or PascalCase to snake_case
-  snaketocamel    - Converts snake_case to camelCase
+  csvtojson       - Converts CSV data to JSON format
   jsontocsv       - Converts JSON data to CSV format
+  snaketocamel    - Converts snake_case to camelCase
+  textreverse     - Reverses the input text
 
 EXAMPLES:
   buup base64encode "Hello, world!"     # Encode text directly
