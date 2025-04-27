@@ -7,9 +7,9 @@ pub mod transformers;
 
 // Export the transformer structs for backward compatibility
 pub use transformers::{
-    Base64Decode, Base64Encode, CamelToSnake, CsvToJson, HexDecode, HexEncode, HtmlDecode,
-    HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, Md5HashTransformer, Rot13,
-    Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode, UrlEncode,
+    Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, HexDecode,
+    HexEncode, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, Md5HashTransformer,
+    Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode, UrlEncode,
 };
 
 /// Represents a transformation error
@@ -22,6 +22,7 @@ pub enum TransformError {
     JsonParseError(String),
     HexDecodeError(String),
     CompressionError(String),
+    InvalidArgument(std::borrow::Cow<'static, str>),
 }
 
 impl fmt::Display for TransformError {
@@ -36,6 +37,7 @@ impl fmt::Display for TransformError {
             Self::CompressionError(details) => {
                 write!(f, "Compression/decompression error: {}", details)
             }
+            Self::InvalidArgument(details) => write!(f, "Invalid argument: {}", details),
         }
     }
 }
@@ -122,9 +124,9 @@ fn register_builtin_transformers() -> Registry {
 
     // Import the new transformer
     use transformers::{
-        Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer, CamelToSnake,
-        CsvToJson, DecToBinTransformer, DecToHexTransformer, HexDecode, HexEncode,
-        HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
+        Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer, BinaryDecode,
+        BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer, DecToHexTransformer, HexDecode,
+        HexEncode, HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
         JsonMinifier, JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel,
         TextReverse, UrlDecode, UrlEncode,
     };
@@ -185,6 +187,14 @@ fn register_builtin_transformers() -> Registry {
         .transformers
         .insert(BinToHexTransformer.id(), &BinToHexTransformer);
 
+    // Added binary transformers
+    registry
+        .transformers
+        .insert(BinaryEncode.id(), &BinaryEncode);
+    registry
+        .transformers
+        .insert(BinaryDecode.id(), &BinaryDecode);
+
     registry
 }
 
@@ -239,6 +249,9 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "bin_to_dec" => transformer_from_id("dec_to_bin").ok(),
         "hex_to_bin" => transformer_from_id("bin_to_hex").ok(),
         "bin_to_hex" => transformer_from_id("hex_to_bin").ok(),
+        // Added binary transformers
+        "binaryencode" => transformer_from_id("binarydecode").ok(),
+        "binarydecode" => transformer_from_id("binaryencode").ok(),
         _ => None,
     }
 }

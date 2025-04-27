@@ -33,6 +33,7 @@ Available transformers:
 ENCODERS:
   base64encode    - Encode text to Base64 format
   bin_to_hex      - Convert binary numbers to hexadecimal.
+  binaryencode    - Encode text into its binary representation (space-separated bytes).
   dec_to_bin      - Convert decimal numbers to binary.
   dec_to_hex      - Convert decimal numbers to hexadecimal.
   hex_to_bin      - Convert hexadecimal numbers to binary.
@@ -44,6 +45,7 @@ ENCODERS:
 DECODERS:
   base64decode    - Decode Base64 text to plain text
   bin_to_dec      - Convert binary numbers to decimal.
+  binarydecode    - Decode space-separated binary representation back to text.
   hex_to_dec      - Convert hexadecimal numbers to decimal.
   hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters
@@ -136,7 +138,7 @@ To create a custom transformer:
 
 Here's a simple example of a custom transformer that reverses text:
 
-```rust
+```rust,ignore
 use buup::{Transform, TransformError};
 
 /// Text Reverse transformer
@@ -166,7 +168,7 @@ impl Transform for TextReverse {
 
 In `lib.rs`, add your transformer to the `register_builtin_transformers` function:
 
-```rust
+```rust,ignore
 fn register_builtin_transformers() -> Registry {
     let mut registry = Registry {
         transformers: HashMap::new(),
@@ -187,7 +189,7 @@ fn register_builtin_transformers() -> Registry {
 
 If your transformer will be used directly, add it to the exports in `transformers/mod.rs`:
 
-```rust
+```rust,ignore
 // src/transformers/mod.rs
 mod base64_decode;
 // ... other mods ...
@@ -202,7 +204,7 @@ pub use my_transformer::MyNewTransformer; // Your new transformer
 
 If your transformer has an inverse operation, update the `inverse_transformer` function in `lib.rs`:
 
-```rust
+```rust,ignore
 pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> {
     match t.id() {
         // ... existing matches ...
@@ -217,7 +219,7 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
 
 If your transformer has a logical inverse (like encoding/decoding), you'll want to define both:
 
-```rust
+```rust,ignore
 use buup::{Transform, TransformError};
 
 // Define the transformers
