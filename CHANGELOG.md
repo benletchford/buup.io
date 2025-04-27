@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/benletchford/buup/compare/v0.4.0...v0.5.0) (2025-04-27)
+
+
+### Features
+
+* add morse code encoder/decoder transformers ([dc8b87d](https://github.com/benletchford/buup/commit/dc8b87d907c1365f783f46440c5358d3468fa69b))
+
 ## [0.4.0](https://github.com/benletchford/buup/compare/v0.3.0...v0.4.0) (2025-04-27)
 
 
