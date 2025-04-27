@@ -36,7 +36,7 @@ jobs:
           # Use the SHA from the workflow_run event
           ref: ${{ github.event.workflow_run.head_sha }}
 
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: rust
