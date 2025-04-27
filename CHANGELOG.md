@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/benletchford/buup/compare/v0.3.0...v0.4.0) (2025-04-27)
+
+
+### Features
+
+* Add AsciiToHex and HexToAscii transformers ([6f3b2b8](https://github.com/benletchford/buup/commit/6f3b2b82dc75f5543329f1290965b6270ed4c9b2))
+
+
+### Bug Fixes
+
+* **web:** Improve responsiveness and scrolling on small screens ([22c0df4](https://github.com/benletchford/buup/commit/22c0df46388a3ff72e96fdf4e654c01db2b43800))
+
 ## [0.3.0](https://github.com/benletchford/buup/compare/v0.2.0...v0.3.0) (2025-04-27)
 
 
