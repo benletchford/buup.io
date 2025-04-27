@@ -47,34 +47,30 @@ The following transformers are currently available in Buup:
 Available transformers:
 
 ENCODERS:
+  urlencode       - Encode text for use in URLs
   hexencode       - Encode text to hexadecimal representation
   base64encode    - Encode text to Base64 format
-  urlencode       - Encode text for use in URLs
   htmlencode      - Encodes special characters to HTML entities
 
 DECODERS:
-  base64decode    - Decode Base64 text to plain text
-  htmldecode      - Decodes HTML entities back to special characters
   urldecode       - Decode URL-encoded text
   hexdecode       - Decode hexadecimal to original text
+  base64decode    - Decode Base64 text to plain text
+  htmldecode      - Decodes HTML entities back to special characters
 
 FORMATTERS:
-  jsonminifier    - Minifies JSON by removing whitespace
   jsonformatter   - Formats JSON with proper indentation
+  jsonminifier    - Minifies JSON by removing whitespace
 
 CRYPTOGRAPHY:
   md5hash         - Computes the MD5 hash of the input text
   sha256hash      - Computes the SHA-256 hash of the input text
 
-COMPRESSION:
-  lzwcompress     - Compresses byte sequence using LZW algorithm (variable width, max 12-bit) and outputs as hex
-  lzwdecompress   - Decompresses hex LZW-compressed data (variable width, max 12-bit) back to original text
-
 OTHERS:
-  cameltosnake    - Converts camelCase or PascalCase to snake_case
-  snaketocamel    - Converts snake_case to camelCase
   csvtojson       - Converts CSV data to JSON format
   textreverse     - Reverses the input text
+  cameltosnake    - Converts camelCase or PascalCase to snake_case
+  snaketocamel    - Converts snake_case to camelCase
   jsontocsv       - Converts JSON data to CSV format
 
 EXAMPLES:
