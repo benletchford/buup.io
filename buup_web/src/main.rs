@@ -386,10 +386,8 @@ fn App() -> Element {
                 background: {bg}; 
                 color: {text}; 
                 transition: background 0.3s ease, color 0.3s ease;
-                min-height: 100vh;
-                height: 100vh;
+                min-height: 100vh; /* Ensure body takes at least full height */
                 width: 100vw;
-                overflow: hidden;
             }}
             
             button, select, input {{
@@ -401,7 +399,7 @@ fn App() -> Element {
                 max-width: 1200px; 
                 margin: 0 auto; 
                 padding: 2rem;
-                height: 100vh;
+                min-height: 100vh; /* Use min-height instead of height */
                 display: flex;
                 flex-direction: column;
             }}
@@ -733,8 +731,7 @@ fn App() -> Element {
                 flex: 1; 
                 position: relative;
                 display: flex;
-                overflow: hidden;
-                max-height: 650px; /* Increased from 450px */
+                max-height: 650px; /* Keep max-height for desktop */
             }}
             
             .textarea {{ 
@@ -818,6 +815,8 @@ fn App() -> Element {
             @media (max-width: 768px) {{
                 .container {{ 
                     padding: 1rem; 
+                    /* Ensure container still respects viewport height */
+                    min-height: 100vh; 
                 }}
                 
                 /* Restructure panels for mobile */
@@ -825,11 +824,22 @@ fn App() -> Element {
                     display: flex;
                     flex-direction: column;
                     gap: 1rem; /* Consistent gap value */
+                    flex: 1; /* Ensure panels try to fill remaining space */
+                    min-height: 0; /* Allow panels container to shrink */
                 }}
                 
                 /* Make panels larger on mobile */
                 .panel {{
-                    min-height: 200px; /* Add minimum height for panels on mobile */
+                    /* Removed min-height: 200px; Allow panels to shrink based on content */
+                    max-height: none; /* Remove desktop max-height on mobile */
+                    flex-shrink: 1; /* Allow panels to shrink if needed */
+                    min-height: 150px; /* Add a smaller min-height for better structure */
+                }}
+
+                .textarea-container {{
+                    max-height: none; /* Remove desktop max-height */
+                    min-height: 100px; /* Ensure textarea is at least minimally visible */
+                    overflow: auto; /* Ensure scrolling within container is possible */
                 }}
                 
                 /* Make swap button full width on mobile */
