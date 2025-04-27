@@ -40,6 +40,7 @@ ENCODERS:
   hex_to_bin      - Convert hexadecimal numbers to binary.
   hexencode       - Encode text to hexadecimal representation
   htmlencode      - Encodes special characters to HTML entities
+  morseencode     - Encode text to Morse code
   rot13           - Applies the ROT13 substitution cipher to the input text.
   urlencode       - Encode text for use in URLs
 
@@ -51,6 +52,7 @@ DECODERS:
   hex_to_dec      - Convert hexadecimal numbers to decimal.
   hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters
+  morsedecode     - Decode Morse code to text
   urldecode       - Decode URL-encoded text
 
 FORMATTERS:

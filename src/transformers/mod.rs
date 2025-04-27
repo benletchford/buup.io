@@ -27,6 +27,10 @@ pub mod text_reverse;
 pub mod url_decode;
 pub mod url_encode;
 
+// Add morse code transformers
+pub mod morse_decode;
+pub mod morse_encode;
+
 pub use self::ascii_to_hex::AsciiToHex;
 pub use self::base64_decode::Base64Decode;
 pub use self::base64_encode::Base64Encode;
@@ -55,3 +59,7 @@ pub use self::snake_to_camel::SnakeToCamel;
 pub use self::text_reverse::TextReverse;
 pub use self::url_decode::UrlDecode;
 pub use self::url_encode::UrlEncode;
+
+// Export morse code transformers
+pub use self::morse_decode::MorseDecode;
+pub use self::morse_encode::MorseEncode;

@@ -129,8 +129,8 @@ fn register_builtin_transformers() -> Registry {
         BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
         DecToHexTransformer, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
         HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
-        Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode,
-        UrlEncode,
+        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha256HashTransformer, SnakeToCamel,
+        TextReverse, UrlDecode, UrlEncode,
     };
 
     // Register built-in transformers
@@ -200,6 +200,10 @@ fn register_builtin_transformers() -> Registry {
     registry.transformers.insert(AsciiToHex.id(), &AsciiToHex);
     registry.transformers.insert(HexToAscii.id(), &HexToAscii);
 
+    // Register morse code transformers
+    registry.transformers.insert(MorseEncode.id(), &MorseEncode);
+    registry.transformers.insert(MorseDecode.id(), &MorseDecode);
+
     registry
 }
 
@@ -259,6 +263,9 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "binarydecode" => transformer_from_id("binaryencode").ok(),
         "ascii_to_hex" => transformer_from_id("hex_to_ascii").ok(),
         "hex_to_ascii" => transformer_from_id("ascii_to_hex").ok(),
+        // Add morse code inverses
+        "morseencode" => transformer_from_id("morsedecode").ok(),
+        "morsedecode" => transformer_from_id("morseencode").ok(),
         _ => None,
     }
 }
