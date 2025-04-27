@@ -1,6 +1,6 @@
 [package]
 name = "buup_web"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Ben Letchford <me@benletchford.com>"]
 edition = "2021"
 description = "Web UI for Buup text transformation utilities"
