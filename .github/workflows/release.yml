@@ -132,24 +132,17 @@ jobs:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
   publish-gh-pages:
-    name: Publish GitHub Pages
-    # Run in parallel with publish, only needs release-please to have created a tag
+    name: Publish buup_web app to GitHub Pages
     needs: [release-please, update-readme]
     runs-on: ubuntu-latest
     if: needs.release-please.outputs.created == 'true'
     permissions:
       contents: write # Needed to push to gh-pages branch
-    # Optional: Configure GitHub Pages environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repository at release tag
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.release-please.outputs.tag_name }}
 
-      - name: Install Rust with wasm target
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
@@ -157,20 +150,15 @@ jobs:
       - name: Install trunk
         uses: jetli/trunk-action@v0.4.0
 
-      - name: Build web application
-        # Ensure we are in the correct directory
-        run: dx build --release
+      - name: Run Dioxus Deploy Action
         working-directory: ./buup_web
+        run: |
+          # This will run the equivalent of the Dioxus deploy action in the buup_web directory
+          cargo install dioxus-cli
+          dx build --release
 
       - name: Deploy to GitHub Pages
-        id: deployment # Give the step an ID to reference its outputs
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          # The folder the action should deploy.
-          folder: buup_web/dist # Correct path after dx build
-          # The branch the action should deploy to.
+          folder: target/dx/buup_web/release/web/public
           branch: gh-pages
-          # Optional: Prevent smelly commits
-          clean: true
-          # Optional: Commit message
-          commit-message: "Deploy web release ${{ needs.release-please.outputs.tag_name }}"
