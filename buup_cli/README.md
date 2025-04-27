@@ -1,99 +1,146 @@
 # Buup CLI
 
-A command-line interface for the Buup text transformation utilities.
+A command-line interface for the `buup` text transformation utilities.
 
 ## Installation
 
+Make sure you have Rust and Cargo installed. Then, you can install `buup_cli` from the source:
+
+```bash
+# Navigate to the root of the buup repository
+cd /path/to/buup
+
+# Install the CLI binary
+cargo install --path buup_cli
+
+# Verify installation
+buup --version
 ```
-cargo install --path .
+
+Alternatively, you can run it directly from the source using `cargo run`:
+
+```bash
+# From the workspace root
+cargo run --bin buup -- --help
 ```
 
 ## Usage
 
-### List available transformers
+### Listing Transformers
 
-```
+To see all available transformers, categorized by type:
+
+```bash
 buup list
 ```
 
-### Transform text using a specific transformer
+### Transforming Text
 
-```
-# Using the transform command with a transformer ID
-buup transform --transformer base64encode --input file.txt --output encoded.txt
+There are two main ways to apply a transformation:
 
-# Direct transformer commands
-buup base64encode --input file.txt --output encoded.txt
-buup base64decode --input encoded.txt --output decoded.txt
-buup urlencode --input file.txt --output encoded.txt
-buup urldecode --input encoded.txt --output decoded.txt
-```
+1.  **Using the `transform` subcommand:** Specify the transformer ID.
 
-### Input/Output Methods
+    ```bash
+    buup transform --transformer <TRANSFORMER_ID> [options] [input_text]
+    ```
 
-Buup CLI supports three ways to provide input:
+2.  **Using direct transformer subcommands:** Most transformers have their own subcommand named after their ID.
 
-1. Directly on the command line:
+    ```bash
+    buup <TRANSFORMER_ID> [options] [input_text]
+    ```
 
-```
-buup base64encode "Hello, World!"
-# Output: SGVsbG8sIFdvcmxkIQ==
-```
+### Input Methods
 
-2. From a file:
+Buup CLI accepts input in three ways:
 
-```
-buup base64encode --input file.txt
-```
+1.  **Direct Argument:** Provide the text directly after the command.
 
-3. From stdin (pipe):
+    ```bash
+    buup base64encode "Hello, CLI!"
+    # Output: SGVsbG8sIENMSSENQ==
+    ```
 
-```
-echo "Hello, World!" | buup base64encode
-# Output: SGVsbG8sIFdvcmxkIQ==
-```
+2.  **From a File:** Use the `--input` or `-i` option.
 
-And two ways to output results:
+    ```bash
+    echo "Input from file." > input.txt
+    buup urlencode --input input.txt
+    # Output: Input+from+file.
+    ```
 
-1. To stdout (default):
+3.  **From Stdin (Pipe):** Pipe the output of another command into `buup`.
 
-```
-buup base64encode "Hello, World!"
-```
+    ```bash
+    echo "Piped input." | buup hexencode
+    # Output: 506970656420696e7075742e
+    ```
 
-2. To a file:
+_Note: If input is provided via multiple methods (e.g., direct argument and `-i`), the direct argument takes precedence._
 
-```
-buup base64encode "Hello, World!" --output encoded.txt
+### Output Methods
+
+Results can be output in two ways:
+
+1.  **To Stdout (Default):** The transformed text is printed to the terminal.
+
+    ```bash
+    buup textreverse "Output to stdout."
+    # Output: .tuodts ot tuptuO
+    ```
+
+2.  **To a File:** Use the `--output` or `-o` option.
+
+    ```bash
+    buup jsonformatter '{"a": 1, "b": 2}' --output formatted.json
+    # formatted.json will contain the indented JSON
+    ```
+
+### Chaining Transformations
+
+You can easily pipe the output of one `buup` command into another:
+
+```bash
+echo "Chain Example" | buup base64encode | buup textreverse
+# Output: ==QklESBhZWFlOiJBY0
+
+# Verify by decoding
+echo "==QklESBhZWFlOiJBY0" | buup textreverse | buup base64decode
+# Output: Chain Example
 ```
 
 ### Examples
 
-```
+```bash
 # Encode text directly
 buup base64encode "Hello, World!"
 # Output: SGVsbG8sIFdvcmxkIQ==
 
-# Decode base64 text
-buup base64decode SGVsbG8sIFdvcmxkIQ==
+# Decode base64 text from a file
+echo "SGVsbG8sIFdvcmxkIQ==" > encoded.txt
+buup base64decode --input encoded.txt
 # Output: Hello, World!
 
-# Pipe data through transformers
-echo "Hello, World!" | buup base64encode | buup base64decode
-# Output: Hello, World!
+# URL encode text with special characters via pipe
+echo "Email test@example.com?subject=test" | buup urlencode
+# Output: Email+test%40example.com%3Fsubject%3Dtest
 
-# URL encode text with spaces and special characters
-buup urlencode "Hello, World! ?&="
-# Output: Hello%2C+World%21+%3F%26%3D
+# Convert JSON to CSV and save to file
+echo '[{"name":"Alice","age":30},{"name":"Bob","age":25}]' | buup jsontocsv --output users.csv
+# users.csv will contain:
+# name,age
+# Alice,30
+# Bob,25
 
-# URL decode text
-buup urldecode "Hello%2C+World%21+%3F%26%3D"
-# Output: Hello, World! ?&=
+# Calculate SHA-256 hash
+buup sha256hash "my secret password"
+# Output: 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
 ```
 
 ## Available Transformers
 
-- `base64encode` - Encode text to Base64 format
-- `base64decode` - Decode Base64 text to plain text
-- `urlencode` - Encode text for use in URLs
-- `urldecode` - Decode URL-encoded text
+To get the most up-to-date list of available transformers and their descriptions, run:
+
+```bash
+buup list
+```

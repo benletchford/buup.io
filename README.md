@@ -38,10 +38,10 @@ This zero-dependency approach makes Buup suitable for security-critical applicat
 
 ## Interfaces
 
-- **[Web UI](buup_web/README.md)** - A sleek, modern interface built with Dioxus
-  - Responsive design that works on mobile and desktop
-  - Customizable dark/light themes
-- **[CLI](buup_cli/README.md)** - A command-line interface for scripting and automation
+Buup offers two primary interfaces:
+
+- **[Web UI](buup_web/README.md)**: A sleek, modern web interface built with Dioxus. Ideal for interactive use. See the [Web UI README](buup_web/README.md) for setup and usage details.
+- **[CLI](buup_cli/README.md)**: A command-line interface suitable for scripting, automation, and terminal-based workflows. See the [CLI README](buup_cli/README.md) for installation and command details.
 
 ## Available Transformers
 
@@ -85,77 +85,24 @@ EXAMPLES:
 
 ## Usage as a Library
 
-The foundation of Buup is a dependency-free Rust library implementing common text transformations:
+The core `buup` crate can be used directly in your Rust projects.
 
 ```rust
 // In your Cargo.toml:
 // [dependencies]
-// buup = "0.1.0"
+// buup = { version = "0.1" } // Replace with the desired version
 
-use buup::Base64Encode;
+use buup::{transformer_from_id, Transform, Base64Encode};
 
-// You can directly use the library like this:
-let result = Base64Encode.transform("Hello, World!").unwrap();
-println!("{}", result); // Outputs: SGVsbG8sIFdvcmxkIQ==
+// Option 1: Use a specific transformer struct
+let encoded = Base64Encode.transform("Hello, Library!").unwrap();
+println!("{}", encoded); // Outputs: SGVsbG8sIExpYnJhcnkh
 
-// -- or --
-
-let transformer = transformer_from_id("base64encode").unwrap();
-let result = transformer.transform("Hello, World!").unwrap();
-println!("{}", result); // Outputs: SGVsbG8sIFdvcmxkIQ==
+// Option 2: Look up a transformer by its ID
+let transformer = transformer_from_id("base64decode").unwrap();
+let decoded = transformer.transform(&encoded).unwrap();
+println!("{}", decoded); // Outputs: Hello, Library!
 ```
-
-## Extending with Custom Transformers
-
-Buup features a modular transformer system that allows you to add new transformers by following a standard pattern.
-
-```rust
-use buup::{Transform, TransformError, TransformerCategory};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct MyCustomTransformer;
-
-impl Transform for MyCustomTransformer {
-    fn name(&self) -> &'static str {
-        "My Custom Transformer"
-    }
-
-    fn id(&self) -> &'static str {
-        "my_custom_transformer"
-    }
-
-    fn description(&self) -> &'static str {
-        "Describes what your transformer does"
-    }
-
-    fn category(&self) -> TransformerCategory {
-        TransformerCategory::Other
-    }
-
-    fn transform(&self, input: &str) -> Result<String, TransformError> {
-        // Your transformation logic here
-        Ok(input.to_uppercase())
-    }
-}
-```
-
-For more details on creating custom transformers, see the [transformer documentation](src/transformers/examples.md).
-
-## Using in Your Projects
-
-The `buup` crate can be used as a standalone dependency in any Rust project:
-
-```toml
-[dependencies]
-buup = "0.1.0"
-```
-
-This will give you access to all transformers without pulling in any UI-related dependencies. The core library is designed to be lightweight and focused, making it ideal for:
-
-- Embedding in larger applications that need text transformation capabilities
-- Server-side processing where UIs aren't needed
-- Building your own specialized interfaces on top of the transformation engine
-- Adding text utilities to embedded systems or WebAssembly modules
 
 ## API Examples
 
@@ -164,18 +111,19 @@ This will give you access to all transformers without pulling in any UI-related 
 ```rust
 use buup::{transformer_from_id, Transform};
 
-// Example of basic transformer usage:
 // Get a transformer by ID
-let transformer = transformer_from_id("base64encode").unwrap();
+let transformer = transformer_from_id("urlencode").unwrap();
 
 // Transform some text
-let result = transformer.transform("Hello, World!").unwrap();
-assert_eq!(result, "SGVsbG8sIFdvcmxkIQ==");
+let result = transformer.transform("query string?").unwrap();
+assert_eq!(result, "query+string%3F");
 
 // Find the inverse transformer
 if let Some(inverse) = buup::inverse_transformer(transformer) {
     let original = inverse.transform(&result).unwrap();
-    assert_eq!(original, "Hello, World!");
+    assert_eq!(original, "query string?");
+} else {
+    println!("Transformer '{}' has no inverse.", transformer.id());
 }
 ```
 
@@ -184,18 +132,62 @@ if let Some(inverse) = buup::inverse_transformer(transformer) {
 ```rust
 use buup::{all_transformers, Transform};
 
-// Example of listing all available transformers:
+println!("Available Transformers:");
 for transformer in all_transformers() {
     println!(
-        "{} ({}): {}",
+        "- {} ({}) [{}]: {}",
         transformer.name(),
         transformer.id(),
+        transformer.category(), // Display category
         transformer.description()
     );
 }
 ```
 
-All implementations are written in pure Rust with zero external dependencies, ensuring security, portability, and performance.
+### Categorized Transformers
+
+```rust
+use buup::categorized_transformers;
+
+let categorized = categorized_transformers();
+
+for (category, transformers) in categorized {
+    println!("
+{}:", category.to_string().to_uppercase());
+    for transformer in transformers {
+        println!("  - {}", transformer.id());
+    }
+}
+```
+
+## Extending with Custom Transformers
+
+Buup is designed to be extensible. You can add your own transformers by implementing the `Transform` trait.
+
+```rust
+use buup::{Transform, TransformError, TransformerCategory};
+
+// Define your transformer struct
+#[derive(Debug, Clone, Copy)]
+pub struct UppercaseTransformer;
+
+impl Transform for UppercaseTransformer {
+    fn name(&self) -> &'static str { "Uppercase" }
+    fn id(&self) -> &'static str { "uppercase" }
+    fn description(&self) -> &'static str { "Converts text to uppercase." }
+    fn category(&self) -> TransformerCategory { TransformerCategory::Other }
+
+    fn transform(&self, input: &str) -> Result<String, TransformError> {
+        Ok(input.to_uppercase())
+        // Handle potential errors by returning Err(TransformError::...)
+    }
+}
+
+// To integrate, you would typically add it to the registry
+// (This requires modifying the core `buup` library or managing your own registry)
+```
+
+For detailed guidance, refer to the `buup` library documentation.
 
 ## Building From Source
 
@@ -204,35 +196,34 @@ All implementations are written in pure Rust with zero external dependencies, en
 git clone https://github.com/benletchford/buup.git
 cd buup
 
-# Build everything
+# Build the entire workspace (library, CLI, web)
 cargo build --release
 
-# Run the CLI
-cd buup_cli
-cargo run -- list
+# Run the CLI (from workspace root)
+cargo run --bin buup -- list
 
-# Run the web UI
+# Serve the web UI (requires Dioxus CLI)
+# cargo install dioxus-cli # If not already installed
 cd buup_web
 dx serve
 ```
 
 ## Contributing
 
-When adding new transformers, follow these guidelines:
+Contributions are welcome! When adding new transformers or modifying core logic, please ensure:
 
-1. **No external dependencies**: Implement everything in pure Rust
-2. **Comprehensive tests**: Each transformer must have thorough unit tests
-3. **Clear error handling**: All potential errors should be properly handled with descriptive messages
-4. **Documentation**: Include examples and edge cases in documentation
+1.  **Zero external dependencies** in the core `buup` library.
+2.  **Comprehensive tests** covering functionality and edge cases.
+3.  **Clear error handling** using `TransformError`.
+4.  **Appropriate documentation** (doc comments, README updates if applicable).
+5.  Run `cargo test --workspace` and `cargo clippy --workspace -- -D warnings`.
 
 ## Documentation Generation
 
-The README.md is automatically updated with the latest list of transformers. This happens in two ways:
+The list of available transformers in this README is automatically generated. To update it manually after adding or modifying transformers, run:
 
-1. **GitHub Actions**: Whenever changes are pushed to the main branch that affect the transformers, GitHub Actions automatically updates the README
-2. **Manual Update**: You can manually update the README by running:
-   ```bash
-   cargo run --bin update_readme
-   ```
+```bash
+cargo run --bin update_readme
+```
 
-This ensures the documentation always stays in sync with the actual available transformers.
+This ensures the documentation stays synchronized with the code.
