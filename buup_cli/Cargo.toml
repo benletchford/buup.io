@@ -1,6 +1,6 @@
 [package]
 name = "buup_cli"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Ben Letchford <me@benletchford.com>"]
 edition = "2021"
 description = "CLI for Buup text transformation utilities"
