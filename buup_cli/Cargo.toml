@@ -1,0 +1,15 @@
+[package]
+name = "buup_cli"
+version = "0.1.0"
+authors = ["Ben Letchford <me@benletchford.com>"]
+edition = "2021"
+description = "CLI for Buup text transformation utilities"
+
+[dependencies]
+buup = { path = ".." }
+clap = { version = "4.5.37", features = ["derive"] }
+anyhow = "1.0.98"
+
+[[bin]]
+name = "buup"
+path = "src/main.rs"

@@ -1,0 +1,29 @@
+[package]
+name = "buup"
+version = "0.1.0"
+authors = ["Ben Letchford <me@benletchford.com>"]
+edition = "2021"
+description = "Core transformation library with zero dependencies"
+
+[dependencies]
+dioxus-helmet = "0.2.4"
+# Strictly no external dependencies
+
+[workspace]
+members = ["buup_cli", "buup_web"]
+
+[[bin]]
+name = "update_readme"
+path = "update_readme.rs"
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

@@ -1,0 +1,18 @@
+[application]
+
+[web.app]
+# HTML title tag content
+title = "Buup - Text Utility Belt"
+
+[web.watcher]
+
+[web.resource]
+# Configure the directory for static assets
+asset_dir = "assets"
+# Additional CSS style files
+style = []
+# Additional JavaScript files
+script = []
+
+[web.resource.dev]
+script = []

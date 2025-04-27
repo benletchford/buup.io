@@ -1,0 +1,38 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install trunk
+        uses: jetli/trunk-action@v0.4.0
+
+      - name: Run Dioxus Deploy Action
+        working-directory: ./buup_web
+        run: |
+          # This will run the equivalent of the Dioxus deploy action in the buup_web directory
+          cargo install dioxus-cli
+          dx build --release
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: target/dx/buup_web/release/web/public
+          branch: gh-pages
