@@ -29,6 +29,7 @@ jobs:
     outputs:
       created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      upload_url: ${{ steps.release.outputs.upload_url }}
     steps:
       # Checkout the code from the commit that triggered the Rust CI workflow
       - uses: actions/checkout@v4
@@ -162,3 +163,75 @@ jobs:
         with:
           folder: target/dx/buup_web/release/web/public
           branch: gh-pages
+
+  build-and-upload-binaries:
+    name: Build & Upload Binaries
+    needs: release-please
+    if: needs.release-please.outputs.created == 'true'
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write # Needed to upload release assets
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            asset_ext: tar.gz
+            binary_ext: ""
+          - os: macos-latest # Should default to x86_64 runner
+            target: x86_64-apple-darwin
+            asset_ext: tar.gz
+            binary_ext: ""
+          - os: macos-latest # M1/M2 Macs
+            target: aarch64-apple-darwin
+            asset_ext: tar.gz
+            binary_ext: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            asset_ext: zip
+            binary_ext: .exe
+
+    steps:
+      - name: Checkout code for the release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: ${{ matrix.target }}
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build binary
+        run: cargo build --release -p buup_cli --target ${{ matrix.target }}
+
+      - name: Prepare artifacts (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          strip buup || true # Try stripping, ignore if fails
+          tar czf ../../../buup-${{ needs.release-please.outputs.tag_name }}-${{ matrix.target }}.tar.gz buup
+          cd ../../..
+        shell: bash
+
+      - name: Prepare artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          # Use Compress-Archive from PowerShell standard library
+          Compress-Archive -Path buup.exe -DestinationPath ../../../buup-${{ needs.release-please.outputs.tag_name }}-${{ matrix.target }}.zip
+          cd ../../..
+        shell: pwsh # Use PowerShell
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release-please.outputs.upload_url }}
+          asset_path: ./buup-${{ needs.release-please.outputs.tag_name }}-${{ matrix.target }}.${{ matrix.asset_ext }}
+          asset_name: buup-${{ needs.release-please.outputs.tag_name }}-${{ matrix.target }}.${{ matrix.asset_ext }}
+          asset_content_type: application/zip # Use application/zip consistently
