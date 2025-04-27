@@ -1179,21 +1179,25 @@ fn App() -> Element {
 
             // Footer
             div { class: "footer",
-                "Made with "
-                span { class: "heart", "❤" }
-                " by "
-                a {
-                    href: "https://benletchford.com",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    "Ben Letchford"
+                span {
+                    {"Made with "}
+                    span { class: "heart", "❤" }
+                    {" by "}
+                    a {
+                        href: "https://benletchford.com",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        "Ben Letchford"
+                    }
+                    {" "}
                 }
-                " | "
-                a {
-                    href: "https://github.com/benletchford/buup",
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    "Open Source on GitHub"
+                span {
+                    a {
+                        href: format!("{}/releases/tag/v{}", env!("CARGO_PKG_REPOSITORY"), env!("CARGO_PKG_VERSION")),
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        {format!("({}-{})", env!("CARGO_PKG_VERSION"), env!("BUUP_WEB_GIT_HASH"))}
+                    }
                 }
             }
         }

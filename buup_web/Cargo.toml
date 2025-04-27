@@ -4,6 +4,7 @@ version = "0.2.0"
 authors = ["Ben Letchford <me@benletchford.com>"]
 edition = "2021"
 description = "Web UI for Buup text transformation utilities"
+repository = "https://github.com/benletchford/buup"
 
 [dependencies]
 buup = { path = ".." }
