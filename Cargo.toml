@@ -6,7 +6,6 @@ edition = "2021"
 description = "Core transformation library with zero dependencies"
 
 [dependencies]
-dioxus-helmet = "0.2.4"
 # Strictly no external dependencies
 
 [workspace]
