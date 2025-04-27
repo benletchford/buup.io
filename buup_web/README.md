@@ -1,53 +1,40 @@
 # Buup Web
 
-A clean, minimalist web interface for Buup text transformations, inspired by Apple and Google design principles.
+A clean, minimalist web interface for Buup text transformations, built with Dioxus.
 
 ## Features
 
-- Clean, minimalist design with focus on content
-- Categorized transformer selection
-- Quick search functionality to find transformations
-- Elegant dark/light mode toggle
+- Modern design with light/dark mode support
+- Category-based transformer organization
+- Fast search functionality
 - Copy results with a single click
+- Responsive design for all screen sizes
 - Smooth animations and transitions
-- Responsive design for all devices
-- Clear visual hierarchy
-- Native feeling UI
-- Sensible max heights for input and output areas
-- Informative footer with attribution and links
-
-## Running Locally
-
-```bash
-# Make sure you have the Dioxus CLI installed
-cargo install dioxus-cli
-
-# Run the web app in development mode
-dx serve
-```
-
-## Building for Production
-
-```bash
-# Build static files for web
-dx build --release
-```
-
-## Design Philosophy
-
-The interface was crafted with these principles in mind:
-
-- **Content First**: The transformers and text are the focus
-- **Minimal Distractions**: UI elements appear only when needed
-- **Intuitive Interactions**: Familiar patterns that feel natural
-- **Typography Matters**: Clear, legible text with proper hierarchy
-- **Thoughtful Animation**: Subtle cues to enhance understanding
-- **Adaptable Design**: Works beautifully across all screen sizes
-- **Accessibility**: Design that works for everyone
 
 ## Development
 
-The application is built using:
+### Prerequisites
 
-- [Dioxus](https://dioxuslabs.com/) - A React-like framework for Rust
+```bash
+# Install Dioxus CLI
+cargo install dioxus-cli
+```
+
+### Running Locally
+
+```bash
+# Start development server
+dx serve
+```
+
+### Building for Production
+
+```bash
+# Generate production-ready static files
+dx build --release
+```
+
+### Technologies
+
+- [Dioxus](https://dioxuslabs.com/) - React-like framework for Rust
 - [buup](../) - Core text transformation library
