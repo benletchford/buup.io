@@ -32,6 +32,10 @@ Available transformers:
 
 ENCODERS:
   base64encode    - Encode text to Base64 format
+  bin_to_hex      - Convert binary numbers to hexadecimal.
+  dec_to_bin      - Convert decimal numbers to binary.
+  dec_to_hex      - Convert decimal numbers to hexadecimal.
+  hex_to_bin      - Convert hexadecimal numbers to binary.
   hexencode       - Encode text to hexadecimal representation
   htmlencode      - Encodes special characters to HTML entities
   rot13           - Applies the ROT13 substitution cipher to the input text.
@@ -39,6 +43,8 @@ ENCODERS:
 
 DECODERS:
   base64decode    - Decode Base64 text to plain text
+  bin_to_dec      - Convert binary numbers to decimal.
+  hex_to_dec      - Convert hexadecimal numbers to decimal.
   hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters
   urldecode       - Decode URL-encoded text

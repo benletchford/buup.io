@@ -121,7 +121,13 @@ fn register_builtin_transformers() -> Registry {
     };
 
     // Import the new transformer
-    use transformers::{CsvToJson, JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer};
+    use transformers::{
+        Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer, CamelToSnake,
+        CsvToJson, DecToBinTransformer, DecToHexTransformer, HexDecode, HexEncode,
+        HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
+        JsonMinifier, JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel,
+        TextReverse, UrlDecode, UrlEncode,
+    };
 
     // Register built-in transformers
     registry
@@ -158,6 +164,26 @@ fn register_builtin_transformers() -> Registry {
     registry.transformers.insert(CsvToJson.id(), &CsvToJson);
     registry.transformers.insert(JsonToCsv.id(), &JsonToCsv);
     registry.transformers.insert(Rot13.id(), &Rot13);
+
+    // Register new base conversion transformers
+    registry
+        .transformers
+        .insert(DecToHexTransformer.id(), &DecToHexTransformer);
+    registry
+        .transformers
+        .insert(HexToDecTransformer.id(), &HexToDecTransformer);
+    registry
+        .transformers
+        .insert(DecToBinTransformer.id(), &DecToBinTransformer);
+    registry
+        .transformers
+        .insert(BinToDecTransformer.id(), &BinToDecTransformer);
+    registry
+        .transformers
+        .insert(HexToBinTransformer.id(), &HexToBinTransformer);
+    registry
+        .transformers
+        .insert(BinToHexTransformer.id(), &BinToHexTransformer);
 
     registry
 }
@@ -206,6 +232,13 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "cameltosnake" => transformer_from_id("snaketocamel").ok(),
         "snaketocamel" => transformer_from_id("cameltosnake").ok(),
         "rot13" => transformer_from_id("rot13").ok(),
+        // Add quasi-inverses for base conversions (no direct inverse function, but conceptually paired)
+        "dec_to_hex" => transformer_from_id("hex_to_dec").ok(),
+        "hex_to_dec" => transformer_from_id("dec_to_hex").ok(),
+        "dec_to_bin" => transformer_from_id("bin_to_dec").ok(),
+        "bin_to_dec" => transformer_from_id("dec_to_bin").ok(),
+        "hex_to_bin" => transformer_from_id("bin_to_hex").ok(),
+        "bin_to_hex" => transformer_from_id("hex_to_bin").ok(),
         _ => None,
     }
 }
