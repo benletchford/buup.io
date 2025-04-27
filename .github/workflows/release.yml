@@ -1,10 +1,14 @@
 name: Release Please
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Rust CI"] # Name of the CI workflow file (rust.yml)
+    types:
+      - completed
     branches:
       - master
-  # Define workflow outputs
+
+  # Keep workflow_call if needed for other workflows to get release info
   workflow_call:
     outputs:
       release_created:
@@ -20,10 +24,18 @@ jobs:
   release-please:
     name: Run release-please
     runs-on: ubuntu-latest
+    # Add condition to only run if the triggering workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
       created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
+      # Checkout the code from the commit that triggered the Rust CI workflow
+      - uses: actions/checkout@v4
+        with:
+          # Use the SHA from the workflow_run event
+          ref: ${{ github.event.workflow_run.head_sha }}
+
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
@@ -37,7 +49,8 @@ jobs:
     name: Update README.md
     needs: release-please
     runs-on: ubuntu-latest
-    # Only run if release-please created a new release
+    # This job already checks if release-please created a release.
+    # The overall workflow only runs if Rust CI succeeded, so this implicitly depends on CI success.
     if: needs.release-please.outputs.created == 'true'
     permissions:
       contents: write # Need write access to push changes
@@ -91,7 +104,7 @@ jobs:
     # Now depends on update-readme completing successfully
     needs: [release-please, update-readme]
     runs-on: ubuntu-latest
-    # Only run if release-please created a new release
+    # This job also already checks if release-please created a release.
     if: needs.release-please.outputs.created == 'true'
     environment: # Optional: Use GitHub Environments for added security/control
       name: crates_io
