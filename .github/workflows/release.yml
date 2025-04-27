@@ -130,3 +130,47 @@ jobs:
           # CARGO_REGISTRY_TOKEN needs to be set in GitHub Secrets
           # (or Environment Secrets if using GitHub Environments)
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  publish-gh-pages:
+    name: Publish GitHub Pages
+    # Run in parallel with publish, only needs release-please to have created a tag
+    needs: [release-please, update-readme]
+    runs-on: ubuntu-latest
+    if: needs.release-please.outputs.created == 'true'
+    permissions:
+      contents: write # Needed to push to gh-pages branch
+    # Optional: Configure GitHub Pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository at release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+
+      - name: Install Rust with wasm target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install trunk
+        uses: jetli/trunk-action@v0.4.0
+
+      - name: Build web application
+        # Ensure we are in the correct directory
+        run: dx build --release
+        working-directory: ./buup_web
+
+      - name: Deploy to GitHub Pages
+        id: deployment # Give the step an ID to reference its outputs
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          # The folder the action should deploy.
+          folder: buup_web/dist # Correct path after dx build
+          # The branch the action should deploy to.
+          branch: gh-pages
+          # Optional: Prevent smelly commits
+          clean: true
+          # Optional: Commit message
+          commit-message: "Deploy web release ${{ needs.release-please.outputs.tag_name }}"
