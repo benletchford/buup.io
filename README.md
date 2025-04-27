@@ -31,6 +31,7 @@ The following transformers are currently available in Buup:
 Available transformers:
 
 ENCODERS:
+  ascii_to_hex    - Convert ASCII characters to their hexadecimal representation.
   base64encode    - Encode text to Base64 format
   bin_to_hex      - Convert binary numbers to hexadecimal.
   binaryencode    - Encode text into its binary representation (space-separated bytes).
@@ -46,6 +47,7 @@ DECODERS:
   base64decode    - Decode Base64 text to plain text
   bin_to_dec      - Convert binary numbers to decimal.
   binarydecode    - Decode space-separated binary representation back to text.
+  hex_to_ascii    - Convert hexadecimal representation back to ASCII characters.
   hex_to_dec      - Convert hexadecimal numbers to decimal.
   hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters

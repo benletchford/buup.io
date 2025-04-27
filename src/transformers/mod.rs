@@ -1,3 +1,4 @@
+pub mod ascii_to_hex;
 pub mod base64_decode;
 pub mod base64_encode;
 pub mod bin_to_dec;
@@ -10,6 +11,7 @@ pub mod dec_to_bin;
 pub mod dec_to_hex;
 pub mod hex_decode;
 pub mod hex_encode;
+pub mod hex_to_ascii;
 pub mod hex_to_bin;
 pub mod hex_to_dec;
 pub mod html_decode;
@@ -25,6 +27,7 @@ pub mod text_reverse;
 pub mod url_decode;
 pub mod url_encode;
 
+pub use self::ascii_to_hex::AsciiToHex;
 pub use self::base64_decode::Base64Decode;
 pub use self::base64_encode::Base64Encode;
 pub use self::bin_to_dec::BinToDecTransformer;
@@ -37,6 +40,7 @@ pub use self::dec_to_bin::DecToBinTransformer;
 pub use self::dec_to_hex::DecToHexTransformer;
 pub use self::hex_decode::HexDecode;
 pub use self::hex_encode::HexEncode;
+pub use self::hex_to_ascii::HexToAscii;
 pub use self::hex_to_bin::HexToBinTransformer;
 pub use self::hex_to_dec::HexToDecTransformer;
 pub use self::html_decode::HtmlDecode;

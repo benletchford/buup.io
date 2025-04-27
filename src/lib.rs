@@ -7,9 +7,10 @@ pub mod transformers;
 
 // Export the transformer structs for backward compatibility
 pub use transformers::{
-    Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, HexDecode,
-    HexEncode, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, Md5HashTransformer,
-    Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode, UrlEncode,
+    AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
+    HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
+    JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse,
+    UrlDecode, UrlEncode,
 };
 
 /// Represents a transformation error
@@ -124,11 +125,12 @@ fn register_builtin_transformers() -> Registry {
 
     // Import the new transformer
     use transformers::{
-        Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer, BinaryDecode,
-        BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer, DecToHexTransformer, HexDecode,
-        HexEncode, HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
-        JsonMinifier, JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel,
-        TextReverse, UrlDecode, UrlEncode,
+        AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
+        BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
+        DecToHexTransformer, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
+        HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
+        Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode,
+        UrlEncode,
     };
 
     // Register built-in transformers
@@ -195,6 +197,9 @@ fn register_builtin_transformers() -> Registry {
         .transformers
         .insert(BinaryDecode.id(), &BinaryDecode);
 
+    registry.transformers.insert(AsciiToHex.id(), &AsciiToHex);
+    registry.transformers.insert(HexToAscii.id(), &HexToAscii);
+
     registry
 }
 
@@ -252,6 +257,8 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         // Added binary transformers
         "binaryencode" => transformer_from_id("binarydecode").ok(),
         "binarydecode" => transformer_from_id("binaryencode").ok(),
+        "ascii_to_hex" => transformer_from_id("hex_to_ascii").ok(),
+        "hex_to_ascii" => transformer_from_id("ascii_to_hex").ok(),
         _ => None,
     }
 }
@@ -338,6 +345,12 @@ mod tests {
         assert_eq!(transformer_from_id("csvtojson").unwrap().id(), "csvtojson");
         assert_eq!(transformer_from_id("jsontocsv").unwrap().id(), "jsontocsv");
         assert!(transformer_from_id("invalid").is_err());
+        assert!(transformer_from_id("bin_to_hex").is_ok());
+        assert!(transformer_from_id("binaryencode").is_ok());
+        assert!(transformer_from_id("binarydecode").is_ok());
+        assert!(transformer_from_id("ascii_to_hex").is_ok());
+        assert!(transformer_from_id("hex_to_ascii").is_ok());
+        assert!(transformer_from_id("nonexistent").is_err());
     }
 
     #[test]
@@ -370,6 +383,25 @@ mod tests {
         // Hash functions have no inverse
         assert!(inverse_transformer(sha256hash).is_none());
         assert!(inverse_transformer(md5hash).is_none());
+
+        assert_eq!(
+            inverse_transformer(transformer_from_id("binarydecode").unwrap())
+                .unwrap()
+                .id(),
+            "binaryencode"
+        );
+        assert_eq!(
+            inverse_transformer(transformer_from_id("ascii_to_hex").unwrap())
+                .unwrap()
+                .id(),
+            "hex_to_ascii"
+        );
+        assert_eq!(
+            inverse_transformer(transformer_from_id("hex_to_ascii").unwrap())
+                .unwrap()
+                .id(),
+            "ascii_to_hex"
+        );
     }
 
     #[test]
@@ -394,32 +426,49 @@ mod tests {
             get_transformer_category(&TextReverse),
             TransformerCategory::Other
         );
+        assert_eq!(
+            get_transformer_category(transformer_from_id("binarydecode").unwrap()),
+            TransformerCategory::Decoder
+        );
+        assert_eq!(
+            get_transformer_category(transformer_from_id("ascii_to_hex").unwrap()),
+            TransformerCategory::Encoder
+        );
+        assert_eq!(
+            get_transformer_category(transformer_from_id("hex_to_ascii").unwrap()),
+            TransformerCategory::Decoder
+        );
     }
 
     #[test]
     fn test_categorized_transformers() {
-        let categories = categorized_transformers();
+        let categorized = categorized_transformers();
+        assert!(categorized.contains_key(&TransformerCategory::Encoder));
+        assert!(categorized.contains_key(&TransformerCategory::Decoder));
+        assert!(categorized.contains_key(&TransformerCategory::Crypto));
+        assert!(categorized.contains_key(&TransformerCategory::Formatter));
+        assert!(categorized.contains_key(&TransformerCategory::Other));
 
-        // Check that each category has at least one transformer
-        assert!(!categories
-            .get(&TransformerCategory::Encoder)
-            .unwrap()
-            .is_empty());
-        assert!(!categories
-            .get(&TransformerCategory::Decoder)
-            .unwrap()
-            .is_empty());
+        let encoders = categorized.get(&TransformerCategory::Encoder).unwrap();
+        let decoders = categorized.get(&TransformerCategory::Decoder).unwrap();
+        let formatters = categorized.get(&TransformerCategory::Formatter).unwrap();
+        let crypto = categorized.get(&TransformerCategory::Crypto).unwrap();
 
-        // Check specific transformers are in the right categories
-        let encoders = categories.get(&TransformerCategory::Encoder).unwrap();
-        let decoders = categories.get(&TransformerCategory::Decoder).unwrap();
-        let formatters = categories.get(&TransformerCategory::Formatter).unwrap();
-        let crypto = categories.get(&TransformerCategory::Crypto).unwrap();
-
+        // Check a few specific transformers are in the right category
         assert!(encoders.iter().any(|t| t.id() == "base64encode"));
         assert!(decoders.iter().any(|t| t.id() == "base64decode"));
         assert!(formatters.iter().any(|t| t.id() == "jsonformatter"));
         assert!(crypto.iter().any(|t| t.id() == "sha256hash"));
+        assert!(categorized
+            .get(&TransformerCategory::Encoder)
+            .unwrap()
+            .iter()
+            .any(|t| t.id() == "ascii_to_hex"));
+        assert!(categorized
+            .get(&TransformerCategory::Decoder)
+            .unwrap()
+            .iter()
+            .any(|t| t.id() == "hex_to_ascii"));
     }
 
     #[test]
