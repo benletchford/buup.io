@@ -8,6 +8,7 @@ license = "MIT"
 documentation = "https://github.com/benletchford/buup"
 homepage = "https://buup.letchford.cloud"
 repository = "https://github.com/benletchford/buup"
+include = ["src", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
 
 [dependencies]
 # Strictly no external dependencies
