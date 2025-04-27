@@ -34,6 +34,7 @@ ENCODERS:
   base64encode    - Encode text to Base64 format
   hexencode       - Encode text to hexadecimal representation
   htmlencode      - Encodes special characters to HTML entities
+  rot13           - Applies the ROT13 substitution cipher to the input text.
   urlencode       - Encode text for use in URLs
 
 DECODERS:

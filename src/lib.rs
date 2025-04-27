@@ -8,8 +8,8 @@ pub mod transformers;
 // Export the transformer structs for backward compatibility
 pub use transformers::{
     Base64Decode, Base64Encode, CamelToSnake, CsvToJson, HexDecode, HexEncode, HtmlDecode,
-    HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, Md5HashTransformer, Sha256HashTransformer,
-    SnakeToCamel, TextReverse, UrlDecode, UrlEncode,
+    HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, Md5HashTransformer, Rot13,
+    Sha256HashTransformer, SnakeToCamel, TextReverse, UrlDecode, UrlEncode,
 };
 
 /// Represents a transformation error
@@ -121,7 +121,7 @@ fn register_builtin_transformers() -> Registry {
     };
 
     // Import the new transformer
-    use transformers::{CsvToJson, JsonToCsv, Md5HashTransformer, Sha256HashTransformer};
+    use transformers::{CsvToJson, JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer};
 
     // Register built-in transformers
     registry
@@ -157,6 +157,7 @@ fn register_builtin_transformers() -> Registry {
         .insert(Md5HashTransformer.id(), &Md5HashTransformer);
     registry.transformers.insert(CsvToJson.id(), &CsvToJson);
     registry.transformers.insert(JsonToCsv.id(), &JsonToCsv);
+    registry.transformers.insert(Rot13.id(), &Rot13);
 
     registry
 }
@@ -204,6 +205,7 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "htmldecode" => transformer_from_id("htmlencode").ok(),
         "cameltosnake" => transformer_from_id("snaketocamel").ok(),
         "snaketocamel" => transformer_from_id("cameltosnake").ok(),
+        "rot13" => transformer_from_id("rot13").ok(),
         _ => None,
     }
 }
