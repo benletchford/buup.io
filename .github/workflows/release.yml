@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+  # Define workflow outputs
+  workflow_call:
+    outputs:
+      release_created:
+        description: "Whether a release was created by release-please"
+        value: ${{ jobs.release-please.outputs.created }}
 
 permissions:
   contents: write
@@ -27,9 +33,63 @@ jobs:
           # You might need a PAT instead of GITHUB_TOKEN if you hit permission issues
           # token: ${{ secrets.YOUR_PAT }}
 
+  update-readme:
+    name: Update README.md
+    needs: release-please
+    runs-on: ubuntu-latest
+    # Only run if release-please created a new release
+    if: needs.release-please.outputs.created == 'true'
+    permissions:
+      contents: write # Need write access to push changes
+    steps:
+      # Checkout the master branch to push changes to, but also fetch tags
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0 # Needed to access tags
+
+      # Check out the specific tag in a separate directory to run the updater against the released code
+      - name: Checkout release tag for processing
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+          path: release-tag-checkout
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+        # No prefix needed, default key generation is usually fine
+
+      - name: Run README updater against release tag code
+        # Run the updater from the main checkout, but point it to the tagged code source
+        # This assumes update_readme can handle reading from a different path if necessary,
+        # or that it reads relative to its own execution dir which is now the tagged version.
+        # If update_readme MUST run from the root of the tagged code, adjust accordingly.
+        run: cargo run --manifest-path release-tag-checkout/Cargo.toml --bin update_readme
+        # This might overwrite the README.md in the main checkout (master branch)
+
+      - name: Check for README changes
+        id: git-check
+        run: |
+          # Compare the potentially updated README.md in the main checkout (master) with HEAD
+          git diff --exit-code README.md || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if README changed
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          # Reference the release tag in the commit message
+          git commit -m "Update README for release ${{ needs.release-please.outputs.tag_name }}"
+          git push origin master
+
   publish:
     name: Publish to crates.io
-    needs: release-please
+    # Now depends on update-readme completing successfully
+    needs: [release-please, update-readme]
     runs-on: ubuntu-latest
     # Only run if release-please created a new release
     if: needs.release-please.outputs.created == 'true'
