@@ -5,7 +5,7 @@ Buup is a versatile text transformation toolkit that provides a dependency-free 
 ## Architecture
 
 ```bash
-buup-rs/
+buup/
 |- src/                # Core transformation library with zero dependencies (published as "buup")
 |- buup_web/           # Web UI implementation (Dioxus)
 |- buup_cli/           # Command-line interface
@@ -192,8 +192,8 @@ All implementations are written in pure Rust with zero external dependencies, en
 
 ```bash
 # Clone the repository
-git clone https://github.com/benletchford/buup-rs.git
-cd buup-rs
+git clone https://github.com/benletchford/buup.git
+cd buup
 
 # Build everything
 cargo build --release

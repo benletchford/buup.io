@@ -1192,7 +1192,7 @@ fn App() -> Element {
                 }
                 " | "
                 a {
-                    href: "https://github.com/benletchford/buup-rs",
+                    href: "https://github.com/benletchford/buup",
                     target: "_blank",
                     rel: "noopener noreferrer",
                     "Open Source on GitHub"
