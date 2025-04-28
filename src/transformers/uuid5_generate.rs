@@ -251,61 +251,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_uuid5_format() {
+    fn test_uuid5() {
         let transformer = Uuid5Generate;
-        let uuid_str = transformer.transform("dns|example.com").unwrap();
-
-        // Check length
-        assert_eq!(uuid_str.len(), 36);
-
-        // Check hyphens
-        assert_eq!(uuid_str.chars().nth(8), Some('-'));
-        assert_eq!(uuid_str.chars().nth(13), Some('-'));
-        assert_eq!(uuid_str.chars().nth(18), Some('-'));
-        assert_eq!(uuid_str.chars().nth(23), Some('-'));
-
-        // Check version (char 14 should be '5')
-        assert_eq!(uuid_str.chars().nth(14), Some('5'));
-
-        // Check variant (char 19 should be '8', '9', 'a', or 'b')
-        let variant_char = uuid_str.chars().nth(19).unwrap();
-        assert!(matches!(variant_char, '8' | '9' | 'a' | 'b'));
-    }
-
-    #[test]
-    fn test_uuid5_dns_namespace() {
-        let transformer = Uuid5Generate;
-
-        // RFC 4122 Example - DNS namespace with "www.example.org"
-        let uuid_str = transformer.transform("dns|www.example.org").unwrap();
-
-        // The exact expected value may differ from the RFC example due to
-        // implementation details, but the format should be correct
-        assert_eq!(uuid_str.chars().nth(14), Some('5')); // Version 5
-    }
-
-    #[test]
-    fn test_uuid5_url_namespace() {
-        let transformer = Uuid5Generate;
-
-        let uuid_str = transformer.transform("url|https://example.com").unwrap();
-
-        // This is not a RFC example, but we check that the format is valid
-        assert_eq!(uuid_str.chars().nth(14), Some('5')); // Version 5
-    }
-
-    #[test]
-    fn test_uuid5_custom_namespace() {
-        let transformer = Uuid5Generate;
-
-        // Custom namespace
-        let custom_namespace = "d9c53a66-fde2-4fee-b45a-a1dd39621aae";
-        let uuid_str = transformer
-            .transform(&format!("{}|test-name", custom_namespace))
-            .unwrap();
-
-        // Validate format
-        assert_eq!(uuid_str.chars().nth(14), Some('5')); // Version 5
+        assert_eq!(
+            transformer.transform("dns|www.example.org").unwrap(),
+            "74738ff5-5367-5958-9aee-98fffdcd1876"
+        );
+        assert_eq!(
+            transformer.transform("url|https://example.com").unwrap(),
+            "4fd35a71-71ef-5a55-a9d9-aa75c889a6d0"
+        );
+        assert_eq!(
+            transformer
+                .transform("d9c53a66-fde2-4fee-b45a-a1dd39621aae|example")
+                .unwrap(),
+            "13f8a259-faa6-5d5e-83cf-2068891aa9bf"
+        );
     }
 
     #[test]
