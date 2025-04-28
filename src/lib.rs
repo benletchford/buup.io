@@ -9,8 +9,8 @@ pub mod transformers;
 pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
     HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
-    JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel,
-    TextReverse, TextStats, UrlDecode, UrlEncode, UrlParser, UuidGenerate,
+    JsonToCsv, LineSorter, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel,
+    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, UuidGenerate,
 };
 
 /// Represents a transformation error
@@ -129,8 +129,8 @@ fn register_builtin_transformers() -> Registry {
         BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
         DecToHexTransformer, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
         HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
-        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha256HashTransformer, SnakeToCamel,
-        TextReverse, UrlDecode, UrlEncode,
+        LineSorter, Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha256HashTransformer,
+        SnakeToCamel, TextReverse, UniqueLines, UrlDecode, UrlEncode,
     };
 
     // Register built-in transformers
@@ -210,6 +210,10 @@ fn register_builtin_transformers() -> Registry {
     registry.transformers.insert(TextStats.id(), &TextStats);
     registry.transformers.insert(UrlParser.id(), &UrlParser);
     registry.transformers.insert(Slugify.id(), &Slugify);
+
+    // Register new transformers
+    registry.transformers.insert(LineSorter.id(), &LineSorter);
+    registry.transformers.insert(UniqueLines.id(), &UniqueLines);
 
     registry
 }

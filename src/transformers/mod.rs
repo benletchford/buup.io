@@ -35,6 +35,10 @@ pub mod uuid_generate;
 pub mod morse_decode;
 pub mod morse_encode;
 
+// Add new transformers
+pub mod line_sorter;
+pub mod unique_lines;
+
 pub use self::ascii_to_hex::AsciiToHex;
 pub use self::base64_decode::Base64Decode;
 pub use self::base64_encode::Base64Encode;
@@ -71,3 +75,7 @@ pub use self::uuid_generate::UuidGenerate;
 // Export morse code transformers
 pub use self::morse_decode::MorseDecode;
 pub use self::morse_encode::MorseEncode;
+
+// Export new transformers
+pub use self::line_sorter::LineSorter;
+pub use self::unique_lines::UniqueLines;

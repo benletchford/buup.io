@@ -132,10 +132,12 @@ OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
   csvtojson       - Converts CSV data to JSON format
   jsontocsv       - Converts JSON data to CSV format
+  linesorter      - Sorts lines of text alphabetically (ascending).
   slugify         - Converts text into a URL-friendly slug (lowercase, dashes, removes special chars)
   snaketocamel    - Converts snake_case to camelCase
   text_stats      - Calculates basic text statistics (lines, words, chars, sentences)
   textreverse     - Reverses the input text
+  uniquelines     - Removes duplicate lines, preserving the order of first occurrence.
   urlparser       - Parses a URL into its components (scheme, authority, path, query, fragment)
   uuid_generate   - Generates a version 4 UUID. Input is ignored. WARNING: Uses a non-cryptographically secure PRNG.
 
