@@ -150,4 +150,8 @@ EXAMPLES:
   echo "Hello" | buup hexencode         # Pipe from stdin
 ```
 
-## Usage as a Library
+## Update README.md with `buup list`
+
+```bash
+cargo run --bin update_readme
+```
