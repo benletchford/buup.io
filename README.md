@@ -1,18 +1,39 @@
 # Buup - The Text Utility Belt
 
-Buup is a versatile text transformation toolkit that provides a dependency-free core library for common text manipulations, with a built-in CLI and web interface.
+Buup is a versatile text transformation toolkit that provides a dependency-free core library and CLI for common text manipulations like encoding/decoding, formatting, cryptography, (coming soon compression/decompression), and more written purely in dependency-free pure Rust.
 
-|                            Dark Mode                            |                            Light Mode                            |
-| :-------------------------------------------------------------: | :--------------------------------------------------------------: |
-| <img src="buup_web/assets/web-screenshot-dark.png" width="400"> | <img src="buup_web/assets/web-screenshot-light.png" width="400"> |
+It is designed to be a simple, lightweight, **open**, **secure**, **provably fast** and easy to integrate.
+
+Drop-in replacement for all of those dodgy online text transformation tools you've ever used in the past except the batteries are included (and they are all in pure Rust).
+
+It includes a [web application](https://buup.letchford.cloud) (WASM via [Dioxus](https://dioxuslabs.com/)) as a separate workspace member.
+
+<a href="https://buup.letchford.cloud">
+    <img src="buup_web/assets/web-screenshot-dark.png" width="400">
+</a>
+
+## Key Features
+
+- **Zero Dependencies**: The core `buup` library and its CLI implement all transformations without external dependencies
+- **Multiple Interfaces**: CLI for terminal workflows and Web UI for interactive use
+- **Extensible Design**: Easy to add new transformers by implementing the `Transform` trait
+- **Strong Typing**: Full type safety with comprehensive error handling
+- **Thread Safety**: All transformers are designed to be safely used concurrently
+- **Performance**: Optimized for speed and memory usage
 
 ## Ways to Use Buup
 
 Buup offers three distinct ways to transform your text:
 
-### 1. Web Interface
+### 1. Web Application
 
-A modern, responsive web application for interactive text transformations.
+A modern, responsive web application for interactive text transformations proudly built with [Dioxus](https://dioxuslabs.com/).
+
+|                            Dark Mode                            |                            Light Mode                            |
+| :-------------------------------------------------------------: | :--------------------------------------------------------------: |
+| <img src="buup_web/assets/web-screenshot-dark.png" width="400"> | <img src="buup_web/assets/web-screenshot-light.png" width="400"> |
+
+From source:
 
 ```bash
 # Serve the web UI (requires Dioxus CLI)
@@ -20,7 +41,11 @@ cd buup_web
 dx serve
 ```
 
-Visit [the Web UI README](buup_web/README.md) for more details on the web interface.
+Build for production:
+
+```bash
+dx build
+```
 
 ### 2. Command Line Interface
 
@@ -117,14 +142,6 @@ buup/
 |  |- cli.rs           # Zero-dependency CLI implementation integrated with the core library
 |- buup_web/           # Web UI implementation (Dioxus)
 ```
-
-## Key Features
-
-- **Zero Dependencies**: The core `buup` library and its CLI implement all transformations without external dependencies
-- **Multiple Interfaces**: CLI for terminal workflows and Web UI for interactive use
-- **Extensible Design**: Easy to add new transformers by implementing the `Transform` trait
-- **Strong Typing**: Full type safety with comprehensive error handling
-- **Thread Safety**: All transformers are designed to be safely used concurrently
 
 ## Building From Source
 
