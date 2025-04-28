@@ -6,22 +6,60 @@ Buup is a versatile text transformation toolkit that provides a dependency-free 
 | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
 | <img src="buup_web/assets/web-screenshot-dark.png" width="400"> | <img src="buup_web/assets/web-screenshot-light.png" width="400"> |
 
-## Architecture
+## Ways to Use Buup
+
+Buup offers three distinct ways to transform your text:
+
+### 1. Web Interface
+
+A modern, responsive web application for interactive text transformations.
 
 ```bash
-buup/
-|- src/                # Core transformation library with zero dependencies (published as "buup")
-|  |- cli.rs           # Zero-dependency CLI implementation integrated with the core library
-|- buup_web/           # Web UI implementation (Dioxus)
+# Serve the web UI (requires Dioxus CLI)
+cd buup_web
+dx serve
 ```
 
-## Key Features
+Visit [the Web UI README](buup_web/README.md) for more details on the web interface.
 
-- **Zero Dependencies**: The core `buup` library and its CLI implement all transformations without external dependencies
-- **Multiple Interfaces**: CLI for terminal workflows and Web UI for interactive use
-- **Extensible Design**: Easy to add new transformers by implementing the `Transform` trait
-- **Strong Typing**: Full type safety with comprehensive error handling
-- **Thread Safety**: All transformers are designed to be safely used concurrently
+### 2. Command Line Interface
+
+Zero-dependency CLI for quick transformations in your terminal workflows.
+
+```bash
+# Installation
+cargo install buup
+
+# List available transformers
+buup list
+
+# Examples
+buup base64encode "Hello, world!"     # Encode text directly
+buup urldecode -i encoded.txt         # Decode from file
+echo "Hello" | buup hexencode         # Pipe from stdin
+```
+
+### 3. Rust Library
+
+Integrate Buup's transformers directly into your Rust applications.
+
+```bash
+# Add to your project
+cargo add buup
+```
+
+```rust
+use buup::{transformer_from_id, Transform, Base64Encode};
+
+// Option 1: Use a specific transformer struct
+let encoded = Base64Encode.transform("Hello, Library!").unwrap();
+println!("{}", encoded); // SGVsbG8sIExpYnJhcnkh
+
+// Option 2: Look up a transformer by its ID
+let transformer = transformer_from_id("base64decode").unwrap();
+let decoded = transformer.transform(&encoded).unwrap();
+println!("{}", decoded); // Hello, Library!
+```
 
 ## Available Transformers
 
@@ -69,36 +107,24 @@ OTHERS:
   jsontocsv       - Converts JSON data to CSV format
   snaketocamel    - Converts snake_case to camelCase
   textreverse     - Reverses the input text
-
-EXAMPLES:
-  buup base64encode "Hello, world!"     # Encode text directly
-  buup urldecode -i encoded.txt         # Decode from file
-  echo "Hello" | buup hexencode         # Pipe from stdin
 ```
 
-## Usage as a Library
+## Architecture
 
 ```bash
-cargo add buup
+buup/
+|- src/                # Core transformation library with zero dependencies (published as "buup")
+|  |- cli.rs           # Zero-dependency CLI implementation integrated with the core library
+|- buup_web/           # Web UI implementation (Dioxus)
 ```
 
-```rust
-use buup::{transformer_from_id, Transform, Base64Encode};
+## Key Features
 
-// Option 1: Use a specific transformer struct
-let encoded = Base64Encode.transform("Hello, Library!").unwrap();
-println!("{}", encoded); // SGVsbG8sIExpYnJhcnkh
-
-// Option 2: Look up a transformer by its ID
-let transformer = transformer_from_id("base64decode").unwrap();
-let decoded = transformer.transform(&encoded).unwrap();
-println!("{}", decoded); // Hello, Library!
-```
-
-## Interfaces
-
-- **CLI**: Zero-dependency CLI included directly in the core library
-- **[Web UI](buup_web/README.md)**: Modern web interface built with Dioxus
+- **Zero Dependencies**: The core `buup` library and its CLI implement all transformations without external dependencies
+- **Multiple Interfaces**: CLI for terminal workflows and Web UI for interactive use
+- **Extensible Design**: Easy to add new transformers by implementing the `Transform` trait
+- **Strong Typing**: Full type safety with comprehensive error handling
+- **Thread Safety**: All transformers are designed to be safely used concurrently
 
 ## Building From Source
 
