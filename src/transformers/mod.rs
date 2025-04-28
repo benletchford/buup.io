@@ -35,6 +35,7 @@ pub mod unique_lines;
 pub mod url_decode;
 pub mod url_encode;
 pub mod url_parser;
+pub mod uuid5_generate;
 pub mod uuid_generate;
 pub mod whitespace_remover;
 
@@ -51,5 +52,6 @@ pub use self::{
     morse_encode::MorseEncode, rot13::Rot13, sha256_hash::Sha256HashTransformer, slugify::Slugify,
     snake_to_camel::SnakeToCamel, text_reverse::TextReverse, text_stats::TextStats,
     unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
-    uuid_generate::UuidGenerate, whitespace_remover::WhitespaceRemover,
+    uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
+    whitespace_remover::WhitespaceRemover,
 };

@@ -129,6 +129,7 @@ FORMATTERS:
 CRYPTOGRAPHY:
   md5hash         - Computes the MD5 hash of the input text
   sha256hash      - Computes the SHA-256 hash of the input text
+  uuid5_generate  - Generates a version 5 UUID based on namespace and name using SHA-1. Input format: "namespace|name". Namespace can be a UUID or one of: dns, url, oid, x500.
 
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
@@ -150,8 +151,4 @@ EXAMPLES:
   echo "Hello" | buup hexencode         # Pipe from stdin
 ```
 
-## Update README.md with `buup list`
-
-```bash
-cargo run --bin update_readme
-```
+## Usage as a Library

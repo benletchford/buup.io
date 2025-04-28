@@ -10,7 +10,8 @@ pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
     HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
     JsonToCsv, LineSorter, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel,
-    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, UuidGenerate,
+    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate,
+    UuidGenerate,
 };
 
 /// Represents a transformation error
@@ -131,7 +132,8 @@ fn register_builtin_transformers() -> Registry {
         HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
         LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
         MorseEncode, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, TextStats,
-        UniqueLines, UrlDecode, UrlEncode, UrlParser, UuidGenerate, WhitespaceRemover,
+        UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+        WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -226,6 +228,11 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(LineNumberRemover.id(), &LineNumberRemover);
+
+    // Add uuid5_generate
+    registry
+        .transformers
+        .insert(Uuid5Generate.id(), &Uuid5Generate);
 
     registry
 }
