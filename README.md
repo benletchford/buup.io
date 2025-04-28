@@ -6,7 +6,7 @@ It is designed to be a simple, lightweight, **open**, **secure**, **provably fas
 
 Drop-in replacement for all of those dodgy online text transformation tools you've ever used in the past except the batteries are included (and they are all in pure Rust).
 
-It includes a [web application](https://buup.io) (WASM via [Dioxus](https://dioxuslabs.com/)) as a separate workspace member.
+It includes a [web application](https://buup.io) which is of course written in pure Rust (WASM via [Dioxus](https://dioxuslabs.com/)) as a separate workspace member.
 
 <div align="center">
     <a href="https://buup.io">
