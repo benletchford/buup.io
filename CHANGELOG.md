@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.0](https://github.com/benletchford/buup/compare/v0.7.0...v0.8.0) (2025-04-28)
+
+
+### Features
+
+* add LineSorter and UniqueLines transformers ([b3d4634](https://github.com/benletchford/buup/commit/b3d463426a9af1c375d962609bed43a56a0c7ea6))
+* add whitespace remover, line number adder/remover transformers ([86a5476](https://github.com/benletchford/buup/commit/86a5476cdb7956ba9f99b190c590e21c2282095d))
+
 ## [0.7.0](https://github.com/benletchford/buup/compare/v0.6.0...v0.7.0) (2025-04-28)
 
 
