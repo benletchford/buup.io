@@ -9,9 +9,9 @@ pub mod transformers;
 pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
     HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
-    JsonToCsv, LineSorter, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel,
-    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate,
-    UuidGenerate,
+    JsonToCsv, JwtDecode, LineSorter, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify,
+    SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser,
+    Uuid5Generate, UuidGenerate,
 };
 
 /// Represents a transformation error
@@ -130,8 +130,8 @@ fn register_builtin_transformers() -> Registry {
         BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
         DecToHexTransformer, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
         HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
-        LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
-        MorseEncode, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse, TextStats,
+        JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
+        MorseEncode, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats,
         UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
         WhitespaceRemover,
     };
@@ -233,6 +233,8 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(Uuid5Generate.id(), &Uuid5Generate);
+
+    registry.transformers.insert(JwtDecode.id(), &JwtDecode);
 
     registry
 }
@@ -385,6 +387,7 @@ mod tests {
         assert_eq!(transformer_from_id("md5hash").unwrap().id(), "md5hash");
         assert_eq!(transformer_from_id("csvtojson").unwrap().id(), "csvtojson");
         assert_eq!(transformer_from_id("jsontocsv").unwrap().id(), "jsontocsv");
+        assert_eq!(transformer_from_id("jwtdecode").unwrap().id(), "jwtdecode");
         assert!(transformer_from_id("invalid").is_err());
         assert!(transformer_from_id("bin_to_hex").is_ok());
         assert!(transformer_from_id("binaryencode").is_ok());

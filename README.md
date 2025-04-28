@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Available Transformers
 
-The following transformers are currently available in Buup (output from `buup list`):
+The following transformers are currently available in Buup:
 
 ```bash
 Available transformers:
@@ -117,6 +117,7 @@ DECODERS:
   hex_to_dec      - Convert hexadecimal numbers to decimal.
   hexdecode       - Decode hexadecimal to original text
   htmldecode      - Decodes HTML entities back to special characters
+  jwtdecode       - Decodes a JSON Web Token (JWT) into its header and payload without verifying the signature.
   morsedecode     - Decode Morse code to text
   urldecode       - Decode URL-encoded text
 

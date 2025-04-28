@@ -19,6 +19,7 @@ pub mod html_encode;
 pub mod json_formatter;
 pub mod json_minifier;
 pub mod json_to_csv;
+pub mod jwt_decode;
 pub mod line_number_adder;
 pub mod line_number_remover;
 pub mod line_sorter;
@@ -55,3 +56,5 @@ pub use self::{
     uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
     whitespace_remover::WhitespaceRemover,
 };
+
+pub use jwt_decode::JwtDecode;
