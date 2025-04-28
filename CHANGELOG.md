@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/benletchford/buup/compare/v0.8.0...v0.9.0) (2025-04-28)
+
+
+### Features
+
+* Add UUID5 transformer with RFC4122 namespace support ([18ea243](https://github.com/benletchford/buup/commit/18ea24313ab1326aeaf1d966a7fbe5816177c2d2))
+
 ## [0.8.0](https://github.com/benletchford/buup/compare/v0.7.0...v0.8.0) (2025-04-28)
 
 
