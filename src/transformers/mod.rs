@@ -19,63 +19,37 @@ pub mod html_encode;
 pub mod json_formatter;
 pub mod json_minifier;
 pub mod json_to_csv;
+pub mod line_number_adder;
+pub mod line_number_remover;
+pub mod line_sorter;
 pub mod md5_hash;
+pub mod morse_decode;
+pub mod morse_encode;
 pub mod rot13;
 pub mod sha256_hash;
 pub mod slugify;
 pub mod snake_to_camel;
 pub mod text_reverse;
 pub mod text_stats;
+pub mod unique_lines;
 pub mod url_decode;
 pub mod url_encode;
 pub mod url_parser;
 pub mod uuid_generate;
+pub mod whitespace_remover;
 
-// Add morse code transformers
-pub mod morse_decode;
-pub mod morse_encode;
-
-// Add new transformers
-pub mod line_sorter;
-pub mod unique_lines;
-
-pub use self::ascii_to_hex::AsciiToHex;
-pub use self::base64_decode::Base64Decode;
-pub use self::base64_encode::Base64Encode;
-pub use self::bin_to_dec::BinToDecTransformer;
-pub use self::bin_to_hex::BinToHexTransformer;
-pub use self::binary_decode::BinaryDecode;
-pub use self::binary_encode::BinaryEncode;
-pub use self::camel_to_snake::CamelToSnake;
-pub use self::csv_to_json::CsvToJson;
-pub use self::dec_to_bin::DecToBinTransformer;
-pub use self::dec_to_hex::DecToHexTransformer;
-pub use self::hex_decode::HexDecode;
-pub use self::hex_encode::HexEncode;
-pub use self::hex_to_ascii::HexToAscii;
-pub use self::hex_to_bin::HexToBinTransformer;
-pub use self::hex_to_dec::HexToDecTransformer;
-pub use self::html_decode::HtmlDecode;
-pub use self::html_encode::HtmlEncode;
-pub use self::json_formatter::JsonFormatter;
-pub use self::json_minifier::JsonMinifier;
-pub use self::json_to_csv::JsonToCsv;
-pub use self::md5_hash::Md5HashTransformer;
-pub use self::rot13::Rot13;
-pub use self::sha256_hash::Sha256HashTransformer;
-pub use self::slugify::Slugify;
-pub use self::snake_to_camel::SnakeToCamel;
-pub use self::text_reverse::TextReverse;
-pub use self::text_stats::TextStats;
-pub use self::url_decode::UrlDecode;
-pub use self::url_encode::UrlEncode;
-pub use self::url_parser::UrlParser;
-pub use self::uuid_generate::UuidGenerate;
-
-// Export morse code transformers
-pub use self::morse_decode::MorseDecode;
-pub use self::morse_encode::MorseEncode;
-
-// Export new transformers
-pub use self::line_sorter::LineSorter;
-pub use self::unique_lines::UniqueLines;
+pub use self::{
+    ascii_to_hex::AsciiToHex, base64_decode::Base64Decode, base64_encode::Base64Encode,
+    bin_to_dec::BinToDecTransformer, bin_to_hex::BinToHexTransformer, binary_decode::BinaryDecode,
+    binary_encode::BinaryEncode, camel_to_snake::CamelToSnake, csv_to_json::CsvToJson,
+    dec_to_bin::DecToBinTransformer, dec_to_hex::DecToHexTransformer, hex_decode::HexDecode,
+    hex_encode::HexEncode, hex_to_ascii::HexToAscii, hex_to_bin::HexToBinTransformer,
+    hex_to_dec::HexToDecTransformer, html_decode::HtmlDecode, html_encode::HtmlEncode,
+    json_formatter::JsonFormatter, json_minifier::JsonMinifier, json_to_csv::JsonToCsv,
+    line_number_adder::LineNumberAdder, line_number_remover::LineNumberRemover,
+    line_sorter::LineSorter, md5_hash::Md5HashTransformer, morse_decode::MorseDecode,
+    morse_encode::MorseEncode, rot13::Rot13, sha256_hash::Sha256HashTransformer, slugify::Slugify,
+    snake_to_camel::SnakeToCamel, text_reverse::TextReverse, text_stats::TextStats,
+    unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
+    uuid_generate::UuidGenerate, whitespace_remover::WhitespaceRemover,
+};

@@ -123,6 +123,8 @@ DECODERS:
 FORMATTERS:
   jsonformatter   - Formats JSON with proper indentation
   jsonminifier    - Minifies JSON by removing whitespace
+  linenumberadder - Adds line numbers (1-based) to the beginning of each line.
+  linenumberremover - Removes leading line numbers (e.g., '1 ', '2. ', '3:	') from each line.
 
 CRYPTOGRAPHY:
   md5hash         - Computes the MD5 hash of the input text
@@ -140,6 +142,7 @@ OTHERS:
   uniquelines     - Removes duplicate lines, preserving the order of first occurrence.
   urlparser       - Parses a URL into its components (scheme, authority, path, query, fragment)
   uuid_generate   - Generates a version 4 UUID. Input is ignored. WARNING: Uses a non-cryptographically secure PRNG.
+  whitespaceremover - Removes all whitespace (spaces, tabs, newlines) from the input text.
 
 EXAMPLES:
   buup base64encode "Hello, world!"     # Encode text directly
