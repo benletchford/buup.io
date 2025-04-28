@@ -22,10 +22,14 @@ pub mod json_to_csv;
 pub mod md5_hash;
 pub mod rot13;
 pub mod sha256_hash;
+pub mod slugify;
 pub mod snake_to_camel;
 pub mod text_reverse;
+pub mod text_stats;
 pub mod url_decode;
 pub mod url_encode;
+pub mod url_parser;
+pub mod uuid_generate;
 
 // Add morse code transformers
 pub mod morse_decode;
@@ -55,10 +59,14 @@ pub use self::json_to_csv::JsonToCsv;
 pub use self::md5_hash::Md5HashTransformer;
 pub use self::rot13::Rot13;
 pub use self::sha256_hash::Sha256HashTransformer;
+pub use self::slugify::Slugify;
 pub use self::snake_to_camel::SnakeToCamel;
 pub use self::text_reverse::TextReverse;
+pub use self::text_stats::TextStats;
 pub use self::url_decode::UrlDecode;
 pub use self::url_encode::UrlEncode;
+pub use self::url_parser::UrlParser;
+pub use self::uuid_generate::UuidGenerate;
 
 // Export morse code transformers
 pub use self::morse_decode::MorseDecode;

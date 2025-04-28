@@ -9,12 +9,12 @@ pub mod transformers;
 pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
     HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
-    JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, SnakeToCamel, TextReverse,
-    UrlDecode, UrlEncode,
+    JsonToCsv, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel,
+    TextReverse, TextStats, UrlDecode, UrlEncode, UrlParser, UuidGenerate,
 };
 
 /// Represents a transformation error
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum TransformError {
     Base64DecodeError,
     Utf8Error,
@@ -203,6 +203,13 @@ fn register_builtin_transformers() -> Registry {
     // Register morse code transformers
     registry.transformers.insert(MorseEncode.id(), &MorseEncode);
     registry.transformers.insert(MorseDecode.id(), &MorseDecode);
+
+    registry
+        .transformers
+        .insert(UuidGenerate.id(), &UuidGenerate);
+    registry.transformers.insert(TextStats.id(), &TextStats);
+    registry.transformers.insert(UrlParser.id(), &UrlParser);
+    registry.transformers.insert(Slugify.id(), &Slugify);
 
     registry
 }
