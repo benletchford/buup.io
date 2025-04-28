@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Check if the section already exists in the README
     let section_marker_start = "## Available Transformers";
-    let section_marker_end = "## Update README.md with `buup list`";
+    let section_marker_end = "### Update README.md with `buup list`";
 
     let new_readme = if readme_content.contains(section_marker_start) {
         // Replace the existing section

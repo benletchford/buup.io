@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Available Transformers
 
-The following transformers are currently available in Buup:
+The following transformers are currently available in Buup (output from `buup list`):
 
 ```bash
 Available transformers:
@@ -151,7 +151,7 @@ EXAMPLES:
   echo "Hello" | buup hexencode         # Pipe from stdin
 ```
 
-## Update README.md with `buup list`
+### Update README.md with `buup list`
 
 ```bash
 cargo run --bin update_readme
