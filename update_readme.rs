@@ -6,14 +6,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Read the existing README.md
     let readme_content = fs::read_to_string("README.md")?;
 
-    // Run the buup_cli list command
+    // Run the buup list command from the root crate
     let output = Command::new("cargo")
-        .args(["run", "--package", "buup_cli", "--", "list"])
+        .args(["run", "--bin", "buup", "--", "list"])
         .output()?;
 
     if !output.status.success() {
         return Err(format!(
-            "Failed to run buup_cli: {}",
+            "Failed to run buup: {}",
             String::from_utf8_lossy(&output.stderr)
         )
         .into());

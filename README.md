@@ -1,6 +1,6 @@
 # Buup - The Text Utility Belt
 
-Buup is a versatile text transformation toolkit that provides a dependency-free core library for common text manipulations, with additional CLI and web interfaces.
+Buup is a versatile text transformation toolkit that provides a dependency-free core library for common text manipulations, with a built-in CLI and web interface.
 
 |                            Dark Mode                            |                            Light Mode                            |
 | :-------------------------------------------------------------: | :--------------------------------------------------------------: |
@@ -11,13 +11,13 @@ Buup is a versatile text transformation toolkit that provides a dependency-free 
 ```bash
 buup/
 |- src/                # Core transformation library with zero dependencies (published as "buup")
+|  |- cli.rs           # Zero-dependency CLI implementation integrated with the core library
 |- buup_web/           # Web UI implementation (Dioxus)
-|- buup_cli/           # Command-line interface
 ```
 
 ## Key Features
 
-- **Zero Dependencies**: The core `buup` library implements all transformations without external dependencies
+- **Zero Dependencies**: The core `buup` library and its CLI implement all transformations without external dependencies
 - **Multiple Interfaces**: CLI for terminal workflows and Web UI for interactive use
 - **Extensible Design**: Easy to add new transformers by implementing the `Transform` trait
 - **Strong Typing**: Full type safety with comprehensive error handling
@@ -79,10 +79,6 @@ EXAMPLES:
 ## Usage as a Library
 
 ```rust
-// Add to your Cargo.toml:
-// [dependencies]
-// buup = { version = "0.1" }
-
 use buup::{transformer_from_id, Transform, Base64Encode};
 
 // Option 1: Use a specific transformer struct
@@ -97,7 +93,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Interfaces
 
-- **[CLI](buup_cli/README.md)**: Command-line interface for scripting and terminal workflows
+- **CLI**: Zero-dependency CLI included directly in the core library
 - **[Web UI](buup_web/README.md)**: Modern web interface built with Dioxus
 
 ## Building From Source
@@ -110,7 +106,7 @@ cd buup
 # Build the entire workspace
 cargo build --release
 
-# Run the CLI
+# Run the built-in CLI
 cargo run --bin buup -- list
 
 # Serve the web UI (requires Dioxus CLI)

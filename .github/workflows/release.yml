@@ -206,7 +206,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Build binary
-        run: cargo build --release -p buup_cli --target ${{ matrix.target }}
+        run: cargo build --release --bin buup --target ${{ matrix.target }}
 
       - name: Prepare artifacts (Linux/macOS)
         if: matrix.os != 'windows-latest'

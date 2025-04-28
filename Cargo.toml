@@ -14,8 +14,13 @@ include = ["src", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
 # Strictly no external dependencies
 
 [workspace]
-members = ["buup_cli", "buup_web"]
+members = ["buup_web"]
 
+[[bin]]
+name = "buup"
+path = "src/cli.rs"
+
+# Utility to update the README.md file with the latest info
 [[bin]]
 name = "update_readme"
 path = "update_readme.rs"
