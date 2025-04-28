@@ -28,7 +28,7 @@ Zero-dependency CLI for quick transformations in your terminal workflows.
 
 ```bash
 # Installation
-cargo install buup
+cargo binstall buup # or cargo install buup
 
 # List available transformers
 buup list
