@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Check if the section already exists in the README
     let section_marker_start = "## Available Transformers";
-    let section_marker_end = "## Usage as a Library";
+    let section_marker_end = "## Update README.md with `buup list`";
 
     let new_readme = if readme_content.contains(section_marker_start) {
         // Replace the existing section
@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             before_section, transformer_section, section_marker_end, after_section
         )
     } else {
-        // Insert the new section before "Usage as a Library"
+        // Insert the new section before "## Update README.md with `buup list`"
         let parts: Vec<&str> = readme_content.split(section_marker_end).collect();
         if parts.len() >= 2 {
             format!(
