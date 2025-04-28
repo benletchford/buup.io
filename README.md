@@ -1,6 +1,6 @@
 # Buup - The Text Utility Belt
 
-Buup is a versatile text transformation toolkit that provides a dependency-free core library and CLI for common text manipulations like encoding/decoding, formatting, cryptography, (coming soon compression/decompression), and more written purely in dependency-free pure Rust.
+Buup is a versatile text transformation toolkit that provides a dependency-free core library and CLI for common text manipulations like encoding/decoding, formatting, cryptography, (coming soon compression/decompression), and more written in pure dependency-free Rust.
 
 It is designed to be a simple, lightweight, **open**, **secure**, **provably fast** and easy to integrate.
 
@@ -10,7 +10,7 @@ It includes a [web application](https://buup.letchford.cloud) (WASM via [Dioxus]
 
 <div align="center">
     <a href="https://buup.letchford.cloud">
-        <img src="buup_web/assets/web-screenshot-dark.png" width="700">
+        <img src="buup_web/assets/web-screenshot-dark.png">
     </a>
 </div>
 
