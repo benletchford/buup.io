@@ -8,9 +8,11 @@ Drop-in replacement for all of those dodgy online text transformation tools you'
 
 It includes a [web application](https://buup.letchford.cloud) (WASM via [Dioxus](https://dioxuslabs.com/)) as a separate workspace member.
 
-<a href="https://buup.letchford.cloud">
-    <img src="buup_web/assets/web-screenshot-dark.png" width="400">
-</a>
+<div align="center">
+    <a href="https://buup.letchford.cloud">
+        <img src="buup_web/assets/web-screenshot-dark.png" width="700">
+    </a>
+</div>
 
 ## Key Features
 
