@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/benletchford/buup/compare/v0.6.0...v0.7.0) (2025-04-28)
+
+
+### Features
+
+* add uuid, text stats, url parser, and slugify transformers ([589c302](https://github.com/benletchford/buup/commit/589c3022c1c90ddedaf4af5f8e2342c2d138d8f6))
+
 ## [0.6.0](https://github.com/benletchford/buup/compare/v0.5.0...v0.6.0) (2025-04-28)
 
 
