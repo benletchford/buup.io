@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/benletchford/buup/compare/v0.9.0...v0.10.0) (2025-04-28)
+
+
+### Features
+
+* add JWT Decoder transformer ([179bb6a](https://github.com/benletchford/buup/commit/179bb6ab671c0b334bc49edfec9568b5a4be027f))
+
 ## [0.9.0](https://github.com/benletchford/buup/compare/v0.8.0...v0.9.0) (2025-04-28)
 
 
