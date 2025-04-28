@@ -27,6 +27,11 @@ path = "update_readme.rs"
 
 [profile]
 
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+
 [profile.wasm-dev]
 inherits = "dev"
 opt-level = 1

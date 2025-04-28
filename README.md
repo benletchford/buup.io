@@ -78,6 +78,10 @@ EXAMPLES:
 
 ## Usage as a Library
 
+```bash
+cargo add buup
+```
+
 ```rust
 use buup::{transformer_from_id, Transform, Base64Encode};
 
