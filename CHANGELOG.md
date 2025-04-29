@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/benletchford/buup/compare/v0.10.0...v0.10.1) (2025-04-29)
+
+
+### Bug Fixes
+
+* **ci:** install libglib2.0-dev for workspace builds ([44f79c2](https://github.com/benletchford/buup/commit/44f79c2a91bd51bb89afb1fce913436e26dce30e))
+
 ## [0.10.0](https://github.com/benletchford/buup/compare/v0.9.0...v0.10.0) (2025-04-28)
 
 
