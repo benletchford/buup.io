@@ -27,7 +27,7 @@ impl Transform for Base64Encode {
 }
 
 /// Encodes bytes to base64 without external dependencies
-fn base64_encode(input: &[u8]) -> String {
+pub(crate) fn base64_encode(input: &[u8]) -> String {
     const ALPHABET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     const PAD: u8 = b'=';
 

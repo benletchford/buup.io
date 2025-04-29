@@ -8,10 +8,10 @@ pub mod transformers;
 // Export the transformer structs for backward compatibility
 pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
-    HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
-    JsonToCsv, JwtDecode, LineSorter, Md5HashTransformer, Rot13, Sha256HashTransformer, Slugify,
-    SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser,
-    Uuid5Generate, UuidGenerate,
+    DeflateCompress, DeflateDecompress, HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode,
+    JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode, LineSorter, Md5HashTransformer, Rot13,
+    Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode,
+    UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
 };
 
 /// Represents a transformation error
@@ -128,12 +128,12 @@ fn register_builtin_transformers() -> Registry {
     use transformers::{
         AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
         BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
-        DecToHexTransformer, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
-        HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
-        JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
-        MorseEncode, Rot13, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats,
-        UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
-        WhitespaceRemover,
+        DecToHexTransformer, DeflateCompress, DeflateDecompress, HexDecode, HexEncode, HexToAscii,
+        HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
+        JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter,
+        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha256HashTransformer, Slugify,
+        SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser,
+        Uuid5Generate, UuidGenerate, WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -236,6 +236,15 @@ fn register_builtin_transformers() -> Registry {
 
     registry.transformers.insert(JwtDecode.id(), &JwtDecode);
 
+    // Add new Compression transformer
+    registry
+        .transformers
+        .insert(DeflateCompress.id(), &DeflateCompress);
+    // Register Decompress
+    registry
+        .transformers
+        .insert(DeflateDecompress.id(), &DeflateDecompress);
+
     registry
 }
 
@@ -301,6 +310,9 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         // Add line numbering inverses
         "linenumberadder" => transformer_from_id("linenumberremover").ok(),
         "linenumberremover" => transformer_from_id("linenumberadder").ok(),
+        // Add DEFLATE inverse pair
+        "deflatecompress" => transformer_from_id("deflatedecompress").ok(),
+        "deflatedecompress" => transformer_from_id("deflatecompress").ok(),
         // No natural inverse for whitespace remover, slugify, stats, uuid, parser, sorter, unique lines
         _ => None, // Default: no inverse
     }
