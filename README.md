@@ -157,3 +157,114 @@ EXAMPLES:
 ```bash
 cargo run --bin update_readme
 ```
+
+## Contributing
+
+Contributions are welcome! When adding new transformers or modifying code, please ensure:
+
+1. **Zero external dependencies** in the core `buup` library
+2. **Comprehensive tests** covering functionality and edge cases
+3. **Clear error handling** using `TransformError`
+4. Run `cargo test --workspace` and `cargo clippy --workspace -- -D warnings`
+
+### Creating Custom Transformers
+
+**Basic Structure**
+
+To create a custom transformer:
+
+1. Create a new struct that implements the `Transform` trait
+2. Add the struct to the registry in `lib.rs`
+
+**Step 1: Example Implementation**
+
+Here's a simple example of a custom transformer that reverses text:
+
+```rust
+use buup::{Transform, TransformError, TransformerCategory};
+
+/// Text Reverse transformer
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TextReverse;
+
+impl Transform for TextReverse {
+    fn name(&self) -> &'static str {
+        "Text Reverse"
+    }
+
+    fn id(&self) -> &'static str {
+        "textreverse"
+    }
+
+    fn category(&self) -> TransformerCategory {
+        TransformerCategory::Other
+    }
+
+    fn description(&self) -> &'static str {
+        "Reverses the input text"
+    }
+
+    fn transform(&self, input: &str) -> Result<String, TransformError> {
+        Ok(input.chars().rev().collect())
+    }
+}
+```
+
+**Step 2: Add to Registry**
+
+In `lib.rs`, add your transformer to the `register_builtin_transformers` function:
+
+```rust,ignore
+fn register_builtin_transformers() -> Registry {
+    let mut registry = Registry {
+        transformers: HashMap::new(),
+    };
+    // ... existing registrations ...
+
+    // Import your new transformer struct
+    use crate::transformers::my_transformer::MyNewTransformer;
+
+    // Add your new transformer instance
+    registry.transformers.insert(MyNewTransformer.id(), &MyNewTransformer);
+
+    registry
+}
+```
+
+**Step 3: Export Your Transformer (Optional)**
+
+If your transformer will be used directly, add it to the exports in `transformers/mod.rs`:
+
+```rust,ignore
+// src/transformers/mod.rs
+mod base64_decode;
+// ... other mods ...
+mod my_transformer; // Your new module
+
+pub use base64_decode::Base64Decode;
+// ... other uses ...
+pub use my_transformer::MyNewTransformer; // Your new transformer
+```
+
+**Step 4: Add Inverse Support (Optional)**
+
+If your transformer has an inverse operation, update the `inverse_transformer` function in `lib.rs`:
+
+```rust,ignore
+pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> {
+    match t.id() {
+        // ... existing matches ...
+        "my_encoder" => transformer_from_id("my_decoder").ok(), // Your transformer pair
+        "my_decoder" => transformer_from_id("my_encoder").ok(), // Your transformer pair
+        _ => None,
+    }
+}
+```
+
+**Tips for Creating Good Transformers**
+
+1. Follow the naming convention of existing transformers
+2. Provide clear and concise descriptions
+3. Make sure your transformer is thread-safe (impl Sync+Send)
+4. Consider implementing pairs of transformers for inverse operations
+5. Add comprehensive tests for your transformer
