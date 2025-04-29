@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/benletchford/buup/compare/v0.10.1...v0.11.0) (2025-04-29)
+
+
+### Features
+
+* add deflate (de)/compress transformers ([a598774](https://github.com/benletchford/buup/commit/a5987741f3c0e2233edb382f8f927fe0933e0e06))
+
 ## [0.10.1](https://github.com/benletchford/buup/compare/v0.10.0...v0.10.1) (2025-04-29)
 
 
