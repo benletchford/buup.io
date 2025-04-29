@@ -132,6 +132,10 @@ CRYPTOGRAPHY:
   sha256hash      - Computes the SHA-256 hash of the input text
   uuid5_generate  - Generates a version 5 UUID based on namespace and name using SHA-1. Input format: "namespace|name". Namespace can be a UUID or one of: dns, url, oid, x500.
 
+COMPRESSION:
+  deflatecompress - Compresses input using the DEFLATE algorithm (RFC 1951) and encodes the output as Base64.
+  deflatedecompress - Decompresses DEFLATE input (RFC 1951). Expects Base64 input.
+
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
   csvtojson       - Converts CSV data to JSON format

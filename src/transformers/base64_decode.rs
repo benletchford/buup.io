@@ -28,7 +28,7 @@ impl Transform for Base64Decode {
 }
 
 /// Decodes base64 string to bytes without external dependencies
-fn base64_decode(input: &str) -> Result<Vec<u8>, &'static str> {
+pub(crate) fn base64_decode(input: &str) -> Result<Vec<u8>, &'static str> {
     // Creates a mapping from each base64 character to its 6-bit value
     fn create_lookup_table() -> [i8; 256] {
         let mut table = [-1i8; 256];

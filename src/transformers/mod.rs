@@ -9,6 +9,8 @@ pub mod camel_to_snake;
 pub mod csv_to_json;
 pub mod dec_to_bin;
 pub mod dec_to_hex;
+pub mod deflate_compress;
+pub mod deflate_decompress;
 pub mod hex_decode;
 pub mod hex_encode;
 pub mod hex_to_ascii;
@@ -44,15 +46,17 @@ pub use self::{
     ascii_to_hex::AsciiToHex, base64_decode::Base64Decode, base64_encode::Base64Encode,
     bin_to_dec::BinToDecTransformer, bin_to_hex::BinToHexTransformer, binary_decode::BinaryDecode,
     binary_encode::BinaryEncode, camel_to_snake::CamelToSnake, csv_to_json::CsvToJson,
-    dec_to_bin::DecToBinTransformer, dec_to_hex::DecToHexTransformer, hex_decode::HexDecode,
-    hex_encode::HexEncode, hex_to_ascii::HexToAscii, hex_to_bin::HexToBinTransformer,
-    hex_to_dec::HexToDecTransformer, html_decode::HtmlDecode, html_encode::HtmlEncode,
-    json_formatter::JsonFormatter, json_minifier::JsonMinifier, json_to_csv::JsonToCsv,
-    line_number_adder::LineNumberAdder, line_number_remover::LineNumberRemover,
-    line_sorter::LineSorter, md5_hash::Md5HashTransformer, morse_decode::MorseDecode,
-    morse_encode::MorseEncode, rot13::Rot13, sha256_hash::Sha256HashTransformer, slugify::Slugify,
-    snake_to_camel::SnakeToCamel, text_reverse::TextReverse, text_stats::TextStats,
-    unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
+    dec_to_bin::DecToBinTransformer, dec_to_hex::DecToHexTransformer,
+    deflate_compress::DeflateCompress, deflate_decompress::DeflateDecompress,
+    hex_decode::HexDecode, hex_encode::HexEncode, hex_to_ascii::HexToAscii,
+    hex_to_bin::HexToBinTransformer, hex_to_dec::HexToDecTransformer, html_decode::HtmlDecode,
+    html_encode::HtmlEncode, json_formatter::JsonFormatter, json_minifier::JsonMinifier,
+    json_to_csv::JsonToCsv, line_number_adder::LineNumberAdder,
+    line_number_remover::LineNumberRemover, line_sorter::LineSorter, md5_hash::Md5HashTransformer,
+    morse_decode::MorseDecode, morse_encode::MorseEncode, rot13::Rot13,
+    sha256_hash::Sha256HashTransformer, slugify::Slugify, snake_to_camel::SnakeToCamel,
+    text_reverse::TextReverse, text_stats::TextStats, unique_lines::UniqueLines,
+    url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
     uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
     whitespace_remover::WhitespaceRemover,
 };
