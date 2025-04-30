@@ -1,5 +1,6 @@
 use super::base64_decode;
-use super::deflate_decompress; // Use the extracted deflate_decode_bytes
+use super::deflate_decompress;
+use crate::utils::crc32::calculate_crc32;
 use crate::{Transform, TransformError, TransformerCategory};
 
 // Constants from Gzip spec (RFC 1952)
@@ -170,33 +171,54 @@ impl Transform for GzipDecompress {
 
         let header_len = current_pos;
 
-        // Check if enough bytes remain for footer after parsing header
+        // Minimum length check
         if compressed_bytes.len() < header_len + 8 {
             return Err(TransformError::CompressionError(
                 "Input too short for Gzip footer".into(),
             ));
         }
 
+        // --- Find the end of the DEFLATE stream ---
+        // Gzip always ends with a 8-byte footer: 4 bytes CRC32 + 4 bytes ISIZE
+        // DEFLATE will *always* end with a '1' bit followed by a valid EOB code (usually 0)
+        // We only need to process until we find a valid DEFLATE end, and then add 8 bytes for the footer
+
+        // Create a safety limit - in case there's extra data, don't read all the way to the end
+        // This allows us to handle cases where garbage data is appended to a valid Gzip stream
+        let deflate_data = &compressed_bytes[header_len..];
+
+        // Decompress and check if it succeeded
+        let (decompressed_bytes, consumed_deflate_bytes) =
+            deflate_decompress::deflate_decode_bytes(deflate_data).map_err(|e| {
+                TransformError::CompressionError(format!("DEFLATE decompression failed: {}", e))
+            })?;
+
         // --- Parse Footer ---
-        let footer_start = compressed_bytes.len() - 8;
+        // Since we successfully decompressed the DEFLATE stream, we need to extract the footer data
+        // Gzip footer is always 8 bytes (4 for CRC32, 4 for ISIZE) after the deflate stream
+        // We need to find the position right after the DEFLATE data to locate the footer
+
+        // Since the footer is 8 bytes, ensure we have enough data
+        // DEFLATE decoder should have stopped exactly at the end of the DEFLATE stream,
+        // the next 8 bytes should be the footer
+        let deflate_end_pos = header_len + consumed_deflate_bytes;
+
+        if compressed_bytes.len() < deflate_end_pos + 8 {
+            return Err(TransformError::CompressionError(
+                "Input too short for Gzip footer after DEFLATE stream".into(),
+            ));
+        }
+
         let crc32_expected = u32::from_le_bytes(
-            compressed_bytes[footer_start..footer_start + 4]
+            compressed_bytes[deflate_end_pos..deflate_end_pos + 4]
                 .try_into()
                 .unwrap(),
         );
         let isize_expected = u32::from_le_bytes(
-            compressed_bytes[footer_start + 4..footer_start + 8]
+            compressed_bytes[deflate_end_pos + 4..deflate_end_pos + 8]
                 .try_into()
                 .unwrap(),
         );
-
-        // --- Decompress Data ---
-        let deflate_data = &compressed_bytes[header_len..footer_start];
-        let decompressed_bytes =
-            deflate_decompress::deflate_decode_bytes(deflate_data).map_err(|e| {
-                // Wrap the error from deflate_decode_bytes
-                TransformError::CompressionError(format!("DEFLATE decompression failed: {}", e))
-            })?;
 
         // --- Verify Footer ---
         let crc32_actual = calculate_crc32(&decompressed_bytes);
@@ -224,58 +246,12 @@ impl Transform for GzipDecompress {
     }
 }
 
-// --- CRC32 Implementation (copied from gzip_compress.rs) ---
-// TODO: Move CRC32 logic to a shared utility module
-
-const CRC32_POLYNOMIAL: u32 = 0xEDB88320;
-static CRC32_TABLE: [u32; 256] = generate_crc32_table(); // Table initialized below
-
-const fn generate_crc32_table() -> [u32; 256] {
-    let mut table = [0u32; 256];
-    let mut i = 0;
-    while i < 256 {
-        let mut crc = i as u32;
-        let mut j = 0;
-        while j < 8 {
-            if crc & 1 == 1 {
-                crc = (crc >> 1) ^ CRC32_POLYNOMIAL;
-            } else {
-                crc >>= 1;
-            }
-            j += 1;
-        }
-        table[i] = crc;
-        i += 1;
-    }
-    table
-}
-
-fn calculate_crc32(data: &[u8]) -> u32 {
-    let mut crc = !0u32;
-    for &byte in data {
-        let index = (crc ^ (byte as u32)) & 0xFF;
-        crc = CRC32_TABLE[index as usize] ^ (crc >> 8);
-    }
-    !crc
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::transformers::gzip_compress::GzipCompress; // Use our own compressor for testing
+    use crate::base64_encode;
+    use crate::transformers::gzip_compress::GzipCompress;
     use crate::Transform; // Bring trait into scope
-
-    // Helper to get base64 (requires base64 crate as dev-dependency)
-    fn encode_base64(bytes: &[u8]) -> String {
-        use base64::{engine::general_purpose::STANDARD, Engine as _};
-        STANDARD.encode(bytes)
-    }
-
-    // Helper to decode base64
-    fn decode_base64(s: &str) -> Result<Vec<u8>, base64::DecodeError> {
-        use base64::{engine::general_purpose::STANDARD, Engine as _};
-        STANDARD.decode(s)
-    }
 
     #[test]
     fn test_decompress_empty() {
@@ -327,7 +303,7 @@ mod tests {
         let bad_data = vec![
             0x2f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 255, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         ]; // Min length spoof
-        let base64_input = encode_base64(&bad_data);
+        let base64_input = base64_encode::base64_encode(&bad_data);
         let result = decompressor.transform(&base64_input);
         assert!(matches!(result, Err(TransformError::CompressionError(_))));
         assert!(result
@@ -343,7 +319,7 @@ mod tests {
         let bad_data = vec![
             0x1f, 0x8b, 9, 0, 0, 0, 0, 0, 0, 255, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         ]; // Min length spoof
-        let base64_input = encode_base64(&bad_data);
+        let base64_input = base64_encode::base64_encode(&bad_data);
         let result = decompressor.transform(&base64_input);
         assert!(matches!(result, Err(TransformError::CompressionError(_))));
         assert!(result
@@ -358,7 +334,7 @@ mod tests {
         let decompressor = GzipDecompress;
         let input = "Some data where CRC will be flipped";
         let base64_input = compressor.transform(input).unwrap();
-        let mut compressed_bytes = decode_base64(&base64_input).unwrap();
+        let mut compressed_bytes = base64_decode::base64_decode(&base64_input).unwrap();
 
         // Corrupt the CRC32 footer (bytes at len-8 to len-5)
         let len = compressed_bytes.len();
@@ -367,7 +343,7 @@ mod tests {
             // Flip a bit in CRC
         }
 
-        let corrupted_base64 = encode_base64(&compressed_bytes);
+        let corrupted_base64 = base64_encode::base64_encode(&compressed_bytes);
         let result = decompressor.transform(&corrupted_base64);
         assert!(
             matches!(result, Err(TransformError::CompressionError(_))),
@@ -386,7 +362,7 @@ mod tests {
         let decompressor = GzipDecompress;
         let input = "Some different data where ISIZE will be flipped";
         let base64_input = compressor.transform(input).unwrap();
-        let mut compressed_bytes = decode_base64(&base64_input).unwrap();
+        let mut compressed_bytes = base64_decode::base64_decode(&base64_input).unwrap();
 
         // Corrupt the ISIZE footer (bytes at len-4 to len-1)
         let len = compressed_bytes.len();
@@ -395,7 +371,7 @@ mod tests {
             // Flip a bit in ISIZE
         }
 
-        let corrupted_base64 = encode_base64(&compressed_bytes);
+        let corrupted_base64 = base64_encode::base64_encode(&compressed_bytes);
         let result = decompressor.transform(&corrupted_base64);
         assert!(
             matches!(result, Err(TransformError::CompressionError(_))),
@@ -409,27 +385,33 @@ mod tests {
     fn test_input_too_short() {
         let decompressor = GzipDecompress;
         let short_data = vec![0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 255]; // Only 10 bytes
-        let base64_input = encode_base64(&short_data);
+        let base64_input = base64_encode::base64_encode(&short_data);
         let result = decompressor.transform(&base64_input);
         assert!(matches!(result, Err(TransformError::CompressionError(_))));
         assert!(result.unwrap_err().to_string().contains("Input too short"));
     }
 
-    #[ignore]
-    // TODO: Fix this test. It fails with CRC mismatch, suggesting deflate_decode_bytes reads past end or produces wrong output when input stream has trailing garbage.
     #[test]
     fn test_data_after_footer() {
-        // Tests if the decompressor correctly stops reading after the footer
         let compressor = GzipCompress;
         let decompressor = GzipDecompress;
         let input = "Valid data";
         let base64_input = compressor.transform(input).unwrap();
-        let mut compressed_bytes = decode_base64(&base64_input).unwrap();
+        let mut compressed_bytes = base64_decode::base64_decode(&base64_input).unwrap();
+
+        // Save the original gzip footer before appending
+        let original_len = compressed_bytes.len();
+        let original_crc32 = u32::from_le_bytes(
+            compressed_bytes[original_len - 8..original_len - 4]
+                .try_into()
+                .unwrap(),
+        );
+        eprintln!("Original CRC32 value from footer: 0x{:08x}", original_crc32);
 
         // Append extra garbage data
         compressed_bytes.extend_from_slice(b"GARBAGE");
 
-        let base64_with_garbage = encode_base64(&compressed_bytes);
+        let base64_with_garbage = base64_encode::base64_encode(&compressed_bytes);
         let result = decompressor.transform(&base64_with_garbage);
 
         // Should succeed and ignore the garbage
@@ -454,7 +436,7 @@ mod tests {
         output.push(0); // Null terminator
                         // Add deflated data for "test data"
         let comp_data = GzipCompress.transform("test data").unwrap(); // Use actual compressor to get real deflated data
-        let decoded_comp = decode_base64(&comp_data).unwrap(); // This is Gzip compressed, header is 10 bytes
+        let decoded_comp = base64_decode::base64_decode(&comp_data).unwrap(); // This is Gzip compressed, header is 10 bytes
         let actual_deflated_data = &decoded_comp[10..decoded_comp.len() - 8]; // Extract deflated part (header=10, footer=8)
 
         output.extend_from_slice(actual_deflated_data);
@@ -464,7 +446,7 @@ mod tests {
         output.extend_from_slice(&crc.to_le_bytes());
         output.extend_from_slice(&isize.to_le_bytes());
 
-        let base64_input = encode_base64(&output);
+        let base64_input = base64_encode::base64_encode(&output);
         let decompressor = GzipDecompress;
         let result = decompressor.transform(&base64_input);
 
@@ -476,5 +458,5 @@ mod tests {
         assert_eq!(result.unwrap(), "test data");
     }
 
-    // TODO: Add tests for FCOMMENT, FEXTRA, FHCRC if implemented fully later.
+    // TODO: Add tests for FCOMMENT, FEXTRA, FHCRC later.
 }
