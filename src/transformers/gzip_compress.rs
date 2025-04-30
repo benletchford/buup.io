@@ -135,10 +135,8 @@ mod tests {
 
 const CRC32_POLYNOMIAL: u32 = 0xEDB88320; // Standard CRC32 polynomial (reversed)
 
-// Lazy static initialization for the CRC32 lookup table
 static CRC32_TABLE: [u32; 256] = generate_crc32_table();
 
-// Function to generate the CRC32 lookup table
 const fn generate_crc32_table() -> [u32; 256] {
     let mut table = [0u32; 256];
     let mut i = 0;
@@ -159,7 +157,6 @@ const fn generate_crc32_table() -> [u32; 256] {
     table
 }
 
-// Calculate CRC32 checksum for the given byte slice
 fn calculate_crc32(data: &[u8]) -> u32 {
     let mut crc = !0u32; // Start with inverted value (0xFFFFFFFF)
     for &byte in data {

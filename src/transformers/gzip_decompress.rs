@@ -228,7 +228,7 @@ impl Transform for GzipDecompress {
 // TODO: Move CRC32 logic to a shared utility module
 
 const CRC32_POLYNOMIAL: u32 = 0xEDB88320;
-static CRC32_TABLE: [u32; 256] = generate_crc32_table();
+static CRC32_TABLE: [u32; 256] = generate_crc32_table(); // Table initialized below
 
 const fn generate_crc32_table() -> [u32; 256] {
     let mut table = [0u32; 256];
@@ -415,11 +415,9 @@ mod tests {
         assert!(result.unwrap_err().to_string().contains("Input too short"));
     }
 
-    #[ignore]
-    // TODO: Fix this test. It fails with CRC mismatch, suggesting deflate_decode_bytes reads past end or produces wrong output when input stream has trailing garbage.
     #[test]
     fn test_data_after_footer() {
-        // This tests if the decompressor correctly stops reading after the footer
+        // Tests if the decompressor correctly stops reading after the footer
         let compressor = GzipCompress;
         let decompressor = GzipDecompress;
         let input = "Valid data";
@@ -443,7 +441,6 @@ mod tests {
 
     #[test]
     fn test_header_fname_flag() {
-        // Create Gzip data manually with FNAME flag set
         let original_data = b"test data";
         let filename = b"test.txt";
         let mut output = Vec::new();

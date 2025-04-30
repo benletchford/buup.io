@@ -12,8 +12,8 @@ pub struct DeflateDecompress;
 // Reads bits LSB-first from a byte slice.
 pub(crate) struct BitReader<'a> {
     bytes: &'a [u8],
-    byte_index: usize,
-    bit_position: u8, // Next bit to read (0-7)
+    byte_index: usize, // Start at the beginning
+    bit_position: u8,  // Next bit to read (0-7)
 }
 
 impl<'a> BitReader<'a> {
@@ -202,13 +202,13 @@ impl FixedHuffmanDecoder {
     }
 }
 
-// Extracted core DEFLATE decoding logic
+// Decodes raw DEFLATE data (supports BTYPE 00 and 01)
 pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, TransformError> {
     if compressed_bytes.is_empty() {
         return Ok(Vec::new());
     }
     let mut reader = BitReader::new(compressed_bytes);
-    let mut output: Vec<u8> = Vec::with_capacity(compressed_bytes.len() * 3); // Pre-allocate
+    let mut output: Vec<u8> = Vec::with_capacity(compressed_bytes.len() * 3);
     let fixed_decoder = FixedHuffmanDecoder::new();
 
     loop {
@@ -254,8 +254,8 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
                 loop {
                     let lit_len_code = fixed_decoder.decode_literal_length(&mut reader)?;
                     match lit_len_code {
-                        0..=255 => output.push(lit_len_code as u8),
-                        256 => break, // EOB marker
+                        0..=255 => output.push(lit_len_code as u8), // Literal byte
+                        256 => break,                               // EOB marker
                         257..=285 => {
                             // Length/Distance pair
                             let (len_base, len_extra_bits) =
@@ -290,7 +290,7 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
                                 output.push(output[start + i as usize]);
                             }
                         }
-                        _ => unreachable!(), // Code should be in 0..=285 range
+                        _ => unreachable!(),
                     }
                 }
             }
@@ -309,7 +309,7 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
         }
 
         if bfinal == 1 {
-            break; // Last block processed
+            break;
         }
     }
 
@@ -373,9 +373,7 @@ mod tests {
     #[test]
     fn test_decompress_empty() {
         let transformer = DeflateDecompress;
-        // Empty input string should result in empty output string
         assert_eq!(transformer.transform("").unwrap(), "");
-        // Decompressing the minimal empty fixed block should also work
         assert_eq!(transformer.transform("AwA=").unwrap(), "");
     }
 
