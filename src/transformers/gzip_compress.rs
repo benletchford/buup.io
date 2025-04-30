@@ -1,7 +1,6 @@
 use super::base64_encode;
 use super::deflate_compress;
-#[allow(unused_imports)] // Allowed because it's used in cfg(test)
-use crate::transformers::gzip_decompress::GzipDecompress;
+use crate::utils::crc32::calculate_crc32;
 use crate::{Transform, TransformError, TransformerCategory};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -46,14 +45,20 @@ impl Transform for GzipCompress {
         })?;
 
         // Get current timestamp (seconds since epoch) for MTIME
+        // RFC 1952 states: "If the modification time is not available, MTIME is set to zero."
+        // The wasm32-unknown-unknown target does not support std::time, so we use 0.
+        #[cfg(target_arch = "wasm32")]
+        let mtime: u32 = 0;
+
+        #[cfg(not(target_arch = "wasm32"))]
         let mtime = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map_err(|e| {
-                TransformError::CompressionError(format!("Failed to get timestamp: {}", e))
+                TransformError::CompressionError(format!("Failed to get system time: {}", e))
             })?
             .as_secs()
             .try_into()
-            .unwrap_or(0u32); // Use 0 if conversion fails or time is before epoch
+            .unwrap_or(0u32); // Use 0 if conversion fails (e.g., time before epoch)
 
         let mut output = Vec::with_capacity(10 + deflated_data.len() + 8);
 
@@ -128,61 +133,5 @@ mod tests {
             decompressed_result.err()
         );
         assert_eq!(decompressed_result.unwrap(), input);
-    }
-}
-
-// --- CRC32 Implementation (without external dependencies) ---
-
-const CRC32_POLYNOMIAL: u32 = 0xEDB88320; // Standard CRC32 polynomial (reversed)
-
-static CRC32_TABLE: [u32; 256] = generate_crc32_table();
-
-const fn generate_crc32_table() -> [u32; 256] {
-    let mut table = [0u32; 256];
-    let mut i = 0;
-    while i < 256 {
-        let mut crc = i as u32;
-        let mut j = 0;
-        while j < 8 {
-            if crc & 1 == 1 {
-                crc = (crc >> 1) ^ CRC32_POLYNOMIAL;
-            } else {
-                crc >>= 1;
-            }
-            j += 1;
-        }
-        table[i] = crc;
-        i += 1;
-    }
-    table
-}
-
-fn calculate_crc32(data: &[u8]) -> u32 {
-    let mut crc = !0u32; // Start with inverted value (0xFFFFFFFF)
-    for &byte in data {
-        let index = (crc ^ (byte as u32)) & 0xFF;
-        crc = CRC32_TABLE[index as usize] ^ (crc >> 8);
-    }
-    !crc // Final inversion
-}
-
-#[cfg(test)]
-mod crc_tests {
-    use super::*;
-
-    #[test]
-    fn test_crc32_empty() {
-        assert_eq!(calculate_crc32(b""), 0x00000000); // CRC of empty string is 0 before inversion
-    }
-
-    #[test]
-    fn test_crc32_known_values() {
-        // Known values from various sources (e.g., online calculators)
-        assert_eq!(
-            calculate_crc32(b"The quick brown fox jumps over the lazy dog"),
-            0x414FA339
-        );
-        assert_eq!(calculate_crc32(b"hello"), 0x3610A686);
-        assert_eq!(calculate_crc32(b"123456789"), 0xCBF43926);
     }
 }

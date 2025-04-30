@@ -36,14 +36,19 @@ impl<'a> BitReader<'a> {
         let mut bits_read = 0u8;
         while bits_read < num_bits {
             if self.byte_index >= self.bytes.len() {
-                // Check if remaining requested bits are padding (zeros)
-                // If we reached the end of the byte slice but still need bits, it's an error.
-                return Err(TransformError::CompressionError(format!(
-                    "Unexpected end of DEFLATE stream: needed {} more bits, index {} >= len {}",
-                    num_bits - bits_read,
-                    self.byte_index,
-                    self.bytes.len()
-                )));
+                // Original logic: Handle potential EOF by checking for padding bits.
+                if bits_read < num_bits {
+                    // Allow reading up to 7 padding bits (zeros)
+                    if num_bits - bits_read > 7 {
+                        return Err(TransformError::CompressionError(
+                            "Unexpected end of DEFLATE stream (large bit request past EOF)"
+                                .to_string(),
+                        ));
+                    }
+                    // Assume remaining bits are 0, effectively padding the value.
+                    break; // Stop reading for this call
+                }
+                // If bits_read == num_bits, we finished reading before hitting EOF, which is fine.
             }
 
             let current_byte = self.bytes[self.byte_index];
@@ -203,10 +208,14 @@ impl FixedHuffmanDecoder {
 }
 
 // Decodes raw DEFLATE data (supports BTYPE 00 and 01)
-pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, TransformError> {
+// Returns the decompressed data and the number of bytes consumed from the input.
+pub(crate) fn deflate_decode_bytes(
+    compressed_bytes: &[u8],
+) -> Result<(Vec<u8>, usize), TransformError> {
     if compressed_bytes.is_empty() {
-        return Ok(Vec::new());
+        return Ok((Vec::new(), 0)); // Return 0 consumed bytes
     }
+
     let mut reader = BitReader::new(compressed_bytes);
     let mut output: Vec<u8> = Vec::with_capacity(compressed_bytes.len() * 3);
     let fixed_decoder = FixedHuffmanDecoder::new();
@@ -254,8 +263,12 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
                 loop {
                     let lit_len_code = fixed_decoder.decode_literal_length(&mut reader)?;
                     match lit_len_code {
-                        0..=255 => output.push(lit_len_code as u8), // Literal byte
-                        256 => break,                               // EOB marker
+                        0..=255 => {
+                            output.push(lit_len_code as u8);
+                        }
+                        256 => {
+                            break; // EOB marker
+                        }
                         257..=285 => {
                             // Length/Distance pair
                             let (len_base, len_extra_bits) =
@@ -287,7 +300,8 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
                             let start = current_len - distance as usize;
                             output.reserve(length as usize);
                             for i in 0..length {
-                                output.push(output[start + i as usize]);
+                                let copied_byte = output[start + i as usize];
+                                output.push(copied_byte);
                             }
                         }
                         _ => unreachable!(),
@@ -313,12 +327,13 @@ pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, T
         }
     }
 
-    // Align reader to byte boundary after final block, consuming any padding bits
-    // This might be necessary if the caller expects the reader to be byte-aligned
-    // after processing the DEFLATE stream.
-    reader.align_to_byte();
+    let consumed_bytes = if reader.bit_position > 0 {
+        reader.byte_index + 1 // Consumed the partial byte as well
+    } else {
+        reader.byte_index
+    };
 
-    Ok(output)
+    Ok((output, consumed_bytes)) // Return output and consumed bytes
 }
 
 impl Transform for DeflateDecompress {
@@ -342,7 +357,8 @@ impl Transform for DeflateDecompress {
         let compressed_bytes = base64_decode::base64_decode(input).map_err(|e| {
             TransformError::InvalidArgument(format!("Invalid Base64 input: {}", e).into())
         })?;
-        let output = deflate_decode_bytes(&compressed_bytes)?;
+        // Call modified function, ignore consumed bytes count here
+        let (output, _consumed_bytes) = deflate_decode_bytes(&compressed_bytes)?;
         String::from_utf8(output).map_err(|_| TransformError::Utf8Error)
     }
 }

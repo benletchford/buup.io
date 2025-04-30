@@ -1,9 +1,11 @@
+#[doc = include_str!("../README.md")]
 use crate::transformers::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::OnceLock;
 
 pub mod transformers;
+pub mod utils;
 
 // Export the transformer structs for backward compatibility
 pub use transformers::{
