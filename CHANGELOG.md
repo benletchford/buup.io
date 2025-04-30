@@ -11,7 +11,6 @@
 
 ### Bug Fixes
 
-* restore ignore attribute to failing test ([514b3e2](https://github.com/benletchford/buup/commit/514b3e21a091b4b2cb6dc74742f820974b33bece))
 * **web:** improve mobile layout with svh units and height adjustments ([aa16afe](https://github.com/benletchford/buup/commit/aa16afe45dfa273738fbbb43f6dfa02507b76289))
 
 ## [0.11.0](https://github.com/benletchford/buup/compare/v0.10.1...v0.11.0) (2025-04-29)
