@@ -449,7 +449,7 @@ impl Transform for DeflateCompress {
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         let input_bytes = input.as_bytes();
         let compressed_data = deflate_bytes(input_bytes)?; // Call extracted function
-        Ok(base64_encode::base64_encode(&compressed_data)) // Base64 encode result
+        Ok(base64_encode::base64_encode(&compressed_data))
     }
 }
 
