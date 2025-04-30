@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/benletchford/buup/compare/v0.12.0...v0.13.0) (2025-04-30)
+
+
+### Features
+
+* add sha1hash transformer ([627f604](https://github.com/benletchford/buup/commit/627f604280a5e225886a3e0026cf6fb14f3d83d4))
+
 ## [0.12.0](https://github.com/benletchford/buup/compare/v0.11.0...v0.12.0) (2025-04-30)
 
 
