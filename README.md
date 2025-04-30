@@ -129,6 +129,7 @@ FORMATTERS:
 
 CRYPTOGRAPHY:
   md5hash         - Computes the MD5 hash of the input text
+  sha1hash        - Computes the SHA-1 hash of the input text (Warning: SHA-1 is cryptographically weak)
   sha256hash      - Computes the SHA-256 hash of the input text
   uuid5_generate  - Generates a version 5 UUID based on namespace and name using SHA-1. Input format: "namespace|name". Namespace can be a UUID or one of: dns, url, oid, x500.
 

@@ -133,9 +133,9 @@ fn register_builtin_transformers() -> Registry {
         DecToHexTransformer, DeflateCompress, DeflateDecompress, HexDecode, HexEncode, HexToAscii,
         HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
         JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter,
-        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha256HashTransformer, Slugify,
-        SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser,
-        Uuid5Generate, UuidGenerate, WhitespaceRemover,
+        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha1Hash, Sha256HashTransformer,
+        Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
+        UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -255,6 +255,9 @@ fn register_builtin_transformers() -> Registry {
         .transformers
         .insert(GzipDecompress.id(), &GzipDecompress);
 
+    // Register the new SHA-1 transformer
+    registry.transformers.insert(Sha1Hash.id(), &Sha1Hash);
+
     registry
 }
 
@@ -326,6 +329,10 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         // Add Gzip inverse pair
         "gzipcompress" => transformer_from_id("gzipdecompress").ok(),
         "gzipdecompress" => transformer_from_id("gzipcompress").ok(),
+        // Hashes have no inverse
+        "sha1hash" => None,
+        "sha256hash" => None,
+        "md5hash" => None,
         // No natural inverse for whitespace remover, slugify, stats, uuid, parser, sorter, unique lines, jwtdecode
         _ => None, // Default: no inverse
     }

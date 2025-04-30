@@ -31,6 +31,7 @@ pub mod md5_hash;
 pub mod morse_decode;
 pub mod morse_encode;
 pub mod rot13;
+pub mod sha1_hash;
 pub mod sha256_hash;
 pub mod slugify;
 pub mod snake_to_camel;
@@ -56,9 +57,10 @@ pub use self::{
     json_formatter::JsonFormatter, json_minifier::JsonMinifier, json_to_csv::JsonToCsv,
     line_number_adder::LineNumberAdder, line_number_remover::LineNumberRemover,
     line_sorter::LineSorter, md5_hash::Md5HashTransformer, morse_decode::MorseDecode,
-    morse_encode::MorseEncode, rot13::Rot13, sha256_hash::Sha256HashTransformer, slugify::Slugify,
-    snake_to_camel::SnakeToCamel, text_reverse::TextReverse, text_stats::TextStats,
-    unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
+    morse_encode::MorseEncode, rot13::Rot13, sha1_hash::Sha1Hash,
+    sha256_hash::Sha256HashTransformer, slugify::Slugify, snake_to_camel::SnakeToCamel,
+    text_reverse::TextReverse, text_stats::TextStats, unique_lines::UniqueLines,
+    url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
     uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
     whitespace_remover::WhitespaceRemover,
 };
