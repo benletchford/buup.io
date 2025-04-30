@@ -45,8 +45,16 @@ impl Transform for GzipCompress {
         })?;
 
         // Get current timestamp (seconds since epoch) for MTIME
-        // RFC 1952 states: "If the modification time is not available, MTIME is set to zero."
-        // The wasm32-unknown-unknown target does not support std::time, so we use 0.
+        // RFC 1952 states, if the modification time is not available, MTIME is set to zero:
+        // MTIME (Modification TIME)
+        // This gives the most recent modification time of the original
+        // file being compressed.  The time is in Unix format, i.e.,
+        // seconds since 00:00:00 GMT, Jan.  1, 1970.  (Note that this
+        // may cause problems for MS-DOS and other systems that use
+        // local rather than Universal time.)  If the compressed data
+        // did not come from a file, MTIME is set to the time at which
+        // compression started.  MTIME = 0 means no time stamp is
+        // available.
         #[cfg(target_arch = "wasm32")]
         let mtime: u32 = 0;
 
