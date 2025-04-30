@@ -330,6 +330,100 @@ fn calculate_match_length(input: &[u8], pos1: usize, pos2: usize, max_len: usize
     len
 }
 
+// Extracted core DEFLATE compression logic (without Base64 encoding)
+pub(crate) fn deflate_bytes(input_bytes: &[u8]) -> Result<Vec<u8>, TransformError> {
+    let mut writer = BitWriter::new();
+
+    if input_bytes.is_empty() {
+        // Minimal fixed block for empty input.
+        writer.write_bits(1, 1); // BFINAL
+        writer.write_bits(1, 2); // BTYPE=01 (Fixed Huffman)
+        let (reversed_eob_huff, eob_bits) = get_fixed_literal_length_huffman_code(256); // EOB
+        writer.write_bits(reversed_eob_huff as u32, eob_bits);
+        return Ok(writer.get_bytes());
+    }
+
+    let lz77_tokens = lz77_compress(input_bytes);
+
+    // Estimate size to choose between fixed Huffman and uncompressed block.
+    let mut estimated_bits = 0;
+    for token in &lz77_tokens {
+        match token {
+            Lz77Token::Literal(byte) => {
+                let (_, bits) = get_fixed_literal_length_huffman_code(*byte as u16);
+                estimated_bits += bits as usize;
+            }
+            Lz77Token::Match(length, distance) => {
+                let (len_code, _, len_extra_bits) = get_length_code(*length);
+                let (_, len_huff_bits) = get_fixed_literal_length_huffman_code(len_code);
+                estimated_bits += len_huff_bits as usize + len_extra_bits as usize;
+
+                let (dist_code, _, dist_extra_bits) = get_distance_code(*distance);
+                let (_, dist_huff_bits) = get_fixed_distance_huffman_code(dist_code);
+                estimated_bits += dist_huff_bits as usize + dist_extra_bits as usize;
+            }
+        }
+    }
+    let (_, eob_bits) = get_fixed_literal_length_huffman_code(256); // EOB marker
+    estimated_bits += eob_bits as usize;
+    estimated_bits += 3; // BFINAL + BTYPE bits
+
+    let uncompressed_size_bytes = input_bytes.len() + 5;
+    let uncompressed_size_bits = uncompressed_size_bytes * 8;
+
+    // --- Write DEFLATE Stream ---
+    writer.write_bits(1, 1); // BFINAL = 1
+
+    if estimated_bits >= uncompressed_size_bits {
+        // Write uncompressed block (BTYPE=00).
+        writer.write_bits(0, 2); // BTYPE=00
+        writer.align_to_byte();
+        let len: u16 = input_bytes.len().try_into().map_err(|_| {
+            TransformError::CompressionError(
+                "Input too large for uncompressed block length (max 65535)".into(),
+            )
+        })?;
+        let nlen = !len;
+        writer.write_bytes_raw(&len.to_le_bytes());
+        writer.write_bytes_raw(&nlen.to_le_bytes());
+        writer.write_bytes_raw(input_bytes);
+    } else {
+        // Write fixed Huffman block (BTYPE=01).
+        writer.write_bits(1, 2); // BTYPE=01
+        for token in lz77_tokens {
+            match token {
+                Lz77Token::Match(length, distance) => {
+                    let (len_code, len_extra_val, len_extra_bits) = get_length_code(length);
+                    let (reversed_len_huff, len_huff_bits) =
+                        get_fixed_literal_length_huffman_code(len_code);
+                    writer.write_bits(reversed_len_huff as u32, len_huff_bits);
+                    if len_extra_bits > 0 {
+                        writer.write_bits(len_extra_val, len_extra_bits);
+                    }
+
+                    let (dist_code, dist_extra_val, dist_extra_bits) = get_distance_code(distance);
+                    let (reversed_dist_huff, dist_huff_bits) =
+                        get_fixed_distance_huffman_code(dist_code);
+                    writer.write_bits(reversed_dist_huff as u32, dist_huff_bits);
+                    if dist_extra_bits > 0 {
+                        writer.write_bits(dist_extra_val, dist_extra_bits);
+                    }
+                }
+                Lz77Token::Literal(byte) => {
+                    let (reversed_huff, huff_bits) =
+                        get_fixed_literal_length_huffman_code(byte as u16);
+                    writer.write_bits(reversed_huff as u32, huff_bits);
+                }
+            }
+        }
+        // EOB marker.
+        let (reversed_eob_huff, eob_bits) = get_fixed_literal_length_huffman_code(256);
+        writer.write_bits(reversed_eob_huff as u32, eob_bits);
+    }
+
+    Ok(writer.get_bytes())
+}
+
 /// Compresses input using the DEFLATE algorithm (RFC 1951).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DeflateCompress;
@@ -351,94 +445,11 @@ impl Transform for DeflateCompress {
         "Compresses input using the DEFLATE algorithm (RFC 1951) and encodes the output as Base64."
     }
 
+    // Updated transform method uses deflate_bytes
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         let input_bytes = input.as_bytes();
-        let mut writer = BitWriter::new();
-
-        if input_bytes.is_empty() {
-            // Minimal fixed block for empty input.
-            writer.write_bits(1, 1); // BFINAL
-            writer.write_bits(1, 2); // BTYPE=01
-            let (reversed_eob_huff, eob_bits) = get_fixed_literal_length_huffman_code(256);
-            writer.write_bits(reversed_eob_huff as u32, eob_bits);
-            let compressed_data = writer.get_bytes();
-            return Ok(base64_encode::base64_encode(&compressed_data));
-        }
-
-        let lz77_tokens = lz77_compress(input_bytes);
-
-        // Estimate size to choose between fixed Huffman and uncompressed block.
-        let mut estimated_bits = 0;
-        for token in &lz77_tokens {
-            match token {
-                Lz77Token::Literal(byte) => {
-                    let (_, bits) = get_fixed_literal_length_huffman_code(*byte as u16);
-                    estimated_bits += bits as usize;
-                }
-                Lz77Token::Match(length, distance) => {
-                    let (len_code, _, len_extra_bits) = get_length_code(*length);
-                    let (_, len_huff_bits) = get_fixed_literal_length_huffman_code(len_code);
-                    estimated_bits += len_huff_bits as usize + len_extra_bits as usize;
-                    let (dist_code, _, dist_extra_bits) = get_distance_code(*distance);
-                    let (_, dist_huff_bits) = get_fixed_distance_huffman_code(dist_code);
-                    estimated_bits += dist_huff_bits as usize + dist_extra_bits as usize;
-                }
-            }
-        }
-        let (_, eob_bits) = get_fixed_literal_length_huffman_code(256);
-        estimated_bits += eob_bits as usize;
-        estimated_bits += 3; // BFINAL + BTYPE
-
-        let uncompressed_size_bytes = input_bytes.len() + 5; // Data + LEN/NLEN + alignment byte
-        let uncompressed_size_bits = uncompressed_size_bytes * 8;
-
-        writer.write_bits(1, 1); // BFINAL = 1
-
-        if estimated_bits >= uncompressed_size_bits {
-            // Write uncompressed block (BTYPE=00).
-            writer.write_bits(0, 2);
-            writer.align_to_byte();
-            let len = input_bytes.len() as u16;
-            let nlen = !len;
-            writer.write_bytes_raw(&len.to_le_bytes());
-            writer.write_bytes_raw(&nlen.to_le_bytes());
-            writer.write_bytes_raw(input_bytes);
-        } else {
-            // Write fixed Huffman block (BTYPE=01).
-            writer.write_bits(1, 2);
-            for token in lz77_tokens {
-                match token {
-                    Lz77Token::Match(length, distance) => {
-                        let (len_code, len_extra_val, len_extra_bits) = get_length_code(length);
-                        let (reversed_len_huff, len_huff_bits) =
-                            get_fixed_literal_length_huffman_code(len_code);
-                        writer.write_bits(reversed_len_huff as u32, len_huff_bits);
-                        if len_extra_bits > 0 {
-                            writer.write_bits(len_extra_val, len_extra_bits);
-                        }
-                        let (dist_code, dist_extra_val, dist_extra_bits) =
-                            get_distance_code(distance);
-                        let (reversed_dist_huff, dist_huff_bits) =
-                            get_fixed_distance_huffman_code(dist_code);
-                        writer.write_bits(reversed_dist_huff as u32, dist_huff_bits);
-                        if dist_extra_bits > 0 {
-                            writer.write_bits(dist_extra_val, dist_extra_bits);
-                        }
-                    }
-                    Lz77Token::Literal(byte) => {
-                        let (reversed_huff, huff_bits) =
-                            get_fixed_literal_length_huffman_code(byte as u16);
-                        writer.write_bits(reversed_huff as u32, huff_bits);
-                    }
-                }
-            }
-            // EOB marker.
-            let (reversed_eob_huff, eob_bits) = get_fixed_literal_length_huffman_code(256);
-            writer.write_bits(reversed_eob_huff as u32, eob_bits);
-        }
-
-        let compressed_data = writer.get_bytes();
-        Ok(base64_encode::base64_encode(&compressed_data))
+        let compressed_data = deflate_bytes(input_bytes)?; // Call extracted function
+        Ok(base64_encode::base64_encode(&compressed_data)) // Base64 encode result
     }
 }
 

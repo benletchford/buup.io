@@ -135,6 +135,8 @@ CRYPTOGRAPHY:
 COMPRESSION:
   deflatecompress - Compresses input using the DEFLATE algorithm (RFC 1951) and encodes the output as Base64.
   deflatedecompress - Decompresses DEFLATE input (RFC 1951). Expects Base64 input.
+  gzipcompress    - Compresses input using Gzip (RFC 1952) and encodes the output as Base64.
+  gzipdecompress  - Decompresses Gzip formatted input (RFC 1952). Expects Base64 input.
 
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
