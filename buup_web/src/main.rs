@@ -386,7 +386,7 @@ fn App() -> Element {
                 background: {bg}; 
                 color: {text}; 
                 transition: background 0.3s ease, color 0.3s ease;
-                min-height: 100vh; /* Ensure body takes at least full height */
+                min-height: 100svh; /* Use small viewport height to account for mobile toolbars */
                 width: 100vw;
             }}
             
@@ -399,7 +399,7 @@ fn App() -> Element {
                 max-width: 1200px; 
                 margin: 0 auto; 
                 padding: 2rem;
-                min-height: 100vh; /* Use min-height instead of height */
+                min-height: 100svh;
                 display: flex;
                 flex-direction: column;
             }}
@@ -736,7 +736,7 @@ fn App() -> Element {
             
             .textarea {{ 
                 width: 100%; 
-                height: 100%;
+                max-height: 100%;
                 padding: 1rem; 
                 background: transparent; 
                 border: none; 
@@ -816,7 +816,7 @@ fn App() -> Element {
                 .container {{ 
                     padding: 1rem; 
                     /* Ensure container still respects viewport height */
-                    min-height: 100vh; 
+                    min-height: 100svh; 
                 }}
                 
                 /* Restructure panels for mobile */
@@ -833,12 +833,12 @@ fn App() -> Element {
                     /* Removed min-height: 200px; Allow panels to shrink based on content */
                     max-height: none; /* Remove desktop max-height on mobile */
                     flex-shrink: 1; /* Allow panels to shrink if needed */
-                    min-height: 150px; /* Add a smaller min-height for better structure */
+                    min-height: 100px; /* Add a smaller min-height for better structure */
                 }}
 
                 .textarea-container {{
                     max-height: none; /* Remove desktop max-height */
-                    min-height: 100px; /* Ensure textarea is at least minimally visible */
+                    min-height: 50px; /* Ensure textarea is at least minimally visible */
                     overflow: auto; /* Ensure scrolling within container is possible */
                 }}
                 
