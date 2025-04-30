@@ -13,6 +13,9 @@ include = ["src", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
 [dependencies]
 # Strictly no external dependencies
 
+[dev-dependencies]
+base64 = "0.22.1" # For GzipDecompress tests
+
 [workspace]
 members = ["buup_web"]
 

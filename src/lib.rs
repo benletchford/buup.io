@@ -1,4 +1,4 @@
-#[doc = include_str!("../README.md")]
+use crate::transformers::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::OnceLock;
@@ -245,6 +245,14 @@ fn register_builtin_transformers() -> Registry {
         .transformers
         .insert(DeflateDecompress.id(), &DeflateDecompress);
 
+    // Register Gzip transformers
+    registry
+        .transformers
+        .insert(GzipCompress.id(), &GzipCompress);
+    registry
+        .transformers
+        .insert(GzipDecompress.id(), &GzipDecompress);
+
     registry
 }
 
@@ -313,7 +321,10 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         // Add DEFLATE inverse pair
         "deflatecompress" => transformer_from_id("deflatedecompress").ok(),
         "deflatedecompress" => transformer_from_id("deflatecompress").ok(),
-        // No natural inverse for whitespace remover, slugify, stats, uuid, parser, sorter, unique lines
+        // Add Gzip inverse pair
+        "gzipcompress" => transformer_from_id("gzipdecompress").ok(),
+        "gzipdecompress" => transformer_from_id("gzipcompress").ok(),
+        // No natural inverse for whitespace remover, slugify, stats, uuid, parser, sorter, unique lines, jwtdecode
         _ => None, // Default: no inverse
     }
 }

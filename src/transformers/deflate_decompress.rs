@@ -10,7 +10,7 @@ use std::collections::HashMap;
 pub struct DeflateDecompress;
 
 // Reads bits LSB-first from a byte slice.
-struct BitReader<'a> {
+pub(crate) struct BitReader<'a> {
     bytes: &'a [u8],
     byte_index: usize,
     bit_position: u8, // Next bit to read (0-7)
@@ -37,17 +37,13 @@ impl<'a> BitReader<'a> {
         while bits_read < num_bits {
             if self.byte_index >= self.bytes.len() {
                 // Check if remaining requested bits are padding (zeros)
-                if bits_read < num_bits {
-                    // It's okay to request slightly more bits than available if they would be zero padding,
-                    // but a large difference indicates an issue.
-                    if num_bits - bits_read > 7 {
-                        return Err(TransformError::CompressionError(
-                            "Unexpected end of DEFLATE stream".to_string(),
-                        ));
-                    }
-                    // Assume remaining bits are 0
-                    break;
-                }
+                // If we reached the end of the byte slice but still need bits, it's an error.
+                return Err(TransformError::CompressionError(format!(
+                    "Unexpected end of DEFLATE stream: needed {} more bits, index {} >= len {}",
+                    num_bits - bits_read,
+                    self.byte_index,
+                    self.bytes.len()
+                )));
             }
 
             let current_byte = self.bytes[self.byte_index];
@@ -206,6 +202,125 @@ impl FixedHuffmanDecoder {
     }
 }
 
+// Extracted core DEFLATE decoding logic
+pub(crate) fn deflate_decode_bytes(compressed_bytes: &[u8]) -> Result<Vec<u8>, TransformError> {
+    if compressed_bytes.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut reader = BitReader::new(compressed_bytes);
+    let mut output: Vec<u8> = Vec::with_capacity(compressed_bytes.len() * 3); // Pre-allocate
+    let fixed_decoder = FixedHuffmanDecoder::new();
+
+    loop {
+        let bfinal = reader.read_bits(1)?;
+        let btype = reader.read_bits(2)?;
+
+        match btype {
+            0b00 => {
+                // Handle uncompressed block
+                reader.align_to_byte();
+                let len = reader.read_bits(16)? as u16;
+                let nlen = reader.read_bits(16)? as u16;
+                if len != !nlen {
+                    return Err(TransformError::CompressionError("LEN/NLEN mismatch".into()));
+                }
+                let len_usize = len as usize;
+                // Check remaining bytes needed
+                let remaining_bytes = reader.remaining_bytes();
+                let bytes_needed = if reader.bit_position == 0 {
+                    len_usize
+                } else {
+                    // If mid-byte, we need the current byte + len full bytes
+                    len_usize + 1
+                };
+                if remaining_bytes < bytes_needed {
+                    return Err(TransformError::CompressionError(
+                        "Unexpected end of stream reading uncompressed data".into(),
+                    ));
+                }
+                output.reserve(len_usize);
+                for _ in 0..len_usize {
+                    if reader.bit_position != 0 {
+                        return Err(TransformError::CompressionError(
+                            "Misaligned stream reading uncompressed data byte".into(),
+                        ));
+                    }
+                    let byte = reader.read_bits(8)? as u8;
+                    output.push(byte);
+                }
+            }
+            0b01 => {
+                // Handle fixed Huffman block
+                loop {
+                    let lit_len_code = fixed_decoder.decode_literal_length(&mut reader)?;
+                    match lit_len_code {
+                        0..=255 => output.push(lit_len_code as u8),
+                        256 => break, // EOB marker
+                        257..=285 => {
+                            // Length/Distance pair
+                            let (len_base, len_extra_bits) =
+                                deflate_compress::get_length_info(lit_len_code);
+                            let len_extra_val = if len_extra_bits > 0 {
+                                reader.read_bits(len_extra_bits)?
+                            } else {
+                                0
+                            };
+                            let length = len_base + len_extra_val as u16;
+
+                            let dist_code = fixed_decoder.decode_distance(&mut reader)?;
+                            let (dist_base, dist_extra_bits) =
+                                deflate_compress::get_distance_info(dist_code);
+                            let dist_extra_val = if dist_extra_bits > 0 {
+                                reader.read_bits(dist_extra_bits)?
+                            } else {
+                                0
+                            };
+                            let distance = dist_base + dist_extra_val as u16;
+
+                            let current_len = output.len();
+                            if distance as usize > current_len {
+                                return Err(TransformError::CompressionError(format!(
+                                    "Invalid back-reference distance {} > {}",
+                                    distance, current_len
+                                )));
+                            }
+                            let start = current_len - distance as usize;
+                            output.reserve(length as usize);
+                            for i in 0..length {
+                                output.push(output[start + i as usize]);
+                            }
+                        }
+                        _ => unreachable!(), // Code should be in 0..=285 range
+                    }
+                }
+            }
+            0b10 => {
+                // Dynamic Huffman Tables - Not Supported
+                return Err(TransformError::CompressionError(
+                    "Dynamic Huffman codes (BTYPE=10) are not supported".into(),
+                ));
+            }
+            _ => {
+                // Reserved BTYPE=11
+                return Err(TransformError::CompressionError(
+                    "Invalid or reserved block type (BTYPE=11)".into(),
+                ));
+            }
+        }
+
+        if bfinal == 1 {
+            break; // Last block processed
+        }
+    }
+
+    // Align reader to byte boundary after final block, consuming any padding bits
+    // This might be necessary if the caller expects the reader to be byte-aligned
+    // after processing the DEFLATE stream.
+    reader.align_to_byte();
+
+    Ok(output)
+}
+
 impl Transform for DeflateDecompress {
     fn name(&self) -> &'static str {
         "DEFLATE Decompress"
@@ -227,104 +342,7 @@ impl Transform for DeflateDecompress {
         let compressed_bytes = base64_decode::base64_decode(input).map_err(|e| {
             TransformError::InvalidArgument(format!("Invalid Base64 input: {}", e).into())
         })?;
-        if compressed_bytes.is_empty() {
-            return Ok(String::new());
-        }
-        let mut reader = BitReader::new(&compressed_bytes);
-        let mut output: Vec<u8> = Vec::with_capacity(compressed_bytes.len() * 3);
-        let fixed_decoder = FixedHuffmanDecoder::new();
-
-        loop {
-            let bfinal = reader.read_bits(1)?;
-            let btype = reader.read_bits(2)?;
-
-            match btype {
-                0b00 => {
-                    // Handle uncompressed block
-                    reader.align_to_byte();
-                    let len = reader.read_bits(16)? as u16;
-                    let nlen = reader.read_bits(16)? as u16;
-                    if len != !nlen {
-                        return Err(TransformError::CompressionError("LEN/NLEN mismatch".into()));
-                    }
-                    let len_usize = len as usize;
-                    // Check remaining bytes needed (considering potential partial byte)
-                    let remaining_bytes = reader.remaining_bytes();
-                    let bytes_needed = if reader.bit_position == 0 {
-                        len_usize
-                    } else {
-                        len_usize + 1
-                    };
-                    if remaining_bytes < bytes_needed {
-                        return Err(TransformError::CompressionError(
-                            "Unexpected end of stream reading uncompressed data".into(),
-                        ));
-                    }
-                    output.reserve(len_usize);
-                    for _ in 0..len_usize {
-                        if reader.bit_position != 0 {
-                            return Err(TransformError::CompressionError(
-                                "Misaligned before uncompressed byte read".into(),
-                            ));
-                        }
-                        output.push(reader.read_bits(8)? as u8);
-                    }
-                }
-                0b01 => {
-                    // Handle fixed Huffman block
-                    loop {
-                        let lit_len_code = fixed_decoder.decode_literal_length(&mut reader)?;
-                        match lit_len_code {
-                            0..=255 => output.push(lit_len_code as u8),
-                            256 => break, // EOB
-                            257..=285 => {
-                                let (len_base, len_extra_bits) =
-                                    deflate_compress::get_length_info(lit_len_code);
-                                let len_extra_val = if len_extra_bits > 0 {
-                                    reader.read_bits(len_extra_bits)?
-                                } else {
-                                    0
-                                };
-                                let length = len_base + len_extra_val as u16;
-                                let dist_code = fixed_decoder.decode_distance(&mut reader)?;
-                                let (dist_base, dist_extra_bits) =
-                                    deflate_compress::get_distance_info(dist_code);
-                                let dist_extra_val = if dist_extra_bits > 0 {
-                                    reader.read_bits(dist_extra_bits)?
-                                } else {
-                                    0
-                                };
-                                let distance = dist_base + dist_extra_val as u16;
-                                let current_len = output.len();
-                                if distance as usize > current_len {
-                                    return Err(TransformError::CompressionError(
-                                        "Invalid distance".into(),
-                                    ));
-                                }
-                                let start = current_len - distance as usize;
-                                for i in 0..length {
-                                    output.push(output[start + i as usize]);
-                                }
-                            }
-                            _ => unreachable!(),
-                        }
-                    }
-                }
-                0b10 => {
-                    return Err(TransformError::CompressionError(
-                        "Dynamic Huffman not supported".into(),
-                    ))
-                }
-                _ => {
-                    return Err(TransformError::CompressionError(
-                        "Invalid block type".into(),
-                    ))
-                }
-            }
-            if bfinal == 1 {
-                break;
-            }
-        }
+        let output = deflate_decode_bytes(&compressed_bytes)?;
         String::from_utf8(output).map_err(|_| TransformError::Utf8Error)
     }
 }
