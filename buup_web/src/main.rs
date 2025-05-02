@@ -100,13 +100,13 @@ fn App() -> Element {
 
     // Initialize signals with saved values
     let mut is_dark_mode = use_signal(|| initial_theme);
-    let mut input = use_signal(|| "Hello, world!".to_string());
     let mut current_transformer = use_signal(|| {
         Rc::new(
             buup::transformer_from_id(&initial_transformer_id)
                 .unwrap_or_else(|_| buup::transformer_from_id("base64encode").unwrap()),
         )
     });
+    let mut input = use_signal(|| "".to_string());
     let mut show_transformer_menu = use_signal(|| false);
     let mut transformer_category = use_signal(|| "all");
     let mut search_query = use_signal(String::new);
@@ -194,9 +194,15 @@ fn App() -> Element {
     });
 
     // Apply transformation and get output
-    let output = match current_transformer().transform(&input()) {
-        Ok(result) => result,
-        Err(err) => err.to_string(),
+    let output = if input().is_empty() {
+        current_transformer()
+            .transform(current_transformer().default_test_input())
+            .unwrap()
+    } else {
+        match current_transformer().transform(&input()) {
+            Ok(result) => result,
+            Err(err) => err.to_string(),
+        }
     };
 
     // Clone output for use in the clipboard function
@@ -273,9 +279,11 @@ fn App() -> Element {
     let swap_transform = move |_| {
         if let Some(inverse) = buup::inverse_transformer(&**current_transformer()) {
             // First, get the current output value
-            let current_output = match current_transformer().transform(&input()) {
-                Ok(result) => result,
-                Err(err) => err.to_string(),
+            let current_output = match input().is_empty() {
+                true => "".to_string(),
+                false => current_transformer()
+                    .transform(&input())
+                    .unwrap_or_else(|err| err.to_string()),
             };
 
             // Set the output as the new input
@@ -1134,9 +1142,8 @@ fn App() -> Element {
                             class: "textarea",
                             value: "{input}",
                             oninput: move |evt| input.set(evt.value().clone()),
-                            placeholder: "",
+                            placeholder: "{current_transformer().default_test_input()}",
                         }
-                        div { class: "placeholder", "Enter text to transform..." }
                     }
                 }
 
@@ -1178,11 +1185,9 @@ fn App() -> Element {
                     div { class: "textarea-container",
                         textarea {
                             class: "textarea",
-                            value: "{output}",
+                            value: "{output}" ,
                             readonly: true,
-                            placeholder: "",
                         }
-                        div { class: "placeholder", "Output will appear here..." }
                     }
                 }
             }
