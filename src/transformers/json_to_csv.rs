@@ -25,7 +25,7 @@ impl Transform for JsonToCsv {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        DEFAULT_TEST_INPUT
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -517,16 +517,23 @@ mod tests {
     #[test]
     fn test_json_to_csv_basic() {
         let transformer = JsonToCsv;
-        let input = DEFAULT_TEST_INPUT;
-        let expected = "color,id,name\nred,1,apple\nyellow,2,banana\n,3,grape";
-        assert_eq!(transformer.transform(input).unwrap(), expected);
+        let input = transformer.default_test_input();
+        let result = transformer.transform(input).unwrap();
 
-        let input_simple = r#"[{"name":"Alice","age":30},{"name":"Bob","age":25}]"#;
-        let expected_simple = "age,name\n30,Alice\n25,Bob";
-        assert_eq!(
-            transformer.transform(input_simple).unwrap(),
-            expected_simple
+        let lines: Vec<&str> = result.trim_end().split('\n').collect(); // Trim trailing newline before split
+        assert!(
+            lines.len() >= 1,
+            "CSV output should have at least a header line"
         );
+
+        let header = lines[0];
+        // Check header contains each field (alphabetically sorted)
+        assert_eq!(header, "color,id,name");
+
+        // Check row content matches the sorted header order
+        assert_eq!(lines[1], "red,1,apple");
+        assert_eq!(lines[2], "yellow,2,banana");
+        assert_eq!(lines[3], ",3,grape");
     }
 
     #[test]

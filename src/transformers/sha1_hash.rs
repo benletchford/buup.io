@@ -11,8 +11,8 @@ const H4: u32 = 0xC3D2E1F0;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Sha1Hash;
 
-/// Default test input for SHA1 Hash
-pub const DEFAULT_TEST_INPUT: &str = "buup text utility";
+// Default test input for SHA1 Hash
+// pub const DEFAULT_TEST_INPUT: &str = "buup text utility";
 
 impl Sha1Hash {
     // Pads the message according to SHA-1 standard (RFC 3174)
@@ -138,8 +138,8 @@ mod tests {
     #[test]
     fn test_sha1_simple_string() {
         let transformer = Sha1Hash;
-        let input = DEFAULT_TEST_INPUT;
-        let expected = "3f7ffdf676a9230ba2a2f5e4a49371d1c6b6e4ff";
+        let input = transformer.default_test_input();
+        let expected = "fb68687a3bc7428da3ddeecabc907bea236ae70b";
         assert_eq!(transformer.transform(input).unwrap(), expected);
 
         let input_hw = "hello world";
