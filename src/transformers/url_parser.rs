@@ -4,6 +4,10 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UrlParser;
 
+/// Default test input for URL Parser
+pub const DEFAULT_TEST_INPUT: &str =
+    "https://user:pass@example.com:8080/path/to/resource?key=value&key2=value2#fragment";
+
 // List of known non-hierarchical schemes (add more as needed)
 const NON_HIERARCHICAL_SCHEMES: &[&str] = &["mailto", "urn", "tel", "sms", "news", "isbn"];
 
@@ -216,8 +220,7 @@ mod tests {
     #[test]
     fn test_url_parser_full() {
         let transformer = UrlParser;
-        let url =
-            "https://user:pass@example.com:8080/path/to/resource?key=value&key2=value2#fragment";
+        let url = DEFAULT_TEST_INPUT;
         let result = transformer.transform(url).unwrap();
         assert_eq!(get_component(&result, "Scheme"), "https");
         assert_eq!(get_component(&result, "UserInfo"), "user:pass");

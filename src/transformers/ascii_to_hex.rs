@@ -12,6 +12,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AsciiToHex;
 
+/// Default test input for ASCII to Hex
+pub const DEFAULT_TEST_INPUT: &str = "Hello";
+
 impl Transform for AsciiToHex {
     fn name(&self) -> &'static str {
         "ASCII to Hex"
@@ -49,7 +52,10 @@ mod tests {
     #[test]
     fn test_ascii_to_hex() {
         let transformer = AsciiToHex;
-        assert_eq!(transformer.transform("Hello").unwrap(), "48656c6c6f");
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "48656c6c6f"
+        );
         assert_eq!(transformer.transform("World").unwrap(), "576f726c64");
         assert_eq!(transformer.transform("123").unwrap(), "313233");
         assert_eq!(transformer.transform(" ").unwrap(), "20"); // Space character

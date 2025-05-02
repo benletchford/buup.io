@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct MorseEncode;
 
+/// Default test input for Morse Encode
+pub const DEFAULT_TEST_INPUT: &str = "Hello World";
+
 impl Transform for MorseEncode {
     fn name(&self) -> &'static str {
         "Morse Encode"
@@ -91,7 +94,7 @@ mod tests {
         let transformer = MorseEncode;
         assert_eq!(transformer.transform("SOS").unwrap(), "... --- ...");
         assert_eq!(
-            transformer.transform("Hello World").unwrap(),
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
             ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."
         );
     }

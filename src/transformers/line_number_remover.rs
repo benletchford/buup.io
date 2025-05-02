@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LineNumberRemover;
 
+/// Default test input for Line Number Remover
+pub const DEFAULT_TEST_INPUT: &str = "1. First line\n2. Second line\n3. Third line";
+
 impl Transform for LineNumberRemover {
     fn name(&self) -> &'static str {
         "Line Number Remover"
@@ -74,6 +77,10 @@ mod tests {
     #[test]
     fn test_line_number_remover() {
         let transformer = LineNumberRemover;
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "First line\nSecond line\nThird line"
+        );
         assert_eq!(
             transformer.transform("1 Hello\n2 World").unwrap(),
             "Hello\nWorld"

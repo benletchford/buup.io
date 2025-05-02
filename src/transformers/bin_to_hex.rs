@@ -25,6 +25,9 @@ impl From<BinToHexError> for TransformError {
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug)]
 pub struct BinToHexTransformer;
 
+/// Default test input for Bin to Hex
+pub const DEFAULT_TEST_INPUT: &str = "11111111"; // Represents 255 (FF in hex)
+
 impl Transform for BinToHexTransformer {
     fn id(&self) -> &'static str {
         "bin_to_hex"
@@ -62,7 +65,10 @@ mod tests {
     #[test]
     fn test_bin_to_hex() {
         let transformer = BinToHexTransformer;
-        assert_eq!(transformer.transform("11111111").unwrap(), "FF".to_string());
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "FF".to_string()
+        );
         assert_eq!(transformer.transform("0").unwrap(), "0".to_string());
         assert_eq!(transformer.transform("101010").unwrap(), "2A".to_string());
         assert_eq!(transformer.transform("10000").unwrap(), "10".to_string());

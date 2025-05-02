@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SnakeToCamel;
 
+/// Default test input for Snake to Camel
+pub const DEFAULT_TEST_INPUT: &str = "my_variable_name";
+
 impl Transform for SnakeToCamel {
     fn name(&self) -> &'static str {
         "Snake Case to CamelCase"
@@ -51,6 +54,12 @@ mod tests {
     #[test]
     fn test_snake_to_camel() {
         let transformer = SnakeToCamel;
+
+        // Test default input
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "myVariableName"
+        );
 
         // Test basic snake_case inputs
         assert_eq!(transformer.transform("hello_world").unwrap(), "helloWorld");

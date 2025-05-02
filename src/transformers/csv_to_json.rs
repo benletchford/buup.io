@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CsvToJson;
 
+/// Default test input for CSV to JSON
+pub const DEFAULT_TEST_INPUT: &str = "id,name,value\n1,apple,1.5\n2,banana,0.75";
+
 impl Transform for CsvToJson {
     fn name(&self) -> &'static str {
         "CSV to JSON"
@@ -171,8 +174,23 @@ mod tests {
     #[test]
     fn test_csv_to_json_basic() {
         let transformer = CsvToJson;
-        let input = "name,age,active\nAlice,30,true\nBob,25,false";
-        let expected = r#"[
+        let input = DEFAULT_TEST_INPUT; // Use default for a basic check
+        let expected_default = r#"[
+  {
+    "id":1,
+    "name":"apple",
+    "value":1.5
+  },
+  {
+    "id":2,
+    "name":"banana",
+    "value":0.75
+  }
+]"#;
+        assert_eq!(transformer.transform(input).unwrap(), expected_default);
+
+        let input_complex = "name,age,active\nAlice,30,true\nBob,25,false";
+        let expected_complex = r#"[
   {
     "name":"Alice",
     "age":30,
@@ -184,7 +202,10 @@ mod tests {
     "active":false
   }
 ]"#;
-        assert_eq!(transformer.transform(input).unwrap(), expected);
+        assert_eq!(
+            transformer.transform(input_complex).unwrap(),
+            expected_complex
+        );
     }
 
     #[test]

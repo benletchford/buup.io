@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UrlEncode;
 
+/// Default test input for URL Encode
+pub const DEFAULT_TEST_INPUT: &str = "Hello, World!";
+
 impl Transform for UrlEncode {
     fn name(&self) -> &'static str {
         "URL Encode"
@@ -66,7 +69,7 @@ mod tests {
     fn test_url_encode() {
         let transformer = UrlEncode;
         assert_eq!(
-            transformer.transform("Hello, World!").unwrap(),
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
             "Hello%2C+World%21"
         );
         assert_eq!(transformer.transform("a b").unwrap(), "a+b");

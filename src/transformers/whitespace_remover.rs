@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct WhitespaceRemover;
 
+/// Default test input for Whitespace Remover
+pub const DEFAULT_TEST_INPUT: &str = "Hello\n  World with\t tabs  and spaces.";
+
 impl Transform for WhitespaceRemover {
     fn name(&self) -> &'static str {
         "Whitespace Remover"
@@ -33,6 +36,10 @@ mod tests {
     #[test]
     fn test_whitespace_remover() {
         let transformer = WhitespaceRemover;
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "HelloWorldwithtabsandspaces."
+        );
         assert_eq!(
             transformer.transform("Hello\n World\t!").unwrap(),
             "HelloWorld!"

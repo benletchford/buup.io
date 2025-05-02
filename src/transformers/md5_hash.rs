@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Md5HashTransformer;
 
+/// Default test input for MD5 Hash
+pub const DEFAULT_TEST_INPUT: &str = "buup text utility";
+
 // MD5 Constants
 // Shift amounts for each round
 const S: [u32; 64] = [
@@ -154,9 +157,13 @@ mod tests {
     #[test]
     fn test_md5_simple_string() {
         let transformer = Md5HashTransformer;
-        let input = "hello world";
-        let expected = "5eb63bbbe01eeed093cb22bb8f5acdc3";
+        let input = DEFAULT_TEST_INPUT;
+        let expected = "9da2993109f7a900639e09276ead55a8";
         assert_eq!(transformer.transform(input).unwrap(), expected);
+
+        let input_hw = "hello world";
+        let expected_hw = "5eb63bbbe01eeed093cb22bb8f5acdc3";
+        assert_eq!(transformer.transform(input_hw).unwrap(), expected_hw);
     }
 
     #[test]

@@ -26,6 +26,9 @@ impl From<DecToBinError> for TransformError {
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug)]
 pub struct DecToBinTransformer;
 
+/// Default test input for Dec to Bin
+pub const DEFAULT_TEST_INPUT: &str = "42"; // Represents 101010 in binary
+
 impl Transform for DecToBinTransformer {
     fn id(&self) -> &'static str {
         "dec_to_bin"
@@ -63,6 +66,10 @@ mod tests {
     #[test]
     fn test_dec_to_bin() {
         let transformer = DecToBinTransformer;
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "101010".to_string()
+        );
         assert_eq!(transformer.transform("10").unwrap(), "1010".to_string());
         assert_eq!(transformer.transform("0").unwrap(), "0".to_string());
         assert_eq!(transformer.transform("7").unwrap(), "111".to_string());

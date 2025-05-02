@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HtmlEncode;
 
+/// Default test input for HTML Encode
+pub const DEFAULT_TEST_INPUT: &str = "<p>Hello & Welcome!</p>";
+
 impl Transform for HtmlEncode {
     fn name(&self) -> &'static str {
         "HTML Encode"
@@ -49,6 +52,12 @@ mod tests {
     #[test]
     fn test_html_encode() {
         let encoder = HtmlEncode;
+
+        // Test default input
+        assert_eq!(
+            encoder.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "&lt;p&gt;Hello &amp; Welcome!&lt;&#47;p&gt;"
+        );
 
         // Basic test with various special characters - note that '/' is encoded to '&#47;'
         assert_eq!(

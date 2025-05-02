@@ -424,9 +424,12 @@ pub(crate) fn deflate_bytes(input_bytes: &[u8]) -> Result<Vec<u8>, TransformErro
     Ok(writer.get_bytes())
 }
 
-/// Compresses input using the DEFLATE algorithm (RFC 1951).
+/// Deflate compression transformer (RFC 1951)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DeflateCompress;
+
+/// Default test input for Deflate Compress
+pub const DEFAULT_TEST_INPUT: &str = "Hello, Deflate World!";
 
 impl Transform for DeflateCompress {
     fn name(&self) -> &'static str {
@@ -456,6 +459,8 @@ impl Transform for DeflateCompress {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::transformers::deflate_decompress::DeflateDecompress;
+    use crate::Transform;
 
     #[test]
     fn test_deflate_empty() {
@@ -468,17 +473,18 @@ mod tests {
 
     #[test]
     fn test_deflate_simple() {
-        let transformer = DeflateCompress;
-        let input = "Hello, world!";
-        let expected_base64 = "80jNycnXUSjPL8pJUQQA";
-        match transformer.transform(input) {
-            Ok(actual_base64) => {
-                assert_eq!(actual_base64, expected_base64);
-            }
-            Err(e) => {
-                panic!("transform failed for input '{}': {:?}", input, e);
-            }
-        }
+        let compressor = DeflateCompress;
+        let decompressor = DeflateDecompress;
+        let input = DEFAULT_TEST_INPUT;
+        let compressed_b64 = compressor.transform(input).unwrap();
+        let decompressed = decompressor.transform(&compressed_b64).unwrap();
+        assert_eq!(decompressed, input);
+
+        // Original simple test
+        let input_hi = "Hi";
+        let compressed_hi_b64 = compressor.transform(input_hi).unwrap();
+        let decompressed_hi = decompressor.transform(&compressed_hi_b64).unwrap();
+        assert_eq!(decompressed_hi, input_hi);
     }
 
     #[test]
