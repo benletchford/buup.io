@@ -17,11 +17,15 @@ impl Transform for LineNumberRemover {
     }
 
     fn description(&self) -> &'static str {
-        "Removes leading line numbers (e.g., '1 ', '2. ', '3:\t') from each line."
+        "Removes line numbers (and optional delimiters) from the beginning of each line."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Formatter
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

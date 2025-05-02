@@ -199,6 +199,10 @@ impl Transform for UrlParser {
 
         Ok(result)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "https://user:pass@example.com:8080/p/a/t/h?query=string&key=val#fragment"
+    }
 }
 
 #[cfg(test)]

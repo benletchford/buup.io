@@ -32,18 +32,24 @@ impl Transform for SnakeToCamel {
         let mut result = String::with_capacity(input.len());
         let mut capitalize_next = false;
 
-        for c in input.chars() {
+        for (i, c) in input.chars().enumerate() {
             if c == '_' {
                 capitalize_next = true;
             } else if capitalize_next {
                 result.push(c.to_ascii_uppercase());
                 capitalize_next = false;
+            } else if i == 0 {
+                result.push(c.to_ascii_lowercase());
             } else {
                 result.push(c);
             }
         }
 
         Ok(result)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "convert_this_snake_case_string"
     }
 }
 

@@ -17,11 +17,15 @@ impl Transform for HexDecode {
     }
 
     fn description(&self) -> &'static str {
-        "Decode hexadecimal to original text"
+        "Decodes a hexadecimal string into its original bytes, then interprets as UTF-8."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Decoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

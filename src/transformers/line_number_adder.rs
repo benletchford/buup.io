@@ -17,7 +17,11 @@ impl Transform for LineNumberAdder {
     }
 
     fn description(&self) -> &'static str {
-        "Adds line numbers (1-based) to the beginning of each line."
+        "Adds line numbers to the beginning of each line."
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn category(&self) -> TransformerCategory {

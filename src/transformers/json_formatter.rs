@@ -17,11 +17,15 @@ impl Transform for JsonFormatter {
     }
 
     fn description(&self) -> &'static str {
-        "Formats JSON with proper indentation"
+        "Formats (pretty-prints) a JSON string."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Formatter
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

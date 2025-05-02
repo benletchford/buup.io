@@ -67,11 +67,15 @@ impl Transform for MorseDecode {
     }
 
     fn description(&self) -> &'static str {
-        "Decode Morse code to text"
+        "Decodes Morse code into text."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Decoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

@@ -27,9 +27,6 @@ impl From<DecToHexError> for TransformError {
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug)]
 pub struct DecToHexTransformer;
 
-/// Default test input for Dec to Hex
-pub const DEFAULT_TEST_INPUT: &str = "255"; // Represents FF in hex
-
 impl Transform for DecToHexTransformer {
     fn id(&self) -> &'static str {
         "dec_to_hex"
@@ -58,6 +55,10 @@ impl Transform for DecToHexTransformer {
         let hex_string = format!("{:X}", decimal_value);
         Ok(hex_string)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "255" // Represents FF in hex
+    }
 }
 
 #[cfg(test)]
@@ -68,7 +69,9 @@ mod tests {
     fn test_dec_to_hex() {
         let transformer = DecToHexTransformer;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
             "FF".to_string()
         );
         assert_eq!(transformer.transform("0").unwrap(), "0".to_string());

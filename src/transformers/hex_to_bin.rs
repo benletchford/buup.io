@@ -38,12 +38,16 @@ impl Transform for HexToBinTransformer {
     }
 
     fn description(&self) -> &'static str {
-        "Convert hexadecimal numbers to binary."
+        "Converts hexadecimal input to its binary representation (Base64 encoded)."
     }
 
     fn category(&self) -> TransformerCategory {
         // Categorizing as Encoder as it primarily changes representation
         TransformerCategory::Encoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

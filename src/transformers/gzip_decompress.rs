@@ -39,6 +39,11 @@ impl Transform for GzipDecompress {
         "Decompresses Gzip formatted input (RFC 1952). Expects Base64 input."
     }
 
+    fn default_test_input(&self) -> &'static str {
+        // Gzipped and Base64 encoded string "test"
+        "H4sIAAAAAAAA/ytJLS4BAAx+f9gEAAAA"
+    }
+
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         let compressed_bytes = base64_decode::base64_decode(input).map_err(|e| {
             TransformError::InvalidArgument(format!("Invalid Base64 input: {}", e).into())

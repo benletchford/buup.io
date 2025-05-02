@@ -30,15 +30,13 @@ impl Transform for Slugify {
         }
 
         let mut slug = String::with_capacity(input.len());
-        let mut last_char_was_dash = true; // Treat start as if preceded by a dash
+        let mut last_char_was_dash = true; // Treat beginning as if preceded by a dash
 
         for c in input.chars() {
             if c.is_ascii_alphanumeric() {
-                // Append lowercase alphanumeric chars
                 slug.push(c.to_ascii_lowercase());
                 last_char_was_dash = false;
             } else if c.is_whitespace() || c == '-' || c == '_' {
-                // Replace whitespace and some separators with a single dash
                 if !last_char_was_dash {
                     slug.push('-');
                     last_char_was_dash = true;
@@ -50,8 +48,8 @@ impl Transform for Slugify {
             }
         }
 
-        // Remove potential trailing dash
-        if slug.ends_with('-') {
+        // Remove trailing dash if exists and the slug is not just a dash
+        if slug.ends_with('-') && slug.len() > 1 {
             slug.pop();
         }
 
@@ -62,6 +60,10 @@ impl Transform for Slugify {
         }
 
         Ok(slug)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "This is a Test String! 123?"
     }
 }
 

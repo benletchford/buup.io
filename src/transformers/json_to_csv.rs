@@ -17,11 +17,15 @@ impl Transform for JsonToCsv {
     }
 
     fn description(&self) -> &'static str {
-        "Converts JSON data to CSV format"
+        "Converts a JSON array of objects into CSV format."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Other
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

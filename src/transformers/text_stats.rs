@@ -26,41 +26,29 @@ impl Transform for TextStats {
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
-        let char_count = input.chars().count();
-        let line_count = input.lines().count();
-        let word_count = input.split_whitespace().count();
+        let lines = input.lines().count();
+        let words = input.split_whitespace().count();
+        let chars = input.chars().count();
 
-        // Basic sentence counting: ends with . ! ? followed by whitespace or end of string.
-        // This is a naive implementation.
-        let mut sentence_count = 0;
-        let mut last_char_was_terminator = false;
-        for c in input.chars() {
-            if c == '.' || c == '!' || c == '?' {
-                last_char_was_terminator = true;
-            } else if last_char_was_terminator && c.is_whitespace() {
-                sentence_count += 1;
-                last_char_was_terminator = false;
-            } else if !c.is_whitespace() {
-                last_char_was_terminator = false;
-            }
-        }
-        // If the text ends with a terminator but no trailing whitespace
-        if last_char_was_terminator {
-            sentence_count += 1;
-        }
-        // Handle empty input case where loop doesn't run
-        if input.is_empty() {
-            sentence_count = 0;
-        }
-        // If input is not empty but contains no sentence terminators, count as 1 sentence
-        else if sentence_count == 0 && !input.trim().is_empty() {
-            sentence_count = 1;
-        }
+        // Only count sentences if input is not empty.
+        let sentences = if input.is_empty() {
+            0
+        } else {
+            input
+                .chars()
+                .filter(|&c| c == '.' || c == '!' || c == '?')
+                .count()
+                .max(1) // Assume at least one sentence if there's non-empty text
+        };
 
         Ok(format!(
-            "Characters: {}\nLines: {}\nWords: {}\nSentences: {}",
-            char_count, line_count, word_count, sentence_count
+            "Lines: {}\nWords: {}\nCharacters: {}\nSentences: {}",
+            lines, words, chars, sentences
         ))
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Buup is great. Buup is fast! Is buup easy? Yes."
     }
 }
 

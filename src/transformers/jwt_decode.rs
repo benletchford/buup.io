@@ -17,11 +17,15 @@ impl Transform for JwtDecode {
     }
 
     fn description(&self) -> &'static str {
-        "Decodes a JSON Web Token (JWT) into its header and payload without verifying the signature."
+        "Decodes a JSON Web Token (JWT) without verifying the signature."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Decoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

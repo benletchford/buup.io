@@ -38,11 +38,15 @@ impl Transform for HexToDecTransformer {
     }
 
     fn description(&self) -> &'static str {
-        "Convert hexadecimal numbers to decimal."
+        "Converts hexadecimal numbers to their decimal representation."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Decoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

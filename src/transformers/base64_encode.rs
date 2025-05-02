@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Base64Encode;
 
-/// Default test input for Base64 Encode
-pub const DEFAULT_TEST_INPUT: &str = "Hello, World!";
-
 impl Transform for Base64Encode {
     fn name(&self) -> &'static str {
         "Base64 Encode"
@@ -26,6 +23,10 @@ impl Transform for Base64Encode {
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         Ok(base64_encode(input.as_bytes()))
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello, World!"
     }
 }
 
@@ -70,7 +71,9 @@ mod tests {
     fn test_base64_encode() {
         let transformer = Base64Encode;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
             "SGVsbG8sIFdvcmxkIQ=="
         );
         assert_eq!(transformer.transform("").unwrap(), "");

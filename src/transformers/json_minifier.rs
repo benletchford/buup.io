@@ -27,11 +27,15 @@ impl Transform for JsonMinifier {
     }
 
     fn description(&self) -> &'static str {
-        "Minifies JSON by removing whitespace"
+        "Minifies a JSON string, removing unnecessary whitespace."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Formatter
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

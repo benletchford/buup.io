@@ -17,11 +17,15 @@ impl Transform for HtmlEncode {
     }
 
     fn description(&self) -> &'static str {
-        "Encodes special characters to HTML entities"
+        "Encodes special HTML characters into their entity representation (e.g., < to &lt;)."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Encoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
