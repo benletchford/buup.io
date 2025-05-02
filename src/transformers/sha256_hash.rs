@@ -21,6 +21,9 @@ const H: [u32; 8] = [
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Sha256HashTransformer;
 
+/// Default test input for SHA256 Hash
+pub const DEFAULT_TEST_INPUT: &str = "buup text utility";
+
 impl Sha256HashTransformer {
     fn pad_message(message: &[u8]) -> Vec<u8> {
         let message_len_bits = (message.len() as u64) * 8;
@@ -151,9 +154,13 @@ mod tests {
     #[test]
     fn test_sha256_simple_string() {
         let transformer = Sha256HashTransformer;
-        let input = "hello world";
-        let expected = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
+        let input = DEFAULT_TEST_INPUT;
+        let expected = "9476dba2069548447e5525ec5abd5b828eb1cabb9b56dd1bf04d7f6c043ab3ad";
         assert_eq!(transformer.transform(input).unwrap(), expected);
+
+        let input_hw = "hello world";
+        let expected_hw = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
+        assert_eq!(transformer.transform(input_hw).unwrap(), expected_hw);
     }
 
     #[test]

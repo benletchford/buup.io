@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HtmlDecode;
 
+/// Default test input for HTML Decode
+pub const DEFAULT_TEST_INPUT: &str = "&lt;p&gt;Hello &amp; Welcome!&lt;/p&gt;";
+
 impl Transform for HtmlDecode {
     fn name(&self) -> &'static str {
         "HTML Decode"
@@ -101,6 +104,12 @@ mod tests {
     #[test]
     fn test_html_decode() {
         let decoder = HtmlDecode;
+
+        // Test default input
+        assert_eq!(
+            decoder.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "<p>Hello & Welcome!</p>"
+        );
 
         // Basic test with various entities
         assert_eq!(

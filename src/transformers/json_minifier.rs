@@ -4,6 +4,19 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct JsonMinifier;
 
+/// Default test input for JSON Minifier
+pub const DEFAULT_TEST_INPUT: &str = r#"{
+  "name": "buup",
+  "version": 0.1,
+  "features": [
+    "cli",
+    "web",
+    "lib"
+  ],
+  "active": true,
+  "config": null
+}"#;
+
 impl Transform for JsonMinifier {
     fn name(&self) -> &'static str {
         "JSON Minifier"
@@ -107,11 +120,8 @@ mod tests {
     #[test]
     fn test_json_minifier_simple() {
         let transformer = JsonMinifier;
-        let input = r#"{
-  "name": "John",
-  "age": 30
-}"#;
-        let expected = r#"{"name":"John","age":30}"#;
+        let input = DEFAULT_TEST_INPUT;
+        let expected = "{\"name\":\"buup\",\"version\":0.1,\"features\":[\"cli\",\"web\",\"lib\"],\"active\":true,\"config\":null}";
         assert_eq!(transformer.transform(input).unwrap(), expected);
     }
 

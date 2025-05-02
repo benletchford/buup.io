@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct JsonFormatter;
 
+/// Default test input for JSON Formatter
+pub const DEFAULT_TEST_INPUT: &str = "{\"name\":\"buup\",\"version\":0.1,\"features\":[\"cli\",\"web\",\"lib\"],\"active\":true,\"config\":null}";
+
 impl Transform for JsonFormatter {
     fn name(&self) -> &'static str {
         "JSON Formatter"
@@ -331,10 +334,20 @@ mod tests {
 
     #[test]
     fn test_json_formatter_simple() {
-        let transformer = JsonFormatter;
-        let input = r#"{"name":"John","age":30}"#;
-        let expected = "{\n  \"name\": \"John\",\n  \"age\": 30\n}";
-        assert_eq!(transformer.transform(input).unwrap(), expected);
+        let formatter = JsonFormatter;
+        let input = DEFAULT_TEST_INPUT;
+        let expected = r#"{
+  "name": "buup",
+  "version": 0.1,
+  "features": [
+    "cli",
+    "web",
+    "lib"
+  ],
+  "active": true,
+  "config": null
+}"#;
+        assert_eq!(formatter.transform(input).unwrap(), expected);
     }
 
     #[test]

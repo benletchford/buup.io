@@ -4,6 +4,9 @@ use crate::{Transform, TransformError};
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct BinaryEncode;
 
+/// Default test input for Binary Encode
+pub const DEFAULT_TEST_INPUT: &str = "Hello, World!";
+
 impl Transform for BinaryEncode {
     fn name(&self) -> &'static str {
         "Binary Encode"
@@ -55,7 +58,7 @@ mod tests {
     #[test]
     fn test_binary_encode_with_punctuation() {
         let transformer = BinaryEncode;
-        let result = transformer.transform("Hello, World!").unwrap();
+        let result = transformer.transform(DEFAULT_TEST_INPUT).unwrap();
         // H=72, e=101, l=108, l=108, o=111, ,=44,  =32, W=87, o=111, r=114, l=108, d=100, !=33
         let expected = "01001000 01100101 01101100 01101100 01101111 00101100 00100000 01010111 01101111 01110010 01101100 01100100 00100001";
         assert_eq!(result, expected);

@@ -19,6 +19,9 @@ const FCOMMENT: u8 = 0x10;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GzipDecompress;
 
+/// Default test input for Gzip Decompress (Dynamically generated in test)
+pub const DEFAULT_TEST_INPUT_TEXT: &str = "Hello, Gzip World!";
+
 impl Transform for GzipDecompress {
     fn name(&self) -> &'static str {
         "Gzip Decompress"
@@ -253,25 +256,72 @@ mod tests {
     use crate::transformers::gzip_compress::GzipCompress;
     use crate::Transform; // Bring trait into scope
 
+    // Helper to manually Gzip compress with fixed MTIME=0
+    fn manually_gzip_compress(input: &str) -> Result<String, TransformError> {
+        use super::super::base64_encode;
+        use super::super::deflate_compress;
+        use crate::utils::crc32::calculate_crc32;
+
+        const ID1: u8 = 0x1f;
+        const ID2: u8 = 0x8b;
+        const CM_DEFLATE: u8 = 8;
+        const OS_UNKNOWN: u8 = 255;
+
+        let input_bytes = input.as_bytes();
+        let deflated_data = deflate_compress::deflate_bytes(input_bytes)?;
+        let crc32_checksum = calculate_crc32(input_bytes);
+        let isize: u32 = input_bytes
+            .len()
+            .try_into()
+            .map_err(|_| TransformError::CompressionError("Input too large".into()))?;
+        let mtime: u32 = 0; // Fixed MTIME
+
+        let mut output = Vec::with_capacity(10 + deflated_data.len() + 8);
+        output.push(ID1);
+        output.push(ID2);
+        output.push(CM_DEFLATE);
+        output.push(0); // FLG
+        output.extend_from_slice(&mtime.to_le_bytes());
+        output.push(0); // XFL
+        output.push(OS_UNKNOWN);
+        output.extend_from_slice(&deflated_data);
+        output.extend_from_slice(&crc32_checksum.to_le_bytes());
+        output.extend_from_slice(&isize.to_le_bytes());
+
+        Ok(base64_encode::base64_encode(&output))
+    }
+
     #[test]
     fn test_decompress_empty() {
-        let compressor = GzipCompress;
-        let decompressor = GzipDecompress;
-        let base64_input = compressor.transform("").unwrap();
-        let result = decompressor.transform(&base64_input);
+        let transformer = GzipDecompress;
+        let input = manually_gzip_compress("").unwrap();
+        let result = transformer.transform(&input);
         assert!(result.is_ok(), "Decompression failed: {:?}", result.err());
         assert_eq!(result.unwrap(), "");
     }
 
     #[test]
     fn test_decompress_simple() {
-        let compressor = GzipCompress;
         let decompressor = GzipDecompress;
-        let input = "Hello, world!";
-        let base64_input = compressor.transform(input).unwrap();
-        let result = decompressor.transform(&base64_input);
+        let compressor = GzipCompress; // Use the actual compressor
+
+        // Test with dynamically generated default input
+        let expected_output = DEFAULT_TEST_INPUT_TEXT;
+        let input_b64 = compressor.transform(expected_output).unwrap(); // Generate input
+        let result = decompressor.transform(&input_b64);
         assert!(result.is_ok(), "Decompression failed: {:?}", result.err());
-        assert_eq!(result.unwrap(), input);
+        assert_eq!(result.unwrap(), expected_output);
+
+        // Original simple test with manually gzipped MTIME=0 string
+        let input_hw = "Hello, world!";
+        let input_hw_b64 = manually_gzip_compress(input_hw).unwrap();
+        let result_hw = decompressor.transform(&input_hw_b64);
+        assert!(
+            result_hw.is_ok(),
+            "Decompression failed: {:?}",
+            result_hw.err()
+        );
+        assert_eq!(result_hw.unwrap(), input_hw);
     }
 
     #[test]

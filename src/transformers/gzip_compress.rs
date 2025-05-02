@@ -14,6 +14,9 @@ const OS_UNKNOWN: u8 = 255;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GzipCompress;
 
+/// Default test input for Gzip Compress
+pub const DEFAULT_TEST_INPUT: &str = "Hello, Gzip World!";
+
 impl Transform for GzipCompress {
     fn name(&self) -> &'static str {
         "Gzip Compress"
@@ -113,18 +116,18 @@ mod tests {
 
     #[test]
     fn test_gzip_simple() {
-        let transformer = GzipCompress;
-        let input = "Hello, world!";
-        let result_base64 = transformer.transform(input).unwrap();
-
+        let compressor = GzipCompress;
         let decompressor = GzipDecompress;
-        let decompressed_result = decompressor.transform(&result_base64);
-        assert!(
-            decompressed_result.is_ok(),
-            "Decompression failed: {:?}",
-            decompressed_result.err()
-        );
-        assert_eq!(decompressed_result.unwrap(), input);
+        let input = DEFAULT_TEST_INPUT;
+        let compressed_b64 = compressor.transform(input).unwrap();
+        let decompressed = decompressor.transform(&compressed_b64).unwrap();
+        assert_eq!(decompressed, input);
+
+        // Original simple test
+        let input_hw = "Hello, world!";
+        let compressed_hw_b64 = compressor.transform(input_hw).unwrap();
+        let decompressed_hw = decompressor.transform(&compressed_hw_b64).unwrap();
+        assert_eq!(decompressed_hw, input_hw);
     }
 
     #[test]

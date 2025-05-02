@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LineNumberAdder;
 
+/// Default test input for Line Number Adder
+pub const DEFAULT_TEST_INPUT: &str = "First line\nSecond line\nThird line";
+
 impl Transform for LineNumberAdder {
     fn name(&self) -> &'static str {
         "Line Number Adder"
@@ -56,6 +59,10 @@ mod tests {
     #[test]
     fn test_line_number_adder() {
         let transformer = LineNumberAdder;
+        assert_eq!(
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            "1 First line\n2 Second line\n3 Third line"
+        );
         assert_eq!(
             transformer.transform("Hello\nWorld").unwrap(),
             "1 Hello\n2 World"

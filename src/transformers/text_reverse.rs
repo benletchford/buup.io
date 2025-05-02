@@ -4,6 +4,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TextReverse;
 
+/// Default test input for Text Reverse
+pub const DEFAULT_TEST_INPUT: &str = "Hello, World!";
+
 impl Transform for TextReverse {
     fn name(&self) -> &'static str {
         "Text Reverse"
@@ -34,7 +37,7 @@ mod tests {
     fn test_text_reverse() {
         let transformer = TextReverse;
         assert_eq!(
-            transformer.transform("Hello, World!").unwrap(),
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
             "!dlroW ,olleH"
         );
         assert_eq!(transformer.transform("").unwrap(), "");

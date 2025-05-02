@@ -3,6 +3,9 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Rot13;
 
+/// Default test input for ROT13
+pub const DEFAULT_TEST_INPUT: &str = "The quick brown fox jumps over the lazy dog.";
+
 impl Rot13 {
     fn rot13_char(c: char) -> char {
         if c.is_ascii_alphabetic() {
@@ -57,9 +60,7 @@ mod tests {
         assert_eq!(transformer.transform("123 !@#").unwrap(), "123 !@#");
         assert_eq!(transformer.transform("").unwrap(), "");
         assert_eq!(
-            transformer
-                .transform("The quick brown fox jumps over the lazy dog.")
-                .unwrap(),
+            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
             "Gur dhvpx oebja sbk whzcf bire gur ynml qbt."
         );
     }
