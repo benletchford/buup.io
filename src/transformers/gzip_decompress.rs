@@ -40,9 +40,8 @@ impl Transform for GzipDecompress {
     }
 
     fn default_test_input(&self) -> &'static str {
-        // We rely on dynamic generation in the tests using the GzipCompress transformer.
-        // Returning an empty string as the static default.
-        ""
+        // Hardcode the gzipped, base64-encoded version of the test string
+        "H4sIAAAAAAAA//NIzcnJ11Fwr8osUAjPL8pJUQQAcbBHdRIAAAA=" // This is "Hello, Gzip World!" gzipped and base64-encoded
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
