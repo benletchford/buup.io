@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.14.0](https://github.com/benletchford/buup/compare/v0.13.0...v0.14.0) (2025-05-02)
+
+
+### Features
+
+* add default test input for transformers ([9f2790d](https://github.com/benletchford/buup/commit/9f2790de2040e7f1de091180c8d80f1e92d8b941))
+* display default transformation when input is empty ([2a62620](https://github.com/benletchford/buup/commit/2a62620950f4de9661f0d467ce8538c0a177e7e3))
+
+
+### Bug Fixes
+
+* hardcode gzip_decompress default value ([9f5ec2e](https://github.com/benletchford/buup/commit/9f5ec2eb76c883ce9a33087b209f31a1bf4f51bc))
+* implement default_test_input and fix test failures ([5507a81](https://github.com/benletchford/buup/commit/5507a81e389ce7fae8920ce4939b4d1a8633d8d3))
+* **web:** improve output textarea behavior ([cfa58db](https://github.com/benletchford/buup/commit/cfa58db36a8a36ae4d051ca9b35bc394e11b92d6))
+
 ## [0.13.0](https://github.com/benletchford/buup/compare/v0.12.0...v0.13.0) (2025-04-30)
 
 
