@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.15.0](https://github.com/benletchford/buup/compare/v0.14.0...v0.15.0) (2025-05-02)
+
+
+### Features
+
+* Add AsciiToHex and HexToAscii transformers ([6f3b2b8](https://github.com/benletchford/buup/commit/6f3b2b82dc75f5543329f1290965b6270ed4c9b2))
+* Add binary encode and decode transformers ([20f66e8](https://github.com/benletchford/buup/commit/20f66e839b7ef64e97693b669047b2166e4bed99))
+* add default test input for transformers ([9f2790d](https://github.com/benletchford/buup/commit/9f2790de2040e7f1de091180c8d80f1e92d8b941))
+* add deflate (de)/compress transformers ([a598774](https://github.com/benletchford/buup/commit/a5987741f3c0e2233edb382f8f927fe0933e0e06))
+* add Gzip compress and decompress transformers ([59f7202](https://github.com/benletchford/buup/commit/59f72021043a69504d3b06220ad34241b07399dd))
+* Add integer base conversion transformers ([e607669](https://github.com/benletchford/buup/commit/e6076696f6f5ad198be6b64cddc379fb1f5ab0de))
+* add JWT Decoder transformer ([179bb6a](https://github.com/benletchford/buup/commit/179bb6ab671c0b334bc49edfec9568b5a4be027f))
+* add LineSorter and UniqueLines transformers ([b3d4634](https://github.com/benletchford/buup/commit/b3d463426a9af1c375d962609bed43a56a0c7ea6))
+* add morse code encoder/decoder transformers ([dc8b87d](https://github.com/benletchford/buup/commit/dc8b87d907c1365f783f46440c5358d3468fa69b))
+* add ROT13 transformer ([20f3955](https://github.com/benletchford/buup/commit/20f39559daf08479c5fa72583290284afaf6ec48))
+* add sha1hash transformer ([627f604](https://github.com/benletchford/buup/commit/627f604280a5e225886a3e0026cf6fb14f3d83d4))
+* add uuid, text stats, url parser, and slugify transformers ([589c302](https://github.com/benletchford/buup/commit/589c3022c1c90ddedaf4af5f8e2342c2d138d8f6))
+* Add UUID5 transformer with RFC4122 namespace support ([18ea243](https://github.com/benletchford/buup/commit/18ea24313ab1326aeaf1d966a7fbe5816177c2d2))
+* add whitespace remover, line number adder/remover transformers ([86a5476](https://github.com/benletchford/buup/commit/86a5476cdb7956ba9f99b190c590e21c2282095d))
+* **ci:** integrate readme update and gh-pages into release workflow ([e3a62aa](https://github.com/benletchford/buup/commit/e3a62aa4bf6f0520d477d02ae0f74f2affa7e7d4))
+* **compression:** refactor deflate/gzip and improve robustness ([86ed94b](https://github.com/benletchford/buup/commit/86ed94b59e72a82c38030265032ba75b208bfb9e))
+* display default transformation when input is empty ([2a62620](https://github.com/benletchford/buup/commit/2a62620950f4de9661f0d467ce8538c0a177e7e3))
+* integrate dependency-free CLI into core crate ([f6752de](https://github.com/benletchford/buup/commit/f6752dee63cd25205d5f8bbd92cb0eb2722c148f))
+* **web:** Add version and git hash to footer ([8e01dcd](https://github.com/benletchford/buup/commit/8e01dcd704b4b1e0129be9644f6b23b44d58d792))
+
+
+### Bug Fixes
+
+* bump versions to skip over 0.14.0 ([e212b73](https://github.com/benletchford/buup/commit/e212b7386936c3a6b7568f60b0d1feccf5c1998f))
+* **ci:** install libglib2.0-dev for workspace builds ([44f79c2](https://github.com/benletchford/buup/commit/44f79c2a91bd51bb89afb1fce913436e26dce30e))
+* hardcode gzip_decompress default value ([9f5ec2e](https://github.com/benletchford/buup/commit/9f5ec2eb76c883ce9a33087b209f31a1bf4f51bc))
+* implement default_test_input and fix test failures ([5507a81](https://github.com/benletchford/buup/commit/5507a81e389ce7fae8920ce4939b4d1a8633d8d3))
+* restore ignore attribute to failing test ([514b3e2](https://github.com/benletchford/buup/commit/514b3e21a091b4b2cb6dc74742f820974b33bece))
+* Use div_ceil in base64_encode capacity calculation ([fa33f2c](https://github.com/benletchford/buup/commit/fa33f2c9f5760f1e75cd557859b6299ee992d06c))
+* **web:** improve mobile layout with svh units and height adjustments ([aa16afe](https://github.com/benletchford/buup/commit/aa16afe45dfa273738fbbb43f6dfa02507b76289))
+* **web:** improve output textarea behavior ([cfa58db](https://github.com/benletchford/buup/commit/cfa58db36a8a36ae4d051ca9b35bc394e11b92d6))
+* **web:** Improve responsiveness and scrolling on small screens ([22c0df4](https://github.com/benletchford/buup/commit/22c0df46388a3ff72e96fdf4e654c01db2b43800))
+
 ## [0.14.0](https://github.com/benletchford/buup/compare/v0.13.0...v0.14.0) (2025-05-02)
 
 
