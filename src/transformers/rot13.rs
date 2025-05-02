@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Rot13;
 
-/// Default test input for Rot13
-pub const DEFAULT_TEST_INPUT: &str = "The quick brown fox jumps over the lazy dog";
-
 impl Transform for Rot13 {
     fn name(&self) -> &'static str {
         "Rot13"
@@ -39,7 +36,7 @@ impl Transform for Rot13 {
     }
 
     fn default_test_input(&self) -> &'static str {
-        DEFAULT_TEST_INPUT
+        "The quick brown fox jumps over the lazy dog"
     }
 }
 
@@ -50,7 +47,7 @@ mod tests {
     #[test]
     fn test_rot13_transformation() {
         let transformer = Rot13;
-        let input = DEFAULT_TEST_INPUT;
+        let input = transformer.default_test_input();
         let expected_output = "Gur dhvpx oebja sbk whzcf bire gur ynml qbt";
         assert_eq!(transformer.transform(input).unwrap(), expected_output);
 

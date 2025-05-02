@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct JwtDecode;
 
-/// Default test input for JWT Decode (alg: none, no signature)
-pub const DEFAULT_TEST_INPUT: &str = "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.";
-
 impl Transform for JwtDecode {
     fn name(&self) -> &'static str {
         "JWT Decoder"
@@ -25,7 +22,7 @@ impl Transform for JwtDecode {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ."
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -166,22 +163,21 @@ mod tests {
     const EXAMPLE_JWT: &str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     const EXPECTED_HEADER: &str = r#"{"alg":"HS256","typ":"JWT"}"#;
     const EXPECTED_PAYLOAD: &str = r#"{"sub":"1234567890","name":"John Doe","iat":1516239022}"#;
-    const DEFAULT_EXPECTED_HEADER: &str = r#"{"alg":"none"}"#;
-    const DEFAULT_EXPECTED_PAYLOAD: &str =
-        r#"{"sub":"1234567890","name":"John Doe","iat":1516239022}"#;
 
     #[test]
     fn test_jwt_decode_valid() {
         let transformer = JwtDecode;
-
-        // Test with default input (alg:none)
-        let expected_default_output = format!(
+        let expected_header = "{\"alg\":\"none\"}";
+        let expected_payload = "{\"sub\":\"1234567890\",\"name\":\"John Doe\",\"iat\":1516239022}";
+        let expected_output = format!(
             "Header:\n{}\n\nPayload:\n{}\n\n(Signature not verified)",
-            DEFAULT_EXPECTED_HEADER, DEFAULT_EXPECTED_PAYLOAD
+            expected_header, expected_payload
         );
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
-            expected_default_output
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
+            expected_output
         );
 
         // Test with original example (HS256)

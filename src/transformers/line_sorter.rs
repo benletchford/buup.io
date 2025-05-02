@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct LineSorter;
 
-/// Default test input for Line Sorter
-pub const DEFAULT_TEST_INPUT: &str = "banana\napple\norange\ngrape";
-
 impl Transform for LineSorter {
     fn name(&self) -> &'static str {
         "Line Sorter"
@@ -25,7 +22,7 @@ impl Transform for LineSorter {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        "banana\napple\norange\ngrape"
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -61,7 +58,7 @@ mod tests {
     #[test]
     fn test_line_sorter_basic_sort() {
         let transformer = LineSorter;
-        let input = DEFAULT_TEST_INPUT;
+        let input = transformer.default_test_input();
         let expected = "apple\nbanana\ngrape\norange";
         assert_eq!(transformer.transform(input).unwrap(), expected);
 
