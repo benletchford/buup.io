@@ -110,6 +110,9 @@ pub trait Transform: Sync + Send {
 
     /// Transform the input text
     fn transform(&self, input: &str) -> Result<String, TransformError>;
+
+    /// Provide a default input string suitable for testing the transformer.
+    fn default_test_input(&self) -> &'static str;
 }
 
 // Static registry of transformers

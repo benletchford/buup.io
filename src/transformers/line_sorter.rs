@@ -17,11 +17,15 @@ impl Transform for LineSorter {
     }
 
     fn description(&self) -> &'static str {
-        "Sorts lines of text alphabetically (ascending)."
+        "Sorts lines alphabetically."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Other // Could also be Formatter
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

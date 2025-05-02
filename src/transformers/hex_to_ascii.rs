@@ -25,11 +25,15 @@ impl Transform for HexToAscii {
     }
 
     fn description(&self) -> &'static str {
-        "Convert hexadecimal representation back to ASCII characters."
+        "Decodes a hexadecimal string into its ASCII representation."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Decoder
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -113,7 +117,7 @@ mod tests {
         assert_eq!(transformer.id(), "hex_to_ascii");
         assert_eq!(
             transformer.description(),
-            "Convert hexadecimal representation back to ASCII characters."
+            "Decodes a hexadecimal string into its ASCII representation."
         );
         assert_eq!(transformer.category(), TransformerCategory::Decoder);
     }

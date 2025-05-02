@@ -231,21 +231,25 @@ impl Transform for Uuid5Generate {
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         // Split input on pipe character
-        let parts: Vec<&str> = input.split('|').collect();
+        let parts: Vec<&str> = input.splitn(2, '|').collect(); // Use splitn for safety
         if parts.len() != 2 {
             return Err(TransformError::InvalidArgument(
-                "Input must be in format: \"namespace|name\"".into(),
+                "Input must be in the format 'namespace|name'. Namespace can be a UUID or one of: dns, url, oid, x500.".into()
             ));
         }
 
-        let namespace = parts[0].trim();
+        let namespace_str = parts[0].trim();
         let name = parts[1].trim();
 
         // Parse namespace to bytes
-        let namespace_bytes = Self::parse_namespace(namespace)?;
+        let namespace_bytes = Self::parse_namespace(namespace_str)?;
 
         // Generate UUID using namespace and name
         Self::generate_v5_uuid(&namespace_bytes, name)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "dns|example.com"
     }
 }
 

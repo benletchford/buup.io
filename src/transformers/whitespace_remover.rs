@@ -27,6 +27,10 @@ impl Transform for WhitespaceRemover {
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         Ok(input.chars().filter(|c| !c.is_whitespace()).collect())
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "  Remove \t all \n whitespace  "
+    }
 }
 
 #[cfg(test)]

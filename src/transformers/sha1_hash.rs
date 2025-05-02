@@ -117,6 +117,10 @@ impl Transform for Sha1Hash {
 
         Ok(result)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "buup"
+    }
 }
 
 #[cfg(test)]

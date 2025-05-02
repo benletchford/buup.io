@@ -90,6 +90,10 @@ impl Transform for UuidGenerate {
 
         Ok(uuid_str)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "" // Input is ignored, so empty string is fine
+    }
 }
 
 #[cfg(test)]

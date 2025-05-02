@@ -130,12 +130,16 @@ impl Transform for Sha256HashTransformer {
         }
 
         // Convert the final hash state (h0-h7) to a hex string
-        let mut result = String::with_capacity(64);
+        let mut result = String::with_capacity(64); // SHA-256 output is 256 bits = 32 bytes = 64 hex chars
         for val in h.iter() {
             result.push_str(&format!("{:08x}", val));
         }
 
         Ok(result)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "buup"
     }
 }
 

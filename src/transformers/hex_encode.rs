@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HexEncode;
 
-/// Default test input for Hex Encode
-pub const DEFAULT_TEST_INPUT: &str = "Hello, World!";
-
 impl Transform for HexEncode {
     fn name(&self) -> &'static str {
         "Hex Encode"
@@ -26,6 +23,10 @@ impl Transform for HexEncode {
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         Ok(hex_encode(input.as_bytes()))
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello, World!"
     }
 }
 
@@ -50,7 +51,9 @@ mod tests {
     fn test_hex_encode() {
         let transformer = HexEncode;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
             "48656c6c6f2c20576f726c6421"
         );
         assert_eq!(transformer.transform("").unwrap(), "");

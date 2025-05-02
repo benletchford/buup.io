@@ -32,8 +32,9 @@ impl Transform for MorseEncode {
         let mut output = String::new();
         for (i, c) in input.to_uppercase().chars().enumerate() {
             if i > 0 {
-                output.push(' ');
+                output.push(' '); // Word separator (space between morse codes)
             }
+
             let code = match c {
                 'A' => ".-",
                 'B' => "-...",
@@ -71,7 +72,7 @@ impl Transform for MorseEncode {
                 '7' => "--...",
                 '8' => "---..",
                 '9' => "----.",
-                ' ' => "/",
+                ' ' => "/", // Space is represented by a forward slash
                 _ => {
                     return Err(TransformError::InvalidArgument(
                         format!("Cannot encode '{}' to Morse code", c).into(),
@@ -82,6 +83,10 @@ impl Transform for MorseEncode {
         }
 
         Ok(output)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello World"
     }
 }
 

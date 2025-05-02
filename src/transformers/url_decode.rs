@@ -25,7 +25,11 @@ impl Transform for UrlDecode {
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
-        url_decode(input).map_err(|_| TransformError::UrlDecodeError)
+        url_decode(input).map_err(|_e| TransformError::UrlDecodeError)
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello%2C+World%21"
     }
 }
 

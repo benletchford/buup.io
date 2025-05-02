@@ -12,9 +12,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AsciiToHex;
 
-/// Default test input for ASCII to Hex
-pub const DEFAULT_TEST_INPUT: &str = "Hello";
-
 impl Transform for AsciiToHex {
     fn name(&self) -> &'static str {
         "ASCII to Hex"
@@ -43,6 +40,10 @@ impl Transform for AsciiToHex {
                 Ok(output)
             })
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello"
+    }
 }
 
 #[cfg(test)]
@@ -53,7 +54,9 @@ mod tests {
     fn test_ascii_to_hex() {
         let transformer = AsciiToHex;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
             "48656c6c6f"
         );
         assert_eq!(transformer.transform("World").unwrap(), "576f726c64");
@@ -73,6 +76,7 @@ mod tests {
             "Convert ASCII characters to their hexadecimal representation."
         );
         assert_eq!(transformer.category(), TransformerCategory::Encoder);
+        assert_eq!(transformer.default_test_input(), "Hello"); // Test the new method
     }
 
     // Test with non-ASCII characters (behavior depends on how char -> u8 conversion works)

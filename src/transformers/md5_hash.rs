@@ -109,11 +109,15 @@ impl Transform for Md5HashTransformer {
     }
 
     fn description(&self) -> &'static str {
-        "Computes the MD5 hash of the input text"
+        "Calculates the MD5 hash of the input string."
     }
 
     fn category(&self) -> TransformerCategory {
         TransformerCategory::Crypto
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        ""
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {

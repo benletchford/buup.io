@@ -4,9 +4,6 @@ use crate::{Transform, TransformError};
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct BinaryDecode;
 
-/// Default test input for Binary Decode
-pub const DEFAULT_TEST_INPUT: &str = "01001000 01100101 01101100 01101100 01101111 00101100 00100000 01010111 01101111 01110010 01101100 01100100 00100001"; // "Hello, World!"
-
 impl Transform for BinaryDecode {
     fn name(&self) -> &'static str {
         "Binary Decode"
@@ -52,6 +49,11 @@ impl Transform for BinaryDecode {
             TransformError::InvalidArgument(format!("Invalid UTF-8 sequence: {}", e).into())
         })
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "01001000 01100101 01101100 01101100 01101111 00101100 00100000 01010111 01101111 01110010 01101100 01100100 00100001"
+        // "Hello, World!"
+    }
 }
 
 #[cfg(test)]
@@ -75,7 +77,9 @@ mod tests {
     #[test]
     fn test_binary_decode_with_punctuation() {
         let transformer = BinaryDecode;
-        let result = transformer.transform(DEFAULT_TEST_INPUT).unwrap();
+        let result = transformer
+            .transform(transformer.default_test_input())
+            .unwrap();
         assert_eq!(result, "Hello, World!");
     }
 

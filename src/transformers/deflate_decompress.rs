@@ -9,9 +9,6 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DeflateDecompress;
 
-/// Default test input for Deflate Decompress
-pub const DEFAULT_TEST_INPUT: &str = "80jNycnXUSjPL8pJUQQA"; // "Hello, world!" compressed
-
 // Reads bits LSB-first from a byte slice.
 pub(crate) struct BitReader<'a> {
     bytes: &'a [u8],
@@ -364,6 +361,10 @@ impl Transform for DeflateDecompress {
         let (output, _consumed_bytes) = deflate_decode_bytes(&compressed_bytes)?;
         String::from_utf8(output).map_err(|_| TransformError::Utf8Error)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "80jNycnXUSjPL8pJUQQA" // "Hello, world!" compressed
+    }
 }
 
 #[cfg(test)]
@@ -400,7 +401,9 @@ mod tests {
     fn test_decompress_fixed_simple() {
         let decompressor = DeflateDecompress;
         let expected_output = "Hello, world!"; // Match the default input
-        let decompressed = decompressor.transform(DEFAULT_TEST_INPUT).unwrap();
+        let decompressed = decompressor
+            .transform(decompressor.default_test_input())
+            .unwrap();
         assert_eq!(decompressed, expected_output);
 
         // Original simple test with dynamically compressed input

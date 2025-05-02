@@ -25,22 +25,23 @@ impl Transform for UniqueLines {
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
-        if input.is_empty() {
-            return Ok(String::new());
-        }
-
-        let mut seen_lines = Vec::new();
-        let mut result_lines = Vec::new();
-
+        let mut seen = std::collections::HashSet::new();
+        let mut result = String::new();
         for line in input.lines() {
-            // Only add the line if it hasn't been seen before
-            if !seen_lines.contains(&line) {
-                seen_lines.push(line); // Add to seen list
-                result_lines.push(line); // Add to result list
+            if seen.insert(line) {
+                result.push_str(line);
+                result.push('\n');
             }
         }
+        // Remove the trailing newline if the input was not empty
+        if !input.is_empty() {
+            result.pop();
+        }
+        Ok(result)
+    }
 
-        Ok(result_lines.join("\n"))
+    fn default_test_input(&self) -> &'static str {
+        "apple\nbanana\napple\norange\nbanana"
     }
 }
 

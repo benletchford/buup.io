@@ -428,9 +428,6 @@ pub(crate) fn deflate_bytes(input_bytes: &[u8]) -> Result<Vec<u8>, TransformErro
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DeflateCompress;
 
-/// Default test input for Deflate Compress
-pub const DEFAULT_TEST_INPUT: &str = "Hello, Deflate World!";
-
 impl Transform for DeflateCompress {
     fn name(&self) -> &'static str {
         "DEFLATE Compress"
@@ -454,6 +451,10 @@ impl Transform for DeflateCompress {
         let compressed_data = deflate_bytes(input_bytes)?; // Call extracted function
         Ok(base64_encode::base64_encode(&compressed_data))
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "Hello, Deflate World!"
+    }
 }
 
 #[cfg(test)]
@@ -475,7 +476,7 @@ mod tests {
     fn test_deflate_simple() {
         let compressor = DeflateCompress;
         let decompressor = DeflateDecompress;
-        let input = DEFAULT_TEST_INPUT;
+        let input = compressor.default_test_input();
         let compressed_b64 = compressor.transform(input).unwrap();
         let decompressed = decompressor.transform(&compressed_b64).unwrap();
         assert_eq!(decompressed, input);

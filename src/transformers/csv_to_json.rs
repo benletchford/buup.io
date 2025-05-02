@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CsvToJson;
 
-/// Default test input for CSV to JSON
-pub const DEFAULT_TEST_INPUT: &str = "id,name,value\n1,apple,1.5\n2,banana,0.75";
-
 impl Transform for CsvToJson {
     fn name(&self) -> &'static str {
         "CSV to JSON"
@@ -107,6 +104,10 @@ impl Transform for CsvToJson {
         json.push_str("\n]");
         Ok(json)
     }
+
+    fn default_test_input(&self) -> &'static str {
+        "id,name,value\n1,apple,1.5\n2,banana,0.75"
+    }
 }
 
 /// Parses a CSV row into fields, handling quoted values
@@ -174,7 +175,7 @@ mod tests {
     #[test]
     fn test_csv_to_json_basic() {
         let transformer = CsvToJson;
-        let input = DEFAULT_TEST_INPUT; // Use default for a basic check
+        let input = transformer.default_test_input(); // Use default for a basic check
         let expected_default = r#"[
   {
     "id":1,

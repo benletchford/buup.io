@@ -102,9 +102,9 @@ ENCODERS:
   binaryencode    - Encode text into its binary representation (space-separated bytes).
   dec_to_bin      - Convert decimal numbers to binary.
   dec_to_hex      - Convert decimal numbers to hexadecimal.
-  hex_to_bin      - Convert hexadecimal numbers to binary.
+  hex_to_bin      - Converts hexadecimal input to its binary representation (Base64 encoded).
   hexencode       - Encode text to hexadecimal representation
-  htmlencode      - Encodes special characters to HTML entities
+  htmlencode      - Encodes special HTML characters into their entity representation (e.g., < to &lt;).
   morseencode     - Encode text to Morse code
   rot13           - Applies the ROT13 substitution cipher to the input text.
   urlencode       - Encode text for use in URLs
@@ -113,22 +113,22 @@ DECODERS:
   base64decode    - Decode Base64 text to plain text
   bin_to_dec      - Convert binary numbers to decimal.
   binarydecode    - Decode space-separated binary representation back to text.
-  hex_to_ascii    - Convert hexadecimal representation back to ASCII characters.
-  hex_to_dec      - Convert hexadecimal numbers to decimal.
-  hexdecode       - Decode hexadecimal to original text
-  htmldecode      - Decodes HTML entities back to special characters
-  jwtdecode       - Decodes a JSON Web Token (JWT) into its header and payload without verifying the signature.
-  morsedecode     - Decode Morse code to text
+  hex_to_ascii    - Decodes a hexadecimal string into its ASCII representation.
+  hex_to_dec      - Converts hexadecimal numbers to their decimal representation.
+  hexdecode       - Decodes a hexadecimal string into its original bytes, then interprets as UTF-8.
+  htmldecode      - Decodes HTML entities (e.g., &lt;) back into characters (<).
+  jwtdecode       - Decodes a JSON Web Token (JWT) without verifying the signature.
+  morsedecode     - Decodes Morse code into text.
   urldecode       - Decode URL-encoded text
 
 FORMATTERS:
-  jsonformatter   - Formats JSON with proper indentation
-  jsonminifier    - Minifies JSON by removing whitespace
-  linenumberadder - Adds line numbers (1-based) to the beginning of each line.
-  linenumberremover - Removes leading line numbers (e.g., '1 ', '2. ', '3:	') from each line.
+  jsonformatter   - Formats (pretty-prints) a JSON string.
+  jsonminifier    - Minifies a JSON string, removing unnecessary whitespace.
+  linenumberadder - Adds line numbers to the beginning of each line.
+  linenumberremover - Removes line numbers (and optional delimiters) from the beginning of each line.
 
 CRYPTOGRAPHY:
-  md5hash         - Computes the MD5 hash of the input text
+  md5hash         - Calculates the MD5 hash of the input string.
   sha1hash        - Computes the SHA-1 hash of the input text (Warning: SHA-1 is cryptographically weak)
   sha256hash      - Computes the SHA-256 hash of the input text
   uuid5_generate  - Generates a version 5 UUID based on namespace and name using SHA-1. Input format: "namespace|name". Namespace can be a UUID or one of: dns, url, oid, x500.
@@ -142,8 +142,8 @@ COMPRESSION:
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
   csvtojson       - Converts CSV data to JSON format
-  jsontocsv       - Converts JSON data to CSV format
-  linesorter      - Sorts lines of text alphabetically (ascending).
+  jsontocsv       - Converts a JSON array of objects into CSV format.
+  linesorter      - Sorts lines alphabetically.
   slugify         - Converts text into a URL-friendly slug (lowercase, dashes, removes special chars)
   snaketocamel    - Converts snake_case to camelCase
   text_stats      - Calculates basic text statistics (lines, words, chars, sentences)
@@ -213,6 +213,10 @@ impl Transform for TextReverse {
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         Ok(input.chars().rev().collect())
+    }
+
+    fn default_test_input(&self) -> &'static str {
+        "Example Input"
     }
 }
 ```
