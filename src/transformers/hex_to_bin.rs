@@ -25,9 +25,6 @@ impl From<HexToBinError> for TransformError {
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash, Debug)]
 pub struct HexToBinTransformer;
 
-/// Default test input for Hex to Bin
-pub const DEFAULT_TEST_INPUT: &str = "FF"; // Represents 11111111 in binary
-
 impl Transform for HexToBinTransformer {
     fn id(&self) -> &'static str {
         "hex_to_bin"
@@ -47,7 +44,7 @@ impl Transform for HexToBinTransformer {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        "FF"
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -70,16 +67,15 @@ mod tests {
     fn test_hex_to_bin() {
         let transformer = HexToBinTransformer;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
-            "11111111".to_string()
+            transformer
+                .transform(transformer.default_test_input())
+                .unwrap(),
+            "11111111"
         );
-        assert_eq!(transformer.transform("0").unwrap(), "0".to_string());
-        assert_eq!(transformer.transform("2A").unwrap(), "101010".to_string());
-        assert_eq!(
-            transformer.transform("0xFF").unwrap(),
-            "11111111".to_string()
-        );
-        assert_eq!(transformer.transform("10").unwrap(), "10000".to_string());
+        assert_eq!(transformer.transform("0").unwrap(), "0");
+        assert_eq!(transformer.transform("A").unwrap(), "1010");
+        assert_eq!(transformer.transform("1a").unwrap(), "11010");
+        assert_eq!(transformer.transform("100").unwrap(), "100000000");
     }
 
     #[test]

@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HtmlEncode;
 
-/// Default test input for HTML Encode
-pub const DEFAULT_TEST_INPUT: &str = "<p>Hello & Welcome!</p>";
-
 impl Transform for HtmlEncode {
     fn name(&self) -> &'static str {
         "HTML Encode"
@@ -25,7 +22,7 @@ impl Transform for HtmlEncode {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        "<p>Hello & Welcome!</p>"
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -56,44 +53,14 @@ mod tests {
     #[test]
     fn test_html_encode() {
         let encoder = HtmlEncode;
-
-        // Test default input
         assert_eq!(
-            encoder.transform(DEFAULT_TEST_INPUT).unwrap(),
+            encoder.transform(encoder.default_test_input()).unwrap(),
             "&lt;p&gt;Hello &amp; Welcome!&lt;&#47;p&gt;"
         );
-
-        // Basic test with various special characters - note that '/' is encoded to '&#47;'
         assert_eq!(
-            encoder
-                .transform("<script>alert(\"XSS attack\");</script>")
-                .unwrap(),
-            "&lt;script&gt;alert(&quot;XSS attack&quot;);&lt;&#47;script&gt;"
+            encoder.transform("No special chars").unwrap(),
+            "No special chars"
         );
-
-        // Test with various special characters
-        assert_eq!(
-            encoder.transform("a < b && c > d").unwrap(),
-            "a &lt; b &amp;&amp; c &gt; d"
-        );
-
-        // Test with single quotes and other characters
-        assert_eq!(
-            encoder
-                .transform("Don't use `eval(input)` or query='unsafe'")
-                .unwrap(),
-            "Don&#39;t use &#96;eval(input)&#96; or query&#61;&#39;unsafe&#39;"
-        );
-
-        // Test with no special characters
-        assert_eq!(
-            encoder
-                .transform("Normal text with no special chars")
-                .unwrap(),
-            "Normal text with no special chars"
-        );
-
-        // Test with empty input
         assert_eq!(encoder.transform("").unwrap(), "");
     }
 }

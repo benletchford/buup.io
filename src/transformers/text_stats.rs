@@ -4,10 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TextStats;
 
-/// Default test input for Text Stats
-pub const DEFAULT_TEST_INPUT: &str =
-    "Buup: a Rust text utility.\nFast and reliable!\nCheck it out?";
-
 impl Transform for TextStats {
     fn name(&self) -> &'static str {
         "Text Stats"
@@ -94,15 +90,15 @@ mod tests {
     #[test]
     fn test_text_stats_multiline() {
         let transformer = TextStats;
-        let input = DEFAULT_TEST_INPUT;
+        let input = transformer.default_test_input();
         let result = transformer.transform(input).unwrap();
-        assert_eq!(get_stat(&result, "Characters"), 59); // Corrected calculation
-        assert_eq!(get_stat(&result, "Lines"), 3);
-        assert_eq!(get_stat(&result, "Words"), 11); // Corrected word count
-        assert_eq!(get_stat(&result, "Sentences"), 3);
+        assert_eq!(get_stat(&result, "Characters"), 47);
+        assert_eq!(get_stat(&result, "Lines"), 1);
+        assert_eq!(get_stat(&result, "Words"), 10);
+        assert_eq!(get_stat(&result, "Sentences"), 4);
 
         let result_orig = transformer.transform("First line.\nSecond line!").unwrap();
-        assert_eq!(get_stat(&result_orig, "Characters"), 24); // Includes newline char
+        assert_eq!(get_stat(&result_orig, "Characters"), 24);
         assert_eq!(get_stat(&result_orig, "Lines"), 2);
         assert_eq!(get_stat(&result_orig, "Words"), 4);
         assert_eq!(get_stat(&result_orig, "Sentences"), 2);

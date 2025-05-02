@@ -54,9 +54,6 @@ fn get_morse_map() -> &'static HashMap<&'static str, char> {
     MORSE_MAP.get_or_init(build_morse_map)
 }
 
-/// Default test input for Morse Decode
-pub const DEFAULT_TEST_INPUT: &str = ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."; // "HELLO WORLD"
-
 impl Transform for MorseDecode {
     fn name(&self) -> &'static str {
         "Morse Decode"
@@ -75,7 +72,7 @@ impl Transform for MorseDecode {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
@@ -112,14 +109,10 @@ mod tests {
     #[test]
     fn test_morse_decode_basic() {
         let transformer = MorseDecode;
-        assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT).unwrap(),
-            "HELLO WORLD"
-        );
         assert_eq!(transformer.transform("... --- ...").unwrap(), "SOS");
         assert_eq!(
             transformer
-                .transform(".... . .-.. .-.. --- / .-- --- .-. .-.. -..")
+                .transform(transformer.default_test_input())
                 .unwrap(),
             "HELLO WORLD"
         );

@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct UniqueLines;
 
-/// Default test input for Unique Lines
-pub const DEFAULT_TEST_INPUT: &str = "apple\nbanana\napple\norange\nbanana\ngrape\napple";
-
 impl Transform for UniqueLines {
     fn name(&self) -> &'static str {
         "Unique Lines"
@@ -65,8 +62,8 @@ mod tests {
     #[test]
     fn test_unique_lines_with_duplicates() {
         let transformer = UniqueLines;
-        let input = DEFAULT_TEST_INPUT;
-        let expected = "apple\nbanana\norange\ngrape";
+        let input = transformer.default_test_input();
+        let expected = "apple\nbanana\norange";
         assert_eq!(transformer.transform(input).unwrap(), expected);
 
         let input_orig = "line1\nline2\nline1\nline3\nline2";

@@ -4,9 +4,6 @@ use crate::{Transform, TransformError, TransformerCategory};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Slugify;
 
-/// Default test input for Slugify
-pub const DEFAULT_TEST_INPUT: &str = "This is a Test String!";
-
 impl Transform for Slugify {
     fn name(&self) -> &'static str {
         "Slugify"
@@ -75,8 +72,8 @@ mod tests {
     fn test_slugify_basic() {
         let transformer = Slugify;
         assert_eq!(
-            transformer.transform(DEFAULT_TEST_INPUT),
-            Ok("this-is-a-test-string".to_string())
+            transformer.transform(transformer.default_test_input()),
+            Ok("this-is-a-test-string-123".to_string())
         );
         assert_eq!(
             transformer.transform("Hello World"),

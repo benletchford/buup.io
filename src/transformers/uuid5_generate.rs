@@ -126,9 +126,6 @@ fn sha1_hash(data: &[u8]) -> [u8; 20] {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Uuid5Generate;
 
-/// Default test input for UUIDv5 Generate
-pub const DEFAULT_TEST_INPUT: &str = "dns|example.com";
-
 impl Uuid5Generate {
     fn parse_namespace(namespace: &str) -> Result<[u8; 16], TransformError> {
         // Handle predefined namespaces
@@ -262,7 +259,7 @@ mod tests {
         let transformer = Uuid5Generate;
 
         // Test default input
-        let result_default = transformer.transform(DEFAULT_TEST_INPUT);
+        let result_default = transformer.transform(transformer.default_test_input());
         assert!(result_default.is_ok());
         // Use the UUID reported by the test run
         assert_eq!(
@@ -327,8 +324,12 @@ mod tests {
         let transformer = Uuid5Generate;
 
         // Same input should generate same UUID
-        let uuid1 = transformer.transform("dns|example.com").unwrap();
-        let uuid2 = transformer.transform("dns|example.com").unwrap();
+        let uuid1 = transformer
+            .transform(transformer.default_test_input())
+            .unwrap();
+        let uuid2 = transformer
+            .transform(transformer.default_test_input())
+            .unwrap();
 
         assert_eq!(uuid1, uuid2);
 
