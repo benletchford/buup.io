@@ -195,9 +195,7 @@ fn App() -> Element {
 
     // Apply transformation and get output
     let output = if input().is_empty() {
-        current_transformer()
-            .transform(current_transformer().default_test_input())
-            .unwrap()
+        "".to_string()
     } else {
         match current_transformer().transform(&input()) {
             Ok(result) => result,
@@ -1187,6 +1185,7 @@ fn App() -> Element {
                             class: "textarea",
                             value: "{output}" ,
                             readonly: true,
+                            placeholder: "{current_transformer().transform(current_transformer().default_test_input()).unwrap_or_else(|err| err.to_string())}",
                         }
                     }
                 }
