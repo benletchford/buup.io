@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/benletchford/buup/compare/v0.15.0...v0.16.0) (2025-05-08)
+
+
+### Features
+
+* **html-decode:** add meaningful default test input ([c34eabf](https://github.com/benletchford/buup/commit/c34eabf8e48676f7f208cb39b0f5fa2d545cc4a2))
+
 ## [0.15.0](https://github.com/benletchford/buup/compare/v0.14.0...v0.15.0) (2025-05-02)
 
 
