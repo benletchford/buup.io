@@ -25,7 +25,7 @@ impl Transform for HtmlDecode {
     }
 
     fn default_test_input(&self) -> &'static str {
-        ""
+        "&lt;p&gt;Hello &amp; Welcome!&lt;&#47;p&gt;"
     }
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
