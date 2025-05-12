@@ -142,7 +142,6 @@ COMPRESSION:
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
   color_code_convert - Converts between different color formats (HEX, RGB, HSL, CMYK)
-  color_code_convert_inverse - Extracts a specific color format from the output of color_code_convert
   csvtojson       - Converts CSV data to JSON format
   jsontocsv       - Converts a JSON array of objects into CSV format.
   linesorter      - Sorts lines alphabetically.
