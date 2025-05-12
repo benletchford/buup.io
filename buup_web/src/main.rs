@@ -67,22 +67,71 @@ fn App() -> Element {
         use js_sys::{global, Function, Object};
         use wasm_bindgen::JsCast;
 
-        let localStorage = js_sys::Reflect::get(&global(), &"localStorage".into())
-            .ok()
-            .and_then(|val| val.dyn_into::<Object>().ok());
+        // First check if there's a hash in the URL (e.g., #base64encode)
+        let _window = web_sys::window().expect("Window should exist");
+        let location = _window.location();
+        let hash = location.hash().unwrap_or_default();
 
-        if let Some(storage) = localStorage {
-            let get_item = js_sys::Reflect::get(&storage, &"getItem".into())
+        // If hash exists and isn't empty, try to use it as transformer ID
+        if !hash.is_empty() {
+            // Remove the '#' prefix
+            let hash = hash.trim_start_matches('#');
+
+            // Check if this ID exists in our transformers
+            if !hash.is_empty() && buup::transformer_from_id(hash).is_ok() {
+                hash.to_string()
+            } else {
+                // If hash is invalid, fallback to localStorage
+                let localStorage = js_sys::Reflect::get(&global(), &"localStorage".into())
+                    .ok()
+                    .and_then(|val| val.dyn_into::<Object>().ok());
+
+                if let Some(storage) = localStorage {
+                    let get_item = js_sys::Reflect::get(&storage, &"getItem".into())
+                        .ok()
+                        .and_then(|val| val.dyn_into::<Function>().ok());
+
+                    if let Some(get_fn) = get_item {
+                        let id_result = get_fn.call1(&storage, &"buup_transformer_id".into());
+                        if let Ok(id_val) = id_result {
+                            if !id_val.is_null() {
+                                id_val
+                                    .as_string()
+                                    .unwrap_or_else(|| "base64encode".to_string())
+                            } else {
+                                "base64encode".to_string()
+                            }
+                        } else {
+                            "base64encode".to_string()
+                        }
+                    } else {
+                        "base64encode".to_string()
+                    }
+                } else {
+                    "base64encode".to_string()
+                }
+            }
+        } else {
+            // No hash in URL, use localStorage
+            let localStorage = js_sys::Reflect::get(&global(), &"localStorage".into())
                 .ok()
-                .and_then(|val| val.dyn_into::<Function>().ok());
+                .and_then(|val| val.dyn_into::<Object>().ok());
 
-            if let Some(get_fn) = get_item {
-                let id_result = get_fn.call1(&storage, &"buup_transformer_id".into());
-                if let Ok(id_val) = id_result {
-                    if !id_val.is_null() {
-                        id_val
-                            .as_string()
-                            .unwrap_or_else(|| "base64encode".to_string())
+            if let Some(storage) = localStorage {
+                let get_item = js_sys::Reflect::get(&storage, &"getItem".into())
+                    .ok()
+                    .and_then(|val| val.dyn_into::<Function>().ok());
+
+                if let Some(get_fn) = get_item {
+                    let id_result = get_fn.call1(&storage, &"buup_transformer_id".into());
+                    if let Ok(id_val) = id_result {
+                        if !id_val.is_null() {
+                            id_val
+                                .as_string()
+                                .unwrap_or_else(|| "base64encode".to_string())
+                        } else {
+                            "base64encode".to_string()
+                        }
                     } else {
                         "base64encode".to_string()
                     }
@@ -92,8 +141,6 @@ fn App() -> Element {
             } else {
                 "base64encode".to_string()
             }
-        } else {
-            "base64encode".to_string()
         }
     };
 
@@ -129,6 +176,11 @@ fn App() -> Element {
         {
             let dark_mode = is_dark_mode();
             let transformer_id = current_transformer().id();
+
+            // Update URL hash when transformer changes
+            if let Some(_window) = web_sys::window() {
+                let _ = js_sys::eval(&format!("window.location.hash = '{}';", transformer_id));
+            }
 
             let js_code = format!(
                 r#"
@@ -291,6 +343,12 @@ fn App() -> Element {
 
             // Switch to the inverse transformer
             current_transformer.set(Rc::new(inverse));
+
+            // Update URL hash when swapping transformers
+            if let Some(_window) = web_sys::window() {
+                let new_id = inverse.id();
+                let _ = js_sys::eval(&format!("window.location.hash = '{}';", new_id));
+            }
         }
     };
 
@@ -656,6 +714,14 @@ fn App() -> Element {
                                                         current_transformer.set(Rc::new(buup::transformer_from_id(id).unwrap()));
                                                         show_transformer_menu.set(false);
                                                         search_query.set(String::new());
+
+                                                        // Update URL hash when changing transformer
+                                                        if let Some(_window) = web_sys::window() {
+                                                            let _ = js_sys::eval(&format!(
+                                                                "window.location.hash = '{}';",
+                                                                id
+                                                            ));
+                                                        }
 
                                                         // Stop event propagation to prevent issues
                                                         evt.stop_propagation();
