@@ -19,6 +19,10 @@ pub mod hex_encode;
 pub mod hex_to_ascii;
 pub mod hex_to_bin;
 pub mod hex_to_dec;
+pub mod hex_to_hsl;
+pub mod hex_to_rgb;
+pub mod hsl_to_hex;
+pub mod hsl_to_rgb;
 pub mod html_decode;
 pub mod html_encode;
 pub mod json_formatter;
@@ -31,6 +35,8 @@ pub mod line_sorter;
 pub mod md5_hash;
 pub mod morse_decode;
 pub mod morse_encode;
+pub mod rgb_to_hex;
+pub mod rgb_to_hsl;
 pub mod rot13;
 pub mod sha1_hash;
 pub mod sha256_hash;
@@ -55,14 +61,15 @@ pub use self::{
     deflate_decompress::DeflateDecompress, gzip_compress::GzipCompress,
     gzip_decompress::GzipDecompress, hex_decode::HexDecode, hex_encode::HexEncode,
     hex_to_ascii::HexToAscii, hex_to_bin::HexToBinTransformer, hex_to_dec::HexToDecTransformer,
+    hex_to_hsl::HexToHsl, hex_to_rgb::HexToRgb, hsl_to_hex::HslToHex, hsl_to_rgb::HslToRgb,
     html_decode::HtmlDecode, html_encode::HtmlEncode, json_formatter::JsonFormatter,
     json_minifier::JsonMinifier, json_to_csv::JsonToCsv, line_number_adder::LineNumberAdder,
     line_number_remover::LineNumberRemover, line_sorter::LineSorter, md5_hash::Md5HashTransformer,
-    morse_decode::MorseDecode, morse_encode::MorseEncode, rot13::Rot13, sha1_hash::Sha1Hash,
-    sha256_hash::Sha256HashTransformer, slugify::Slugify, snake_to_camel::SnakeToCamel,
-    text_reverse::TextReverse, text_stats::TextStats, unique_lines::UniqueLines,
-    url_decode::UrlDecode, url_encode::UrlEncode, url_parser::UrlParser,
-    uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
+    morse_decode::MorseDecode, morse_encode::MorseEncode, rgb_to_hex::RgbToHex,
+    rgb_to_hsl::RgbToHsl, rot13::Rot13, sha1_hash::Sha1Hash, sha256_hash::Sha256HashTransformer,
+    slugify::Slugify, snake_to_camel::SnakeToCamel, text_reverse::TextReverse,
+    text_stats::TextStats, unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode,
+    url_parser::UrlParser, uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
     whitespace_remover::WhitespaceRemover,
 };
 

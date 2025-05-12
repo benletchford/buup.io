@@ -61,6 +61,8 @@ pub enum TransformerCategory {
     Formatter,
     /// Compression transformers (e.g., lzwcompress, lzwdecompress)
     Compression,
+    /// Color transformers (e.g., hex2rgb, rgb2hsl)
+    Color,
     /// Other transformers that don't fit into above categories
     Other,
 }
@@ -73,6 +75,7 @@ impl std::fmt::Display for TransformerCategory {
             Self::Crypto => write!(f, "crypto"),
             Self::Formatter => write!(f, "formatters"),
             Self::Compression => write!(f, "compression"),
+            Self::Color => write!(f, "colors"),
             Self::Other => write!(f, "others"),
         }
     }
@@ -88,6 +91,7 @@ impl std::str::FromStr for TransformerCategory {
             "crypto" => Ok(Self::Crypto),
             "formatters" => Ok(Self::Formatter),
             "compression" => Ok(Self::Compression),
+            "colors" => Ok(Self::Color),
             "others" => Ok(Self::Other),
             _ => Err(TransformError::UnknownTransformer),
         }
@@ -134,12 +138,12 @@ fn register_builtin_transformers() -> Registry {
         AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
         BinaryDecode, BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
         DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
-        HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HtmlDecode,
-        HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder,
-        LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode, MorseEncode, Rot13,
-        Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats,
-        UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
-        WhitespaceRemover,
+        HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl,
+        HexToRgb, HslToHex, HslToRgb, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
+        JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer,
+        MorseDecode, MorseEncode, RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer,
+        Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
+        UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -251,7 +255,13 @@ fn register_builtin_transformers() -> Registry {
         .transformers
         .insert(DeflateDecompress.id(), &DeflateDecompress);
 
-    // Add new color code converter transformers
+    // Register the color transformers
+    registry.transformers.insert(HexToRgb.id(), &HexToRgb);
+    registry.transformers.insert(RgbToHex.id(), &RgbToHex);
+    registry.transformers.insert(HexToHsl.id(), &HexToHsl);
+    registry.transformers.insert(HslToHex.id(), &HslToHex);
+    registry.transformers.insert(RgbToHsl.id(), &RgbToHsl);
+    registry.transformers.insert(HslToRgb.id(), &HslToRgb);
     registry
         .transformers
         .insert(ColorCodeConvert.id(), &ColorCodeConvert);
@@ -338,6 +348,13 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         // Add Gzip inverse pair
         "gzipcompress" => transformer_from_id("gzipdecompress").ok(),
         "gzipdecompress" => transformer_from_id("gzipcompress").ok(),
+        // Add color transformer pairs
+        "hex_to_rgb" => transformer_from_id("rgb_to_hex").ok(),
+        "rgb_to_hex" => transformer_from_id("hex_to_rgb").ok(),
+        "hex_to_hsl" => transformer_from_id("hsl_to_hex").ok(),
+        "hsl_to_hex" => transformer_from_id("hex_to_hsl").ok(),
+        "rgb_to_hsl" => transformer_from_id("hsl_to_rgb").ok(),
+        "hsl_to_rgb" => transformer_from_id("rgb_to_hsl").ok(),
         // Hashes have no inverse
         "sha1hash" => None,
         "sha256hash" => None,
@@ -357,6 +374,7 @@ pub fn categorized_transformers() -> HashMap<TransformerCategory, Vec<&'static d
     categories.insert(TransformerCategory::Formatter, Vec::new());
     categories.insert(TransformerCategory::Crypto, Vec::new());
     categories.insert(TransformerCategory::Compression, Vec::new());
+    categories.insert(TransformerCategory::Color, Vec::new());
     categories.insert(TransformerCategory::Other, Vec::new());
 
     // Categorize each transformer using the category method
@@ -532,12 +550,15 @@ mod tests {
         assert!(categorized.contains_key(&TransformerCategory::Decoder));
         assert!(categorized.contains_key(&TransformerCategory::Crypto));
         assert!(categorized.contains_key(&TransformerCategory::Formatter));
+        assert!(categorized.contains_key(&TransformerCategory::Compression));
+        assert!(categorized.contains_key(&TransformerCategory::Color));
         assert!(categorized.contains_key(&TransformerCategory::Other));
 
         let encoders = categorized.get(&TransformerCategory::Encoder).unwrap();
         let decoders = categorized.get(&TransformerCategory::Decoder).unwrap();
         let formatters = categorized.get(&TransformerCategory::Formatter).unwrap();
         let crypto = categorized.get(&TransformerCategory::Crypto).unwrap();
+        let compression = categorized.get(&TransformerCategory::Compression).unwrap();
 
         // Check a few specific transformers are in the right category
         assert!(encoders.iter().any(|t| t.id() == "base64encode"));
@@ -575,6 +596,7 @@ mod tests {
         assert_eq!(TransformerCategory::Crypto.to_string(), "crypto");
         assert_eq!(TransformerCategory::Formatter.to_string(), "formatters");
         assert_eq!(TransformerCategory::Compression.to_string(), "compression");
+        assert_eq!(TransformerCategory::Color.to_string(), "colors");
         assert_eq!(TransformerCategory::Other.to_string(), "others");
     }
 
@@ -599,6 +621,10 @@ mod tests {
         assert_eq!(
             TransformerCategory::from_str("compression").unwrap(),
             TransformerCategory::Compression
+        );
+        assert_eq!(
+            TransformerCategory::from_str("colors").unwrap(),
+            TransformerCategory::Color
         );
         assert_eq!(
             TransformerCategory::from_str("others").unwrap(),

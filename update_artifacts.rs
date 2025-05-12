@@ -108,6 +108,7 @@ fn generate_sitemap() -> Result<(), Box<dyn Error>> {
             buup::TransformerCategory::Formatter => "0.8",
             buup::TransformerCategory::Crypto => "0.8",
             buup::TransformerCategory::Compression => "0.9",
+            buup::TransformerCategory::Color => "0.8",
             buup::TransformerCategory::Other => "0.7",
         }
     };
@@ -119,6 +120,7 @@ fn generate_sitemap() -> Result<(), Box<dyn Error>> {
         buup::TransformerCategory::Compression,
         buup::TransformerCategory::Formatter,
         buup::TransformerCategory::Crypto,
+        buup::TransformerCategory::Color,
         buup::TransformerCategory::Other,
     ];
 

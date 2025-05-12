@@ -180,6 +180,37 @@
       <priority>0.8</priority>
       <changefreq>monthly</changefreq>
    </url>
+   <!-- colors related transformers -->
+   <url>
+      <loc>https://buup.io/#hex_to_hsl</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#hex_to_rgb</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#hsl_to_hex</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#hsl_to_rgb</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#rgb_to_hex</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#rgb_to_hsl</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
    <!-- others related transformers -->
    <url>
       <loc>https://buup.io/#cameltosnake</loc>
