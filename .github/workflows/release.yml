@@ -46,64 +46,9 @@ jobs:
           # You might need a PAT instead of GITHUB_TOKEN if you hit permission issues
           # token: ${{ secrets.YOUR_PAT }}
 
-  update-artifacts:
-    name: Update README and Sitemap
-    needs: release-please
-    runs-on: ubuntu-latest
-    # This job already checks if release-please created a release.
-    # The overall workflow only runs if Rust CI succeeded, so this implicitly depends on CI success.
-    if: needs.release-please.outputs.created == 'true'
-    permissions:
-      contents: write # Need write access to push changes
-    steps:
-      # Checkout the master branch to push changes to, but also fetch tags
-      - uses: actions/checkout@v4
-        with:
-          ref: master
-          fetch-depth: 0 # Needed to access tags
-
-      # Check out the specific tag in a separate directory to run the updater against the released code
-      - name: Checkout release tag for processing
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.release-please.outputs.tag_name }}
-          path: release-tag-checkout
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Cache dependencies
-        uses: Swatinem/rust-cache@v2
-        # No prefix needed, default key generation is usually fine
-
-      - name: Run artifacts updater against release tag code
-        # Run the updater from the main checkout, but point it to the tagged code source
-        # This assumes update_artifacts can handle reading from a different path if necessary,
-        # or that it reads relative to its own execution dir which is now the tagged version.
-        # If update_artifacts MUST run from the root of the tagged code, adjust accordingly.
-        run: cargo run --manifest-path release-tag-checkout/Cargo.toml --bin update_artifacts
-        # This might overwrite the README.md in the main checkout (master branch)
-
-      - name: Check for README changes
-        id: git-check
-        run: |
-          # Compare the potentially updated README.md in the main checkout (master) with HEAD
-          git diff --exit-code README.md || echo "changes=true" >> $GITHUB_OUTPUT
-
-      - name: Commit and push if README changed
-        if: steps.git-check.outputs.changes == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add README.md
-          # Reference the release tag in the commit message
-          git commit -m "Update README for release ${{ needs.release-please.outputs.tag_name }}"
-          git push origin master
-
   publish:
     name: Publish to crates.io
-    # Now depends on update-artifacts completing successfully
-    needs: [release-please, update-artifacts]
+    needs: release-please
     runs-on: ubuntu-latest
     # This job also already checks if release-please created a release.
     if: needs.release-please.outputs.created == 'true'
@@ -134,7 +79,7 @@ jobs:
 
   publish-gh-pages:
     name: Publish buup_web app to GitHub Pages
-    needs: [release-please, update-artifacts]
+    needs: release-please
     runs-on: ubuntu-latest
     if: needs.release-please.outputs.created == 'true'
     permissions:
