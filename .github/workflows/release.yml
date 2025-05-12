@@ -46,8 +46,8 @@ jobs:
           # You might need a PAT instead of GITHUB_TOKEN if you hit permission issues
           # token: ${{ secrets.YOUR_PAT }}
 
-  update-readme:
-    name: Update README.md
+  update-artifacts:
+    name: Update README and Sitemap
     needs: release-please
     runs-on: ubuntu-latest
     # This job already checks if release-please created a release.
@@ -76,12 +76,12 @@ jobs:
         uses: Swatinem/rust-cache@v2
         # No prefix needed, default key generation is usually fine
 
-      - name: Run README updater against release tag code
+      - name: Run artifacts updater against release tag code
         # Run the updater from the main checkout, but point it to the tagged code source
-        # This assumes update_readme can handle reading from a different path if necessary,
+        # This assumes update_artifacts can handle reading from a different path if necessary,
         # or that it reads relative to its own execution dir which is now the tagged version.
-        # If update_readme MUST run from the root of the tagged code, adjust accordingly.
-        run: cargo run --manifest-path release-tag-checkout/Cargo.toml --bin update_readme
+        # If update_artifacts MUST run from the root of the tagged code, adjust accordingly.
+        run: cargo run --manifest-path release-tag-checkout/Cargo.toml --bin update_artifacts
         # This might overwrite the README.md in the main checkout (master branch)
 
       - name: Check for README changes
@@ -102,8 +102,8 @@ jobs:
 
   publish:
     name: Publish to crates.io
-    # Now depends on update-readme completing successfully
-    needs: [release-please, update-readme]
+    # Now depends on update-artifacts completing successfully
+    needs: [release-please, update-artifacts]
     runs-on: ubuntu-latest
     # This job also already checks if release-please created a release.
     if: needs.release-please.outputs.created == 'true'
@@ -134,7 +134,7 @@ jobs:
 
   publish-gh-pages:
     name: Publish buup_web app to GitHub Pages
-    needs: [release-please, update-readme]
+    needs: [release-please, update-artifacts]
     runs-on: ubuntu-latest
     if: needs.release-please.outputs.created == 'true'
     permissions:
