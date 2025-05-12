@@ -88,6 +88,18 @@ let decoded = transformer.transform(&encoded).unwrap();
 println!("{}", decoded); // Hello, Library!
 ```
 
+## Tiny Binary Size
+
+Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **588K** on arm64 (again with no external dependencies).
+
+This tiny footprint makes Buup perfect for:
+
+- **Including in resource-constrained environments** e.g. embedded systems
+- **Fast startup times** for CLI operations
+- **Minimal dependencies** means fewer security vulnerabilities and simpler maintenance
+
+*Note: Binary size may vary slightly across different platforms.*
+
 ## Available Transformers
 
 The following transformers are currently available in Buup:
