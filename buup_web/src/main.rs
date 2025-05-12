@@ -197,7 +197,7 @@ fn App() -> Element {
     });
     let mut input = use_signal(|| "".to_string());
     let mut show_transformer_menu = use_signal(|| false);
-    let mut transformer_category = use_signal(|| "all");
+    let mut transformer_category = use_signal(|| "all".to_string());
     let mut search_query = use_signal(String::new);
     let mut show_copy_success = use_signal(|| false);
 
@@ -703,7 +703,7 @@ fn App() -> Element {
                             div { class: "transformer-categories",
                                 button {
                                     class: if transformer_category() == "all" { "category-button active" } else { "category-button" },
-                                    onclick: move |_| transformer_category.set("all"),
+                                    onclick: move |_| transformer_category.set("all".to_string()),
                                     "All"
                                 }
                                 {categories.iter().map(|category| {
@@ -712,17 +712,8 @@ fn App() -> Element {
                                         button {
                                             class: if transformer_category() == category_str { "category-button active" } else { "category-button" },
                                             onclick: move |_| {
-                                                // Use a match on the actual string value
-                                                let cat_str = match &*category_str {
-                                                    "encoders" => "encoders",
-                                                    "decoders" => "decoders",
-                                                    "crypto" => "crypto",
-                                                    "formatters" => "formatters",
-                                                    "compression" => "compression",
-                                                    "others" => "others",
-                                                    _ => "all", // Fallback
-                                                };
-                                                transformer_category.set(cat_str);
+                                                // Now we can directly use the category string
+                                                transformer_category.set(category_str.clone());
                                             },
                                             "{&category.to_string()}"
                                         }
