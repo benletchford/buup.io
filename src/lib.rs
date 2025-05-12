@@ -132,13 +132,13 @@ fn register_builtin_transformers() -> Registry {
     // Import the new transformer
     use transformers::{
         AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
-        BinaryDecode, BinaryEncode, CamelToSnake, ColorCodeConvert, ColorCodeConvertInverse,
-        CsvToJson, DecToBinTransformer, DecToHexTransformer, DeflateCompress, DeflateDecompress,
-        GzipCompress, GzipDecompress, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
-        HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
-        JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
-        MorseEncode, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse,
-        TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+        BinaryDecode, BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
+        DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
+        HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HtmlDecode,
+        HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder,
+        LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode, MorseEncode, Rot13,
+        Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats,
+        UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
         WhitespaceRemover,
     };
 
@@ -255,9 +255,6 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(ColorCodeConvert.id(), &ColorCodeConvert);
-    registry
-        .transformers
-        .insert(ColorCodeConvertInverse.id(), &ColorCodeConvertInverse);
 
     // Register Gzip transformers
     registry
