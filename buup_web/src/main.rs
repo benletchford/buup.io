@@ -329,8 +329,97 @@ fn App() -> Element {
         }
     };
 
+    // Dynamic page title based on current transformer
+    let page_title = format!(
+        "{} | Buup - Text Utility Belt",
+        current_transformer().name()
+    );
+
+    // Dynamic description based on current transformer
+    let meta_description = format!(
+        "Online tool to {}. Free, secure, and works offline - no data is sent to servers. Try Buup's {} utility now!", 
+        current_transformer().description().to_lowercase(),
+        current_transformer().name()
+    );
+
+    // Dynamic keywords based on transformer and its category
+    let keywords = format!(
+        "text utility, online tool, {}, {}, text transformer, online {}, web tool, free tool, secure, offline, no server",
+        current_transformer().id(),
+        current_transformer().name().to_lowercase(),
+        current_transformer().category().to_string().to_lowercase()
+    );
+
+    // Generate canonical URL
+    let canonical_url = format!("https://buup.io/#{}", current_transformer().id());
+
+    // Create a list of all tool names for rich results
+    let _all_tool_names = transformers
+        .iter()
+        .map(|t| t.name())
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    // JSON-LD structured data for better SEO
+    let structured_data = format!(
+        r#"{{
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Buup - Text Utility Belt",
+            "url": "https://buup.io",
+            "applicationCategory": "UtilitiesApplication",
+            "offers": {{
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            }},
+            "description": "Online text transformation toolkit with 50+ utilities including encoding/decoding, compression, formatting, and cryptography tools. Free, open-source, and works completely offline.",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript",
+            "keywords": "{}",
+            "potentialAction": {{
+                "@type": "UseAction",
+                "object": {{
+                    "@type": "SoftwareApplication",
+                    "name": "{}"
+                }}
+            }}
+        }}"#,
+        keywords,
+        current_transformer().name()
+    );
+
     rsx! {
-        document::Title { "Buup - Text Utility Belt" }
+        // Dynamic page title
+        document::Title { "{page_title}" }
+
+        // Standard meta tags
+        document::Meta { name: "description", content: "{meta_description}" }
+        document::Meta { name: "keywords", content: "{keywords}" }
+        document::Meta { name: "robots", content: "index, follow" }
+        document::Meta { name: "author", content: "Buup" }
+
+        // Canonical URL
+        document::Link { rel: "canonical", href: "{canonical_url}" }
+
+        // Open Graph tags
+        document::Meta { property: "og:title", content: "{page_title}" }
+        document::Meta { property: "og:description", content: "{meta_description}" }
+        document::Meta { property: "og:type", content: "website" }
+        document::Meta { property: "og:url", content: "{canonical_url}" }
+        document::Meta { property: "og:image", content: "https://buup.io/apple-touch-icon.png" }
+        document::Meta { property: "og:site_name", content: "Buup - Text Utility Belt" }
+
+        // Twitter Card tags
+        document::Meta { name: "twitter:card", content: "summary" }
+        document::Meta { name: "twitter:title", content: "{page_title}" }
+        document::Meta { name: "twitter:description", content: "{meta_description}" }
+        document::Meta { name: "twitter:image", content: "https://buup.io/apple-touch-icon.png" }
+
+        // Structured data
+        script { r#type: "application/ld+json", dangerous_inner_html: "{structured_data}" }
+
+        // Keep existing meta tags
         document::Link {
             rel: "apple-touch-icon",
             sizes: "180x180",
