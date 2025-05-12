@@ -17,6 +17,41 @@ fn main() {
     dioxus::launch(App);
 }
 
+// Function to provide custom meta descriptions for popular tools
+fn get_meta_description(transformer_id: &str, transformer_name: &str, default_description: &str) -> String {
+    match transformer_id {
+        "base64encode" => "Convert text to Base64 encoding instantly. Our free Base64 encoder works completely offline with no server processing. Perfect for encoding strings, JSON, and binary data securely.".to_string(),
+        
+        "base64decode" => "Decode Base64 strings to plain text with our free online tool. Works offline with client-side processing for maximum security and privacy. Supports standard and URL-safe Base64.".to_string(),
+        
+        "gzipcompress" => "Compress text with GZIP algorithm to reduce file size. Our free compression tool works entirely in your browser - no data is sent to servers. Fast, secure, and private.".to_string(),
+        
+        "gzipdecompress" => "Decompress GZIP-encoded content with our free online tool. Securely extract compressed text with no server uploads. Works offline for complete privacy and security.".to_string(),
+        
+        "jsonformat" => "Format and prettify JSON instantly with our free online tool. Our tool organizes JSON structure for better readability. Works offline with no data sent to servers for complete privacy.".to_string(),
+        
+        "jsonminify" => "Minify JSON data to reduce size. Our free tool removes unnecessary whitespace while preserving data structure. Works 100% offline for security.".to_string(),
+        
+        "urlencode" => "Encode URLs and query parameters safely with our free URL encoder. Handles special characters and Unicode. Works completely in your browser for maximum security.".to_string(),
+        
+        "urldecode" => "Decode URL-encoded strings and query parameters with our free online tool. Converts percent-encoded characters back to readable text. Secure, private, and works offline.".to_string(),
+        
+        "htmlencode" => "Convert HTML special characters to HTML entities to prevent code injection. Our free HTML encoder works entirely in your browser with no server processing.".to_string(),
+        
+        "htmldecode" => "Convert HTML entities back to their corresponding characters. Our free HTML decoder works securely in your browser with no data sent to servers.".to_string(),
+        
+        "md5hash" => "Generate MD5 hash values from text instantly. Free online MD5 hashing tool with complete offline processing for privacy and security.".to_string(),
+        
+        "sha256hash" => "Create SHA-256 cryptographic hashes from text input. Our free tool works entirely in your browser - no data is sent to any server.".to_string(),
+        
+        _ => format!(
+            "Online tool to {}. Free, secure, and works offline - no data is sent to servers. Try Buup's {} utility now!", 
+            default_description.to_lowercase(),
+            transformer_name
+        ),
+    }
+}
+
 // Components
 #[component]
 fn App() -> Element {
@@ -394,10 +429,10 @@ fn App() -> Element {
     );
 
     // Dynamic description based on current transformer
-    let meta_description = format!(
-        "Online tool to {}. Free, secure, and works offline - no data is sent to servers. Try Buup's {} utility now!", 
-        current_transformer().description().to_lowercase(),
-        current_transformer().name()
+    let meta_description = get_meta_description(
+        &current_transformer().id(),
+        &current_transformer().name(),
+        &current_transformer().description()
     );
 
     // Dynamic keywords based on transformer and its category
