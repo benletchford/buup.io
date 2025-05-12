@@ -164,7 +164,7 @@ EXAMPLES:
 ### Update README.md with `buup list`
 
 ```bash
-cargo run --bin update_readme
+cargo run --bin update_artifacts
 ```
 
 ## Contributing
