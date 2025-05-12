@@ -1,5 +1,4 @@
 #[doc = include_str!("../README.md")]
-use crate::transformers::*;
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::OnceLock;
@@ -10,10 +9,11 @@ pub mod utils;
 // Export the transformer structs for backward compatibility
 pub use transformers::{
     AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
-    DeflateCompress, DeflateDecompress, HexDecode, HexEncode, HexToAscii, HtmlDecode, HtmlEncode,
-    JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode, LineSorter, Md5HashTransformer, Rot13,
-    Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode,
-    UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+    DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress, HexDecode, HexEncode,
+    HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode,
+    LineSorter, Md5HashTransformer, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel,
+    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate,
+    UuidGenerate,
 };
 
 /// Represents a transformation error
@@ -132,13 +132,14 @@ fn register_builtin_transformers() -> Registry {
     // Import the new transformer
     use transformers::{
         AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
-        BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson, DecToBinTransformer,
-        DecToHexTransformer, DeflateCompress, DeflateDecompress, HexDecode, HexEncode, HexToAscii,
-        HexToBinTransformer, HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter,
-        JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter,
-        Md5HashTransformer, MorseDecode, MorseEncode, Rot13, Sha1Hash, Sha256HashTransformer,
-        Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
-        UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover,
+        BinaryDecode, BinaryEncode, CamelToSnake, ColorCodeConvert, ColorCodeConvertInverse,
+        CsvToJson, DecToBinTransformer, DecToHexTransformer, DeflateCompress, DeflateDecompress,
+        GzipCompress, GzipDecompress, HexDecode, HexEncode, HexToAscii, HexToBinTransformer,
+        HexToDecTransformer, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv,
+        JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode,
+        MorseEncode, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse,
+        TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+        WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -249,6 +250,14 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(DeflateDecompress.id(), &DeflateDecompress);
+
+    // Add new color code converter transformers
+    registry
+        .transformers
+        .insert(ColorCodeConvert.id(), &ColorCodeConvert);
+    registry
+        .transformers
+        .insert(ColorCodeConvertInverse.id(), &ColorCodeConvertInverse);
 
     // Register Gzip transformers
     registry

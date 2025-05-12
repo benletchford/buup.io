@@ -6,6 +6,8 @@ pub mod bin_to_hex;
 pub mod binary_decode;
 pub mod binary_encode;
 pub mod camel_to_snake;
+pub mod color_code_convert;
+pub mod color_code_convert_inverse;
 pub mod csv_to_json;
 pub mod dec_to_bin;
 pub mod dec_to_hex;
@@ -48,8 +50,9 @@ pub mod whitespace_remover;
 pub use self::{
     ascii_to_hex::AsciiToHex, base64_decode::Base64Decode, base64_encode::Base64Encode,
     bin_to_dec::BinToDecTransformer, bin_to_hex::BinToHexTransformer, binary_decode::BinaryDecode,
-    binary_encode::BinaryEncode, camel_to_snake::CamelToSnake, csv_to_json::CsvToJson,
-    dec_to_bin::DecToBinTransformer, dec_to_hex::DecToHexTransformer,
+    binary_encode::BinaryEncode, camel_to_snake::CamelToSnake,
+    color_code_convert::ColorCodeConvert, color_code_convert_inverse::ColorCodeConvertInverse,
+    csv_to_json::CsvToJson, dec_to_bin::DecToBinTransformer, dec_to_hex::DecToHexTransformer,
     deflate_compress::DeflateCompress, deflate_decompress::DeflateDecompress,
     gzip_compress::GzipCompress, gzip_decompress::GzipDecompress, hex_decode::HexDecode,
     hex_encode::HexEncode, hex_to_ascii::HexToAscii, hex_to_bin::HexToBinTransformer,
