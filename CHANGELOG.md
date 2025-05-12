@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/benletchford/buup/compare/v0.19.0...v0.20.0) (2025-05-12)
+
+
+### Features
+
+* improve and extend SEO meta descriptions ([0872f6e](https://github.com/benletchford/buup/commit/0872f6ee4b1192dbd88744344fb54e15eb58afab))
+
 ## [0.19.0](https://github.com/benletchford/buup/compare/v0.18.0...v0.19.0) (2025-05-12)
 
 
