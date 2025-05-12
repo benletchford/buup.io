@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.18.0](https://github.com/benletchford/buup/compare/v0.17.0...v0.18.0) (2025-05-12)
+
+
+### Features
+
+* dynamically generate sitemap.xml and rename update script ([1c89a4f](https://github.com/benletchford/buup/commit/1c89a4fdc6d66593f347f502001e7bac36f01720))
+* **web:** add custom meta descriptions for popular tools ([b61f7e1](https://github.com/benletchford/buup/commit/b61f7e1b5cf0ff5aa23b0251bc05c23cb2955c31))
+* **web:** add SEO enhancements to the web application ([05c83ba](https://github.com/benletchford/buup/commit/05c83ba88856d24636c9f5cf3d08eab91766fa32))
+* **web:** add support for URL hash navigation to specific transformers ([8f6c7fe](https://github.com/benletchford/buup/commit/8f6c7feb0c958add61f2a752a975d1859899e55a))
+
+
+### Bug Fixes
+
+* remove unnecessary references in meta description function call ([ffd9f47](https://github.com/benletchford/buup/commit/ffd9f47687f6ea37a54d3e908cd22ec7279d496c))
+
 ## [0.17.0](https://github.com/benletchford/buup/compare/v0.16.0...v0.17.0) (2025-05-12)
 
 
