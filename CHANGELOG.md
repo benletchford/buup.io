@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/benletchford/buup/compare/v0.20.0...v0.20.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* **web:** add support for colors category in transformer selector ([1257119](https://github.com/benletchford/buup/commit/1257119016665b31836b79d9c5e2b95dfe9da1d2))
+
 ## [0.20.0](https://github.com/benletchford/buup/compare/v0.19.0...v0.20.0) (2025-05-12)
 
 
