@@ -139,6 +139,14 @@ COMPRESSION:
   gzipcompress    - Compresses input using Gzip (RFC 1952) and encodes the output as Base64.
   gzipdecompress  - Decompresses Gzip formatted input (RFC 1952). Expects Base64 input.
 
+COLORS:
+  hex_to_hsl      - Converts hex color code to HSL format
+  hex_to_rgb      - Converts hex color code to RGB format
+  hsl_to_hex      - Converts HSL color to hex format
+  hsl_to_rgb      - Converts HSL color to RGB format
+  rgb_to_hex      - Converts RGB color to hex format
+  rgb_to_hsl      - Converts RGB color to HSL format
+
 OTHERS:
   cameltosnake    - Converts camelCase or PascalCase to snake_case
   color_code_convert - Converts between different color formats (HEX, RGB, HSL, CMYK)

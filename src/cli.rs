@@ -37,6 +37,7 @@ fn list_transformers() -> Result<(), String> {
     let formatters = categories.get(&TransformerCategory::Formatter).unwrap();
     let cryptography = categories.get(&TransformerCategory::Crypto).unwrap();
     let compression = categories.get(&TransformerCategory::Compression).unwrap();
+    let colors = categories.get(&TransformerCategory::Color).unwrap();
     let others = categories.get(&TransformerCategory::Other).unwrap();
 
     // Print groups with better formatting
@@ -71,6 +72,13 @@ fn list_transformers() -> Result<(), String> {
     if !compression.is_empty() {
         println!("\nCOMPRESSION:");
         for t in compression {
+            println!("  {:<15} - {}", t.id(), t.description());
+        }
+    }
+
+    if !colors.is_empty() {
+        println!("\nCOLORS:");
+        for t in colors {
             println!("  {:<15} - {}", t.id(), t.description());
         }
     }
