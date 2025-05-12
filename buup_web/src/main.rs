@@ -430,9 +430,9 @@ fn App() -> Element {
 
     // Dynamic description based on current transformer
     let meta_description = get_meta_description(
-        &current_transformer().id(),
-        &current_transformer().name(),
-        &current_transformer().description()
+        current_transformer().id(),
+        current_transformer().name(),
+        current_transformer().description()
     );
 
     // Dynamic keywords based on transformer and its category
