@@ -18,36 +18,41 @@ fn main() {
 }
 
 // Function to provide custom meta descriptions for popular tools
-fn get_meta_description(transformer_id: &str, transformer_name: &str, default_description: &str) -> String {
+fn get_meta_description(
+    transformer_id: &str,
+    transformer_name: &str,
+    default_description: &str,
+) -> String {
     match transformer_id {
-        "base64encode" => "Convert text to Base64 encoding instantly. Our free Base64 encoder works completely offline with no server processing. Perfect for encoding strings, JSON, and binary data securely.".to_string(),
-        
-        "base64decode" => "Decode Base64 strings to plain text with our free online tool. Works offline with client-side processing for maximum security and privacy. Supports standard and URL-safe Base64.".to_string(),
-        
-        "gzipcompress" => "Compress text with GZIP algorithm to reduce file size. Our free compression tool works entirely in your browser - no data is sent to servers. Fast, secure, and private.".to_string(),
-        
-        "gzipdecompress" => "Decompress GZIP-encoded content with our free online tool. Securely extract compressed text with no server uploads. Works offline for complete privacy and security.".to_string(),
-        
-        "jsonformat" => "Format and prettify JSON instantly with our free online tool. Our tool organizes JSON structure for better readability. Works offline with no data sent to servers for complete privacy.".to_string(),
-        
-        "jsonminify" => "Minify JSON data to reduce size. Our free tool removes unnecessary whitespace while preserving data structure. Works 100% offline for security.".to_string(),
-        
-        "urlencode" => "Encode URLs and query parameters safely with our free URL encoder. Handles special characters and Unicode. Works completely in your browser for maximum security.".to_string(),
-        
-        "urldecode" => "Decode URL-encoded strings and query parameters with our free online tool. Converts percent-encoded characters back to readable text. Secure, private, and works offline.".to_string(),
-        
-        "htmlencode" => "Convert HTML special characters to HTML entities to prevent code injection. Our free HTML encoder works entirely in your browser with no server processing.".to_string(),
-        
-        "htmldecode" => "Convert HTML entities back to their corresponding characters. Our free HTML decoder works securely in your browser with no data sent to servers.".to_string(),
-        
-        "md5hash" => "Generate MD5 hash values from text instantly. Free online MD5 hashing tool with complete offline processing for privacy and security.".to_string(),
-        
-        "sha256hash" => "Create SHA-256 cryptographic hashes from text input. Our free tool works entirely in your browser - no data is sent to any server.".to_string(),
-        
+        "base64encode" => "Encode text to Base64 online. Free, secure Base64 encoder works entirely in your browser. No data sent to servers. Ideal for strings, JSON, and binary data.".to_string(),
+        "base64decode" => "Decode Base64 strings to text instantly. Free, secure Base64 decoder operates offline in your browser for maximum privacy. Supports standard and URL-safe formats.".to_string(),
+        "gzipcompress" => "Compress text using GZIP algorithm online. Reduce data size with this free, client-side compression tool. Secure and private – no server uploads required.".to_string(),
+        "gzipdecompress" => "Decompress GZIP-encoded data online. Free tool securely extracts compressed text directly in your browser. Works offline, ensuring privacy.".to_string(),
+        "jsonformat" => "Format and prettify JSON data online. Free tool improves readability and validates JSON structure. Works completely offline for security and privacy.".to_string(),
+        "jsonminify" => "Minify JSON data online to reduce file size. Free tool removes whitespace while preserving structure. Operates 100% offline in your browser.".to_string(),
+        "urlencode" => "URL-encode strings online. Free tool safely encodes special characters and Unicode for URLs and query parameters. Works entirely in your browser, no server interaction.".to_string(),
+        "urldecode" => "URL-decode strings online. Free tool converts percent-encoded characters back to readable text. Secure, private, and works offline in your browser.".to_string(),
+        "htmlencode" => "Encode HTML special characters to entities online. Prevent XSS attacks with this free, client-side HTML encoder. Securely processes data in your browser.".to_string(),
+        "htmldecode" => "Decode HTML entities back to characters online. Free, secure HTML decoder works entirely in your browser. No data is sent to any server.".to_string(),
+        "md5hash" => "Generate MD5 hash online from text. Free MD5 hashing tool works completely offline in your browser for data privacy and security.".to_string(),
+        "sha256hash" => "Generate SHA-256 hash online from text. Free cryptographic hashing tool works entirely in your browser. Secure, private, no server interaction.".to_string(),
+        "hexencode" => "Encode text to Hexadecimal online. Free Hex encoder works entirely in your browser, ensuring data privacy. Convert strings to hex format securely.".to_string(),
+        "hexdecode" => "Decode Hexadecimal strings to text online. Free Hex decoder operates offline in your browser for maximum security. Convert hex back to readable text.".to_string(),
+        "binaryencode" => "Encode text to Binary (base-2) online. Free binary encoder converts text to space-separated byte values. Works offline in your browser.".to_string(),
+        "binarydecode" => "Decode Binary strings (space-separated bytes) to text online. Free binary decoder works securely in your browser, offline.".to_string(),
+        "morseencode" => "Encode text to Morse code online. Free Morse code translator works entirely in your browser for privacy. Convert letters and numbers easily.".to_string(),
+        "morsedecode" => "Decode Morse code to text online. Free Morse code translator operates offline in your browser. Convert dots and dashes back to readable text.".to_string(),
+        "jwtdecode" => "Decode JSON Web Tokens (JWT) online without verification. Free JWT decoder tool inspects header and payload client-side. Works securely offline.".to_string(),
+        "uuid_generate" => "Generate Version 4 UUIDs (Universally Unique Identifiers) online. Free UUID generator creates random v4 UUIDs directly in your browser.".to_string(), // Note: PRNG quality mentioned in README
+        "textreverse" => "Reverse text strings online. Free tool reverses the order of characters in your text. Works instantly in your browser, offline.".to_string(),
+        "linesorter" => "Sort lines of text alphabetically online. Free tool sorts lines in ascending order. Works entirely in your browser for privacy.".to_string(),
+        "slugify" => "Convert text to a URL-friendly slug online. Free slug generator creates lowercase, dashed strings safe for URLs. Works offline in your browser.".to_string(),
+        "csvtojson" => "Convert CSV data to JSON format online. Free tool transforms comma-separated values into a JSON array of objects. Secure, client-side conversion.".to_string(),
+        "jsontocsv" => "Convert JSON array of objects to CSV format online. Free tool transforms JSON data into comma-separated values. Secure, client-side conversion.".to_string(),
         _ => format!(
-            "Online tool to {}. Free, secure, and works offline - no data is sent to servers. Try Buup's {} utility now!", 
-            default_description.to_lowercase(),
-            transformer_name
+            "Use Buup's free online {} tool. Securely {} directly in your browser - works offline with no server processing.",
+            transformer_name,
+            default_description.to_lowercase().replace("...", "") // Basic attempt to make it active
         ),
     }
 }
@@ -432,7 +437,7 @@ fn App() -> Element {
     let meta_description = get_meta_description(
         current_transformer().id(),
         current_transformer().name(),
-        current_transformer().description()
+        current_transformer().description(),
     );
 
     // Dynamic keywords based on transformer and its category
