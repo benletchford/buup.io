@@ -20,10 +20,10 @@ members = ["buup_web"]
 name = "buup"
 path = "src/cli.rs"
 
-# Utility to update the README.md file with the latest info
+# Utility to update README.md and generate sitemap.xml
 [[bin]]
-name = "update_readme"
-path = "update_readme.rs"
+name = "update_artifacts"
+path = "update_artifacts.rs"
 
 [profile]
 
