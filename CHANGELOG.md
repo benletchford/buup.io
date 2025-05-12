@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.19.0](https://github.com/benletchford/buup/compare/v0.18.0...v0.19.0) (2025-05-12)
+
+
+### Features
+
+* add dedicated color transformers category with specialized tools ([182f7e1](https://github.com/benletchford/buup/commit/182f7e11aab000806a6c1a8662ffd01f4c0ec3e3))
+
+
+### Bug Fixes
+
+* add Color category to cli list ([19536ff](https://github.com/benletchford/buup/commit/19536ffad7049bbf09f4b9e072c263efa80e6723))
+
 ## [0.18.0](https://github.com/benletchford/buup/compare/v0.17.0...v0.18.0) (2025-05-12)
 
 
