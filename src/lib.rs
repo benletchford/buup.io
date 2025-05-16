@@ -558,7 +558,6 @@ mod tests {
         let decoders = categorized.get(&TransformerCategory::Decoder).unwrap();
         let formatters = categorized.get(&TransformerCategory::Formatter).unwrap();
         let crypto = categorized.get(&TransformerCategory::Crypto).unwrap();
-        let compression = categorized.get(&TransformerCategory::Compression).unwrap();
 
         // Check a few specific transformers are in the right category
         assert!(encoders.iter().any(|t| t.id() == "base64encode"));
