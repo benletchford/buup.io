@@ -17,9 +17,9 @@ pub use transformers::{
     HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl, HexToRgb,
     HslToHex, HslToRgb, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode,
     LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode, MorseEncode,
-    RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse,
-    TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
-    WhitespaceRemover, XmlFormatter, XmlMinifier,
+    RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel,
+    SqlFormatter, SqlMinifier, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
+    UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover, XmlFormatter, XmlMinifier,
 };
 
 /// Represents a transformation error
@@ -152,6 +152,10 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(JsonMinifier.id(), &JsonMinifier);
+    registry
+        .transformers
+        .insert(SqlFormatter.id(), &SqlFormatter);
+    registry.transformers.insert(SqlMinifier.id(), &SqlMinifier);
     registry.transformers.insert(HexEncode.id(), &HexEncode);
     registry.transformers.insert(HexDecode.id(), &HexDecode);
     registry.transformers.insert(HtmlEncode.id(), &HtmlEncode);
@@ -313,6 +317,8 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "textreverse" => transformer_from_id("textreverse").ok(), // Self-inverting
         "jsonformatter" => transformer_from_id("jsonminifier").ok(),
         "jsonminifier" => transformer_from_id("jsonformatter").ok(),
+        "sqlformatter" => transformer_from_id("sqlminifier").ok(),
+        "sqlminifier" => transformer_from_id("sqlformatter").ok(),
         "hexencode" => transformer_from_id("hexdecode").ok(),
         "hexdecode" => transformer_from_id("hexencode").ok(),
         "htmlencode" => transformer_from_id("htmldecode").ok(),
