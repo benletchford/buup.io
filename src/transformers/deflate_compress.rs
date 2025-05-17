@@ -263,11 +263,7 @@ fn lz77_compress(input: &[u8]) -> Vec<Lz77Token> {
     let mut prev: Vec<Option<usize>> = vec![None; MAX_WINDOW_SIZE];
     let mut current_pos = 0;
     while current_pos < input.len() {
-        let window_start = if current_pos > MAX_WINDOW_SIZE {
-            current_pos - MAX_WINDOW_SIZE
-        } else {
-            0
-        };
+        let window_start = current_pos.saturating_sub(MAX_WINDOW_SIZE);
         if current_pos + MIN_MATCH_LEN > input.len() {
             tokens.extend(input[current_pos..].iter().map(|&b| Lz77Token::Literal(b)));
             break;
