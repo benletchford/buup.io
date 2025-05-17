@@ -85,7 +85,7 @@ impl Transform for XmlMinifier {
 
             if c == '<' {
                 if !text_content.is_empty() {
-                    result.push_str(&text_content.trim());
+                    result.push_str(text_content.trim());
                     text_content.clear();
                 }
                 in_tag = true;
@@ -119,7 +119,7 @@ impl Transform for XmlMinifier {
         }
 
         if !text_content.is_empty() {
-            result.push_str(&text_content.trim());
+            result.push_str(text_content.trim());
         }
 
         Ok(result)
