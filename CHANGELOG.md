@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.21.0](https://github.com/benletchford/buup.io/compare/v0.20.1...v0.21.0) (2025-05-17)
+
+
+### Features
+
+* add XML formatter and minifier transformers ([8cdc5a2](https://github.com/benletchford/buup.io/commit/8cdc5a2668d811ec3282c8230d4d5610dae335cd))
+* remove base32_encode transformer ([bfa7922](https://github.com/benletchford/buup.io/commit/bfa79225682b62a63d77f87d727ccd247640be8d))
+
+
+### Bug Fixes
+
+* optimize window start calculation in lz77_compress ([acf21a1](https://github.com/benletchford/buup.io/commit/acf21a1e52cc00d415a0b7600aa87ee496e9d84f))
+* remove unused CLI feature and update dependencies section ([b4d1e47](https://github.com/benletchford/buup.io/commit/b4d1e47d09aa4243b54b8db4bc62208703fd2098))
+* **tests:** remove unused compression transformer category from tests ([bf36a8e](https://github.com/benletchford/buup.io/commit/bf36a8e86722a4ee9afe898ec831f637d7519a97))
+
 ## [0.20.1](https://github.com/benletchford/buup/compare/v0.20.0...v0.20.1) (2025-05-12)
 
 
