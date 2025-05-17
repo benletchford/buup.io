@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/benletchford/buup.io/compare/v0.21.1...v0.22.0) (2025-05-17)
+
+
+### Features
+
+* **transformers:** add SQL formatter and minifier transformers ([9b81a80](https://github.com/benletchford/buup.io/commit/9b81a8024860fc0f72013b4c844a8f7f2ceac152))
+
 ## [0.21.1](https://github.com/benletchford/buup.io/compare/v0.21.0...v0.21.1) (2025-05-17)
 
 
