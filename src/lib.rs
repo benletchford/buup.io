@@ -6,10 +6,6 @@ use std::sync::OnceLock;
 pub mod transformers;
 pub mod utils;
 
-#[allow(unexpected_cfgs)]
-#[cfg(feature = "cli")]
-mod cli;
-
 // Create mutable storage for registry
 static REGISTRY: OnceLock<Registry> = OnceLock::new();
 

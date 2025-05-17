@@ -13,9 +13,6 @@ include = ["src", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
 [dependencies]
 # Strictly no external dependencies
 
-[features]
-cli = []
-
 [workspace]
 members = ["buup_web"]
 
