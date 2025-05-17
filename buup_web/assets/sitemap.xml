@@ -140,6 +140,11 @@
    </url>
    <!-- formatters related transformers -->
    <url>
+      <loc>https://buup.io/#htmltomarkdown</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
       <loc>https://buup.io/#jsonformatter</loc>
       <priority>0.8</priority>
       <changefreq>monthly</changefreq>
@@ -156,6 +161,21 @@
    </url>
    <url>
       <loc>https://buup.io/#linenumberremover</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#markdowntohtml</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#sqlformatter</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#sqlminifier</loc>
       <priority>0.8</priority>
       <changefreq>monthly</changefreq>
    </url>

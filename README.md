@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Tiny Binary Size
 
-Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **604K** on arm64 (again with no external dependencies).
+Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **636K** on arm64 (again with no external dependencies).
 
 This tiny footprint makes Buup perfect for:
 
@@ -98,7 +98,7 @@ This tiny footprint makes Buup perfect for:
 - **Fast startup times** for CLI operations
 - **Minimal dependencies** means fewer security vulnerabilities and simpler maintenance
 
-*Note: Binary size may vary slightly across different platforms.*
+_Note: Binary size may vary slightly across different platforms._
 
 ## Available Transformers
 
@@ -134,10 +134,14 @@ DECODERS:
   urldecode       - Decode URL-encoded text
 
 FORMATTERS:
+  htmltomarkdown  - Converts HTML to Markdown format
   jsonformatter   - Formats (pretty-prints) a JSON string.
   jsonminifier    - Minifies a JSON string, removing unnecessary whitespace.
   linenumberadder - Adds line numbers to the beginning of each line.
   linenumberremover - Removes line numbers (and optional delimiters) from the beginning of each line.
+  markdowntohtml  - Converts Markdown text to HTML format
+  sqlformatter    - Formats SQL queries with proper indentation and spacing
+  sqlminifier     - Minifies SQL queries by removing unnecessary whitespace and formatting
   xmlformatter    - Format XML code with proper indentation
   xmlminifier     - Compress XML by removing unnecessary whitespace
 

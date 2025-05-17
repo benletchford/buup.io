@@ -15,11 +15,12 @@ pub use transformers::{
     BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
     DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
     HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl, HexToRgb,
-    HslToHex, HslToRgb, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode,
-    LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode, MorseEncode,
-    RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel,
-    SqlFormatter, SqlMinifier, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
-    UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover, XmlFormatter, XmlMinifier,
+    HslToHex, HslToRgb, HtmlDecode, HtmlEncode, HtmlToMarkdown, JsonFormatter, JsonMinifier,
+    JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, MarkdownToHtml,
+    Md5HashTransformer, MorseDecode, MorseEncode, RgbToHex, RgbToHsl, Rot13, Sha1Hash,
+    Sha256HashTransformer, Slugify, SnakeToCamel, SqlFormatter, SqlMinifier, TextReverse,
+    TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+    WhitespaceRemover, XmlFormatter, XmlMinifier,
 };
 
 /// Represents a transformation error
@@ -277,6 +278,14 @@ fn register_builtin_transformers() -> Registry {
         .insert(XmlFormatter.id(), &XmlFormatter);
     registry.transformers.insert(XmlMinifier.id(), &XmlMinifier);
 
+    // Add markdown transformers
+    registry
+        .transformers
+        .insert(MarkdownToHtml.id(), &MarkdownToHtml);
+    registry
+        .transformers
+        .insert(HtmlToMarkdown.id(), &HtmlToMarkdown);
+
     registry
 }
 
@@ -365,6 +374,8 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "sha256hash" => None,
         "md5hash" => None,
         // No natural inverse for whitespace remover, slugify, stats, uuid, parser, sorter, unique lines, jwtdecode
+        "markdowntohtml" => transformer_from_id("htmltomarkdown").ok(),
+        "htmltomarkdown" => transformer_from_id("markdowntohtml").ok(),
         _ => None, // Default: no inverse
     }
 }

@@ -25,6 +25,7 @@ pub mod hsl_to_hex;
 pub mod hsl_to_rgb;
 pub mod html_decode;
 pub mod html_encode;
+pub mod html_to_markdown;
 pub mod json_formatter;
 pub mod json_minifier;
 pub mod json_to_csv;
@@ -32,6 +33,7 @@ pub mod jwt_decode;
 pub mod line_number_adder;
 pub mod line_number_remover;
 pub mod line_sorter;
+pub mod markdown_to_html;
 pub mod md5_hash;
 pub mod morse_decode;
 pub mod morse_encode;
@@ -66,10 +68,11 @@ pub use self::{
     gzip_decompress::GzipDecompress, hex_decode::HexDecode, hex_encode::HexEncode,
     hex_to_ascii::HexToAscii, hex_to_bin::HexToBinTransformer, hex_to_dec::HexToDecTransformer,
     hex_to_hsl::HexToHsl, hex_to_rgb::HexToRgb, hsl_to_hex::HslToHex, hsl_to_rgb::HslToRgb,
-    html_decode::HtmlDecode, html_encode::HtmlEncode, json_formatter::JsonFormatter,
-    json_minifier::JsonMinifier, json_to_csv::JsonToCsv, jwt_decode::JwtDecode,
-    line_number_adder::LineNumberAdder, line_number_remover::LineNumberRemover,
-    line_sorter::LineSorter, md5_hash::Md5HashTransformer, morse_decode::MorseDecode,
+    html_decode::HtmlDecode, html_encode::HtmlEncode, html_to_markdown::HtmlToMarkdown,
+    json_formatter::JsonFormatter, json_minifier::JsonMinifier, json_to_csv::JsonToCsv,
+    jwt_decode::JwtDecode, line_number_adder::LineNumberAdder,
+    line_number_remover::LineNumberRemover, line_sorter::LineSorter,
+    markdown_to_html::MarkdownToHtml, md5_hash::Md5HashTransformer, morse_decode::MorseDecode,
     morse_encode::MorseEncode, rgb_to_hex::RgbToHex, rgb_to_hsl::RgbToHsl, rot13::Rot13,
     sha1_hash::Sha1Hash, sha256_hash::Sha256HashTransformer, slugify::Slugify,
     snake_to_camel::SnakeToCamel, sql_formatter::SqlFormatter, sql_minifier::SqlMinifier,
