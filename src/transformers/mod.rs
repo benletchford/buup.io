@@ -51,6 +51,8 @@ pub mod url_parser;
 pub mod uuid5_generate;
 pub mod uuid_generate;
 pub mod whitespace_remover;
+pub mod xml_formatter;
+pub mod xml_minifier;
 
 pub use self::{
     ascii_to_hex::AsciiToHex, base64_decode::Base64Decode, base64_encode::Base64Encode,
@@ -70,7 +72,7 @@ pub use self::{
     slugify::Slugify, snake_to_camel::SnakeToCamel, text_reverse::TextReverse,
     text_stats::TextStats, unique_lines::UniqueLines, url_decode::UrlDecode, url_encode::UrlEncode,
     url_parser::UrlParser, uuid5_generate::Uuid5Generate, uuid_generate::UuidGenerate,
-    whitespace_remover::WhitespaceRemover,
+    whitespace_remover::WhitespaceRemover, xml_formatter::XmlFormatter, xml_minifier::XmlMinifier,
 };
 
 pub use jwt_decode::JwtDecode;

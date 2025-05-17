@@ -159,6 +159,16 @@
       <priority>0.8</priority>
       <changefreq>monthly</changefreq>
    </url>
+   <url>
+      <loc>https://buup.io/#xmlformatter</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>https://buup.io/#xmlminifier</loc>
+      <priority>0.8</priority>
+      <changefreq>monthly</changefreq>
+   </url>
    <!-- crypto related transformers -->
    <url>
       <loc>https://buup.io/#md5hash</loc>

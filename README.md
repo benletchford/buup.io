@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Tiny Binary Size
 
-Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **588K** on arm64 (again with no external dependencies).
+Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **604K** on arm64 (again with no external dependencies).
 
 This tiny footprint makes Buup perfect for:
 
@@ -138,6 +138,8 @@ FORMATTERS:
   jsonminifier    - Minifies a JSON string, removing unnecessary whitespace.
   linenumberadder - Adds line numbers to the beginning of each line.
   linenumberremover - Removes line numbers (and optional delimiters) from the beginning of each line.
+  xmlformatter    - Format XML code with proper indentation
+  xmlminifier     - Compress XML by removing unnecessary whitespace
 
 CRYPTOGRAPHY:
   md5hash         - Calculates the MD5 hash of the input string.

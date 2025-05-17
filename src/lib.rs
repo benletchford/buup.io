@@ -6,14 +6,24 @@ use std::sync::OnceLock;
 pub mod transformers;
 pub mod utils;
 
+#[allow(unexpected_cfgs)]
+#[cfg(feature = "cli")]
+mod cli;
+
+// Create mutable storage for registry
+static REGISTRY: OnceLock<Registry> = OnceLock::new();
+
 // Export the transformer structs for backward compatibility
 pub use transformers::{
-    AsciiToHex, Base64Decode, Base64Encode, BinaryDecode, BinaryEncode, CamelToSnake, CsvToJson,
-    DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress, HexDecode, HexEncode,
-    HexToAscii, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode,
-    LineSorter, Md5HashTransformer, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel,
-    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate,
-    UuidGenerate,
+    AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer, BinaryDecode,
+    BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
+    DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
+    HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl, HexToRgb,
+    HslToHex, HslToRgb, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode,
+    LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer, MorseDecode, MorseEncode,
+    RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, TextReverse,
+    TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
+    WhitespaceRemover, XmlFormatter, XmlMinifier,
 };
 
 /// Represents a transformation error
@@ -124,26 +134,10 @@ struct Registry {
     transformers: HashMap<&'static str, &'static dyn Transform>,
 }
 
-// Global registry using OnceLock for thread-safe initialization
-static REGISTRY: OnceLock<Registry> = OnceLock::new();
-
 // Register built-in transformers
 fn register_builtin_transformers() -> Registry {
     let mut registry = Registry {
         transformers: HashMap::new(),
-    };
-
-    // Import the new transformer
-    use transformers::{
-        AsciiToHex, Base64Decode, Base64Encode, BinToDecTransformer, BinToHexTransformer,
-        BinaryDecode, BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
-        DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
-        HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl,
-        HexToRgb, HslToHex, HslToRgb, HtmlDecode, HtmlEncode, JsonFormatter, JsonMinifier,
-        JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, Md5HashTransformer,
-        MorseDecode, MorseEncode, RgbToHex, RgbToHsl, Rot13, Sha1Hash, Sha256HashTransformer,
-        Slugify, SnakeToCamel, TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode,
-        UrlParser, Uuid5Generate, UuidGenerate, WhitespaceRemover,
     };
 
     // Register built-in transformers
@@ -277,6 +271,12 @@ fn register_builtin_transformers() -> Registry {
     // Register the new SHA-1 transformer
     registry.transformers.insert(Sha1Hash.id(), &Sha1Hash);
 
+    // Register XML transformers
+    registry
+        .transformers
+        .insert(XmlFormatter.id(), &XmlFormatter);
+    registry.transformers.insert(XmlMinifier.id(), &XmlMinifier);
+
     registry
 }
 
@@ -355,6 +355,9 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "hsl_to_hex" => transformer_from_id("hex_to_hsl").ok(),
         "rgb_to_hsl" => transformer_from_id("hsl_to_rgb").ok(),
         "hsl_to_rgb" => transformer_from_id("rgb_to_hsl").ok(),
+        // Add XML transformer inverses
+        "xmlformatter" => transformer_from_id("xmlminifier").ok(),
+        "xmlminifier" => transformer_from_id("xmlformatter").ok(),
         // Hashes have no inverse
         "sha1hash" => None,
         "sha256hash" => None,
