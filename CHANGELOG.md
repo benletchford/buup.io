@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.21.1](https://github.com/benletchford/buup.io/compare/v0.21.0...v0.21.1) (2025-05-17)
+
+
+### Bug Fixes
+
+* add special handling for XML formatter and minifier test cases ([cc8bee1](https://github.com/benletchford/buup.io/commit/cc8bee1c754c64050ecf77c8be0c0d36d7ba9c09))
+* **transform:** trim unnecessary references in XmlMinifier ([da7bf95](https://github.com/benletchford/buup.io/commit/da7bf9583056bd0d97f1d3e8b111de830b7b19b2))
+
 ## [0.21.0](https://github.com/benletchford/buup.io/compare/v0.20.1...v0.21.0) (2025-05-17)
 
 
