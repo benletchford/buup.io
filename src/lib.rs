@@ -15,12 +15,12 @@ pub use transformers::{
     BinaryEncode, CamelToSnake, ColorCodeConvert, CsvToJson, DecToBinTransformer,
     DecToHexTransformer, DeflateCompress, DeflateDecompress, GzipCompress, GzipDecompress,
     HexDecode, HexEncode, HexToAscii, HexToBinTransformer, HexToDecTransformer, HexToHsl, HexToRgb,
-    HslToHex, HslToRgb, HtmlDecode, HtmlEncode, HtmlToMarkdown, JsonFormatter, JsonMinifier,
-    JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover, LineSorter, MarkdownToHtml,
-    Md5HashTransformer, MorseDecode, MorseEncode, RgbToHex, RgbToHsl, Rot13, Sha1Hash,
-    Sha256HashTransformer, Slugify, SnakeToCamel, SqlFormatter, SqlMinifier, TextReverse,
-    TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate, UuidGenerate,
-    WhitespaceRemover, XmlFormatter, XmlMinifier,
+    HslToHex, HslToRgb, HtmlDecode, HtmlEncode, HtmlToMarkdown, JsFormatter, JsMinifier,
+    JsonFormatter, JsonMinifier, JsonToCsv, JwtDecode, LineNumberAdder, LineNumberRemover,
+    LineSorter, MarkdownToHtml, Md5HashTransformer, MorseDecode, MorseEncode, RgbToHex, RgbToHsl,
+    Rot13, Sha1Hash, Sha256HashTransformer, Slugify, SnakeToCamel, SqlFormatter, SqlMinifier,
+    TextReverse, TextStats, UniqueLines, UrlDecode, UrlEncode, UrlParser, Uuid5Generate,
+    UuidGenerate, WhitespaceRemover, XmlFormatter, XmlMinifier,
 };
 
 /// Represents a transformation error
@@ -153,6 +153,8 @@ fn register_builtin_transformers() -> Registry {
     registry
         .transformers
         .insert(JsonMinifier.id(), &JsonMinifier);
+    registry.transformers.insert(JsFormatter.id(), &JsFormatter);
+    registry.transformers.insert(JsMinifier.id(), &JsMinifier);
     registry
         .transformers
         .insert(SqlFormatter.id(), &SqlFormatter);
@@ -326,6 +328,8 @@ pub fn inverse_transformer(t: &dyn Transform) -> Option<&'static dyn Transform> 
         "textreverse" => transformer_from_id("textreverse").ok(), // Self-inverting
         "jsonformatter" => transformer_from_id("jsonminifier").ok(),
         "jsonminifier" => transformer_from_id("jsonformatter").ok(),
+        "jsformatter" => transformer_from_id("jsminifier").ok(),
+        "jsminifier" => transformer_from_id("jsformatter").ok(),
         "sqlformatter" => transformer_from_id("sqlminifier").ok(),
         "sqlminifier" => transformer_from_id("sqlformatter").ok(),
         "hexencode" => transformer_from_id("hexdecode").ok(),
