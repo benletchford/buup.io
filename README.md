@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Tiny Binary Size
 
-Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **636K** on arm64 (again with no external dependencies).
+Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **652K** on arm64 (again with no external dependencies).
 
 This tiny footprint makes Buup perfect for:
 
@@ -98,7 +98,7 @@ This tiny footprint makes Buup perfect for:
 - **Fast startup times** for CLI operations
 - **Minimal dependencies** means fewer security vulnerabilities and simpler maintenance
 
-_Note: Binary size may vary slightly across different platforms._
+*Note: Binary size may vary slightly across different platforms.*
 
 ## Available Transformers
 
