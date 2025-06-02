@@ -145,16 +145,6 @@
       <changefreq>monthly</changefreq>
    </url>
    <url>
-      <loc>https://buup.io/#jsformatter</loc>
-      <priority>0.8</priority>
-      <changefreq>monthly</changefreq>
-   </url>
-   <url>
-      <loc>https://buup.io/#jsminifier</loc>
-      <priority>0.8</priority>
-      <changefreq>monthly</changefreq>
-   </url>
-   <url>
       <loc>https://buup.io/#jsonformatter</loc>
       <priority>0.8</priority>
       <changefreq>monthly</changefreq>

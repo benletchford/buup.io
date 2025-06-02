@@ -90,7 +90,7 @@ println!("{}", decoded); // Hello, Library!
 
 ## Tiny Binary Size
 
-Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **672K** on arm64 (again with no external dependencies).
+Buup is incredibly lightweight, with the entire buup library of transformers and the CLI binary compiling down to just **652K** on arm64 (again with no external dependencies).
 
 This tiny footprint makes Buup perfect for:
 
@@ -135,8 +135,6 @@ DECODERS:
 
 FORMATTERS:
   htmltomarkdown  - Converts HTML to Markdown format
-  jsformatter     - Formats JavaScript code with proper indentation and spacing.
-  jsminifier      - Minifies JavaScript code by removing unnecessary whitespace and comments.
   jsonformatter   - Formats (pretty-prints) a JSON string.
   jsonminifier    - Minifies a JSON string, removing unnecessary whitespace.
   linenumberadder - Adds line numbers to the beginning of each line.
