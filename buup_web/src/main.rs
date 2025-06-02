@@ -7,10 +7,11 @@ use wasm_bindgen::JsCast;
 
 mod styles; // Add module declaration
 
-const BUUP_ICON_SVG: Asset = asset!("assets/buup-icon.svg");
-const APPLE_TOUCH_ICON: Asset = asset!("assets/apple-touch-icon.png");
+const FAVICON_ICO: Asset = asset!("assets/favicon.ico");
 const FAVICON_32: Asset = asset!("assets/favicon-32x32.png");
 const FAVICON_16: Asset = asset!("assets/favicon-16x16.png");
+const APPLE_TOUCH_ICON: Asset = asset!("assets/apple-touch-icon.png");
+const BUUP_ICON_SVG: Asset = asset!("assets/buup-icon.svg");
 const SITE_MANIFEST: Asset = asset!("assets/site.webmanifest");
 
 fn main() {
@@ -518,6 +519,11 @@ fn App() -> Element {
         script { r#type: "application/ld+json", dangerous_inner_html: "{structured_data}" }
 
         // Keep existing meta tags
+        document::Link {
+            rel: "icon",
+            type: "image/x-icon",
+            href: FAVICON_ICO
+        }
         document::Link {
             rel: "apple-touch-icon",
             sizes: "180x180",

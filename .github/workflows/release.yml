@@ -103,6 +103,11 @@ jobs:
           cargo install dioxus-cli
           dx build --release
 
+      - name: Copy specific assets to public folder for GitHub Pages
+        run: |
+          cp buup_web/assets/sitemap.xml target/dx/buup_web/release/web/public/sitemap.xml
+          cp buup_web/assets/robots.txt target/dx/buup_web/release/web/public/robots.txt
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
