@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.24.0](https://github.com/benletchford/buup.io/compare/v0.23.0...v0.24.0) (2025-06-02)
+
+
+### Features
+
+* add JavaScript formatter and minifier transformers ([c7b72e6](https://github.com/benletchford/buup.io/commit/c7b72e62e7ebb6787b2345d0aa09840d2d043693))
+* add sitemap.xml and rebots.txt to github pages asset folder ([377bc4e](https://github.com/benletchford/buup.io/commit/377bc4ef9531bb1958a851c7b863fb4e1941ada4))
+* **html-to-markdown:** enhance transformer with ordered lists, blockquotes, horizontal rules, and code syntax highlighting ([d6bf92e](https://github.com/benletchford/buup.io/commit/d6bf92e2d82324f57a917a6989f7168c743159fc))
+* **markdown-to-html:** enhance transformer with ordered lists, blockquotes, horizontal rules, code syntax highlighting, strikethrough, and inline code ([ec06eac](https://github.com/benletchford/buup.io/commit/ec06eacae7aee2f606d91059f4763a26da5b0505))
+
+
+### Bug Fixes
+
+* **docs:** update binary size in README and correct note formatting ([d078d87](https://github.com/benletchford/buup.io/commit/d078d87c3111d9ef5d28529fbb9a8ce34101c578))
+
 ## [0.23.0](https://github.com/benletchford/buup.io/compare/v0.22.0...v0.23.0) (2025-05-17)
 
 
