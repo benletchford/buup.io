@@ -5,7 +5,6 @@
 
 ### Features
 
-* add JavaScript formatter and minifier transformers ([c7b72e6](https://github.com/benletchford/buup.io/commit/c7b72e62e7ebb6787b2345d0aa09840d2d043693))
 * add sitemap.xml and rebots.txt to github pages asset folder ([377bc4e](https://github.com/benletchford/buup.io/commit/377bc4ef9531bb1958a851c7b863fb4e1941ada4))
 * **html-to-markdown:** enhance transformer with ordered lists, blockquotes, horizontal rules, and code syntax highlighting ([d6bf92e](https://github.com/benletchford/buup.io/commit/d6bf92e2d82324f57a917a6989f7168c743159fc))
 * **markdown-to-html:** enhance transformer with ordered lists, blockquotes, horizontal rules, code syntax highlighting, strikethrough, and inline code ([ec06eac](https://github.com/benletchford/buup.io/commit/ec06eacae7aee2f606d91059f4763a26da5b0505))
