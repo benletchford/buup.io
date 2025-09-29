@@ -42,9 +42,7 @@ impl Transform for JsonMinifier {
         }
 
         // Replace smart quotes with regular quotes
-        let normalized_input = input
-            .replace('\u{201C}', "\"") // left double quotation mark
-            .replace('\u{201D}', "\""); // right double quotation mark
+        let normalized_input = input.replace(['\u{201C}', '\u{201D}'], "\"");
 
         minify_json(&normalized_input)
     }
