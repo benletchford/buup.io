@@ -276,11 +276,11 @@ checksum = "46c5e41b57b8bba42a04676d81cb89e9ee8e859a1a66f80a5a72e1cb76b34d43"
 
 [[package]]
 name = "buup"
-version = "0.25.0"
+version = "0.25.1"
 
 [[package]]
 name = "buup_web"
-version = "0.25.0"
+version = "0.25.1"
 dependencies = [
  "buup",
  "dioxus",
