@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.2](https://github.com/benletchford/buup.io/compare/v0.25.1...v0.25.2) (2025-09-29)
+
+
+### Bug Fixes
+
+* ci still broken binstall dioxus-cli ([066fadb](https://github.com/benletchford/buup.io/commit/066fadb411ccfc3de9a26646ba66544c8b2a5b74))
+
 ## [0.25.1](https://github.com/benletchford/buup.io/compare/v0.25.0...v0.25.1) (2025-09-29)
 
 
