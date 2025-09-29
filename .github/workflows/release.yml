@@ -100,7 +100,7 @@ jobs:
         working-directory: ./buup_web
         run: |
           # This will run the equivalent of the Dioxus deploy action in the buup_web directory
-          cargo install dioxus-cli
+          cargo binstall dioxus-cli -y
           dx build --release
 
       - name: Copy specific assets to public folder for GitHub Pages
