@@ -96,6 +96,9 @@ jobs:
       - name: Install trunk
         uses: jetli/trunk-action@v0.4.0
 
+      - name: Install binstall
+        uses: cargo-bins/cargo-binstall@main
+
       - name: Run Dioxus Deploy Action
         working-directory: ./buup_web
         run: |
