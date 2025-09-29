@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.3](https://github.com/benletchford/buup.io/compare/v0.25.2...v0.25.3) (2025-09-29)
+
+
+### Bug Fixes
+
+* install binstall first :D ([46a1d1c](https://github.com/benletchford/buup.io/commit/46a1d1c243351a877ac5316d45bf5fa43cfb40a6))
+
 ## [0.25.2](https://github.com/benletchford/buup.io/compare/v0.25.1...v0.25.2) (2025-09-29)
 
 
