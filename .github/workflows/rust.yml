@@ -38,5 +38,8 @@ jobs:
       - name: Run tests
         run: cargo test --workspace
 
+      - name: Install clippy
+        run: rustup component add clippy
+
       - name: Run clippy
         run: cargo clippy --workspace -- -D warnings
