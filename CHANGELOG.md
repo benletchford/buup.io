@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.1](https://github.com/benletchford/buup.io/compare/v0.25.0...v0.25.1) (2025-09-29)
+
+
+### Bug Fixes
+
+* fix web release by updating dependencies ([c31e287](https://github.com/benletchford/buup.io/commit/c31e287ba3edb1c8325e584ead76d5344539c3b3))
+
 ## [0.25.0](https://github.com/benletchford/buup.io/compare/v0.24.0...v0.25.0) (2025-09-29)
 
 
