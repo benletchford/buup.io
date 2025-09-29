@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.25.0](https://github.com/benletchford/buup.io/compare/v0.24.0...v0.25.0) (2025-09-29)
+
+
+### Features
+
+* add support for smart quotes in JSON formatters ([049873d](https://github.com/benletchford/buup.io/commit/049873dfb3aa4c6f9d3dfc25b13cd62b380b0800))
+
+
+### Bug Fixes
+
+* address clippy warnings for collapsible str::replace ([e3ec73e](https://github.com/benletchford/buup.io/commit/e3ec73ebfa20f00aaff1320dc1e61ea8b6ab7466))
+
 ## [0.24.0](https://github.com/benletchford/buup.io/compare/v0.23.0...v0.24.0) (2025-06-02)
 
 
