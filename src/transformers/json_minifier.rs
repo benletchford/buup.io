@@ -41,7 +41,12 @@ impl Transform for JsonMinifier {
             return Ok(String::new());
         }
 
-        minify_json(input)
+        // Replace smart quotes with regular quotes
+        let normalized_input = input
+            .replace('\u{201C}', "\"") // left double quotation mark
+            .replace('\u{201D}', "\""); // right double quotation mark
+
+        minify_json(&normalized_input)
     }
 }
 
@@ -166,6 +171,15 @@ mod tests {
   "text": "This has   spaces   and \n newlines \t tabs"
 }"#;
         let expected = r#"{"text":"This has   spaces   and \n newlines \t tabs"}"#;
+        assert_eq!(transformer.transform(input).unwrap(), expected);
+    }
+
+    #[test]
+    fn test_json_minifier_smart_quotes() {
+        let transformer = JsonMinifier;
+
+        let input = r#"{"test":“value”}"#;
+        let expected = r#"{"test":"value"}"#;
         assert_eq!(transformer.transform(input).unwrap(), expected);
     }
 }

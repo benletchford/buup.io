@@ -31,8 +31,13 @@ impl Transform for JsonFormatter {
             return Ok(String::new());
         }
 
+        // Replace smart quotes with regular quotes
+        let normalized_input = input
+            .replace('\u{201C}', "\"") // left double quotation mark
+            .replace('\u{201D}', "\""); // right double quotation mark
+
         // First, parse the JSON into tokens
-        let tokens = tokenize_json(input)?;
+        let tokens = tokenize_json(&normalized_input)?;
 
         // Then format the tokens with indentation
         format_json(&tokens)
@@ -372,6 +377,14 @@ mod tests {
         let transformer = JsonFormatter;
         let input = r#"{"empty":{},"emptyArray":[],"nonempty":{"key":"value"}}"#;
         let expected = "{\n  \"empty\": {},\n  \"emptyArray\": [],\n  \"nonempty\": {\n    \"key\": \"value\"\n  }\n}";
+        assert_eq!(transformer.transform(input).unwrap(), expected);
+    }
+
+    #[test]
+    fn test_json_formatter_smart_quotes() {
+        let transformer = JsonFormatter;
+        let input = r#"{"name":"buup","message":“Hello world”,"smart_left":"testing","smart_right":"more testing"}"#;
+        let expected = "{\n  \"name\": \"buup\",\n  \"message\": \"Hello world\",\n  \"smart_left\": \"testing\",\n  \"smart_right\": \"more testing\"\n}";
         assert_eq!(transformer.transform(input).unwrap(), expected);
     }
 }
