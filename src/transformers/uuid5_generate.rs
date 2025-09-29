@@ -10,7 +10,7 @@ const NAMESPACE_X500: &str = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 // Helper function to parse hex to bytes
 fn hex_to_bytes(hex: &str) -> Result<Vec<u8>, TransformError> {
     let hex = hex.replace('-', ""); // Remove hyphens if present
-    if hex.len() % 2 != 0 {
+    if !hex.len().is_multiple_of(2) {
         return Err(TransformError::InvalidArgument(
             "Hex string must have even length".into(),
         ));

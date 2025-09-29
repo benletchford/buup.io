@@ -99,7 +99,7 @@ fn base64_standard_decode(input: &str) -> Result<Vec<u8>, TransformError> {
     if padding > 2 {
         return Err(TransformError::Base64DecodeError);
     }
-    if input_bytes.len() % 4 != 0 {
+    if !input_bytes.len().is_multiple_of(4) {
         return Err(TransformError::Base64DecodeError);
     }
 

@@ -35,7 +35,7 @@ impl Transform for HexToAscii {
 
     fn transform(&self, input: &str) -> Result<String, TransformError> {
         // Ensure input has an even number of characters
-        if input.len() % 2 != 0 {
+        if !input.len().is_multiple_of(2) {
             return Err(TransformError::InvalidArgument(
                 "Input hex string must have an even number of characters".into(),
             ));

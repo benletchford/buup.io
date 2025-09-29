@@ -34,7 +34,7 @@ impl Transform for HexDecode {
             return Ok(String::new());
         }
 
-        if input.len() % 2 != 0 {
+        if !input.len().is_multiple_of(2) {
             return Err(TransformError::HexDecodeError(
                 "Hex string must have an even length".to_string(),
             ));
